@@ -12,25 +12,13 @@ import com.baomidou.mybatisplus.generator.engine.FreemarkerTemplateEngine;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 public class CodeGenerator {
-    //表名：tc_admin,tc_chat,tc_message,tc_news,tc_picture,tc_post,tc_reply,tc_tag,tc_user
-    /**
-     * <p>
-     * 读取控制台内容
-     * </p>
-     */
     public static String scanner(String tip) {
-        Scanner scanner = new Scanner(System.in);
-        StringBuilder help = new StringBuilder();
-        help.append("请输入" + tip + "：");
-        System.out.println(help.toString());
-        if (scanner.hasNext()) {
-            String ipt = scanner.next();
-            if (StringUtils.isNotBlank(ipt)) {
-                return ipt;
-            }
+        //数据库表名配置
+        String ipt = "tc_chat,tc_message,tc_news,tc_picture,tc_post,tc_reply,tc_tag,tc_user";
+        if (StringUtils.isNotBlank(ipt)) {
+            return ipt;
         }
         throw new MybatisPlusException("请输入正确的" + tip + "！");
     }
@@ -60,7 +48,7 @@ public class CodeGenerator {
         // 包配置
         PackageConfig pc = new PackageConfig();
         //pc.setModuleName(scanner("模块名"));
-        pc.setParent("com.pzj")
+        pc.setParent("com.pzj.technicalcommunity")
             .setEntity("entity")
             .setMapper("mapper")
             .setService("service")
