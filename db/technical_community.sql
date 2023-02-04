@@ -11,7 +11,7 @@
  Target Server Version : 80031
  File Encoding         : 65001
 
- Date: 04/02/2023 17:26:19
+ Date: 04/02/2023 17:32:17
 */
 
 SET NAMES utf8mb4;
@@ -88,6 +88,7 @@ CREATE TABLE `tc_post`  (
   `post_title` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `post_content` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `post_time` datetime NOT NULL ON UPDATE CURRENT_TIMESTAMP,
+  `post_top` tinyint(1) NOT NULL,
   `post_price` decimal(10, 2) NULL DEFAULT NULL,
   PRIMARY KEY (`post_id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
