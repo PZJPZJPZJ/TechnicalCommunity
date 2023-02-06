@@ -1,5 +1,5 @@
 <template>
-  <p>123</p>
+  <p>12345</p>
 </template>
 
 <script>
