@@ -17,15 +17,16 @@ import java.util.List;
  * </p>
  *
  * @author pzj
- * @since 2023-02-04
+ * @since 2023-02-06
  */
 @RestController
 @RequestMapping("/user")
 public class TcUserController {
     @Autowired
     private ITcUserService iTcUserService;
-    @GetMapping("/list")
+    @GetMapping ("/list")
     public List<TcUser> list(){
         return iTcUserService.list();
     }
+
 }

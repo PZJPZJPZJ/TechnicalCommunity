@@ -14,7 +14,7 @@ import lombok.EqualsAndHashCode;
  * </p>
  *
  * @author pzj
- * @since 2023-02-04
+ * @since 2023-02-06
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -36,6 +36,8 @@ public class TcPost implements Serializable {
     private LocalDateTime postTime;
 
     private Boolean postTop;
+
+    private Integer postLike;
 
     private BigDecimal postPrice;
 

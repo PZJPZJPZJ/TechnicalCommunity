@@ -16,7 +16,7 @@ import java.util.List;
 public class CodeGenerator {
     public static String scanner(String tip) {
         //数据库表名配置
-        String ipt = "tc_chat,tc_message,tc_news,tc_picture,tc_post,tc_reply,tc_tag,tc_user";
+        String ipt = "tc_chat,tc_message,tc_news,tc_picture,tc_post,tc_comment,tc_tag,tc_user";
         if (StringUtils.isNotBlank(ipt)) {
             return ipt;
         }

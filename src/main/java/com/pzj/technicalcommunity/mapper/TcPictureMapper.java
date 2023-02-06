@@ -10,7 +10,7 @@ import org.mapstruct.Mapper;
  * </p>
  *
  * @author pzj
- * @since 2023-02-04
+ * @since 2023-02-06
  */
 @Mapper
 public interface TcPictureMapper extends BaseMapper<TcPicture> {

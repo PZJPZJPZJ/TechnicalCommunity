@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
  * </p>
  *
  * @author pzj
- * @since 2023-02-04
+ * @since 2023-02-06
  */
 @RestController
 @RequestMapping("/tc-picture")

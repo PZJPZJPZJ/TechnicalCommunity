@@ -11,7 +11,7 @@
  Target Server Version : 80031
  File Encoding         : 65001
 
- Date: 04/02/2023 18:30:49
+ Date: 06/02/2023 18:13:36
 */
 
 SET NAMES utf8mb4;
@@ -30,6 +30,23 @@ CREATE TABLE `tc_chat`  (
 
 -- ----------------------------
 -- Records of tc_chat
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for tc_comment
+-- ----------------------------
+DROP TABLE IF EXISTS `tc_comment`;
+CREATE TABLE `tc_comment`  (
+  `comment_id` int UNSIGNED NOT NULL AUTO_INCREMENT,
+  `comment_user` int UNSIGNED NOT NULL,
+  `comment_content` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `comment_like` int NOT NULL,
+  `comment_time` datetime NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`comment_id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Records of tc_comment
 -- ----------------------------
 
 -- ----------------------------
@@ -93,28 +110,13 @@ CREATE TABLE `tc_post`  (
   `post_content` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `post_time` datetime NOT NULL ON UPDATE CURRENT_TIMESTAMP,
   `post_top` tinyint(1) NOT NULL,
+  `post_like` int NOT NULL,
   `post_price` decimal(10, 2) NULL DEFAULT NULL,
   PRIMARY KEY (`post_id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of tc_post
--- ----------------------------
-
--- ----------------------------
--- Table structure for tc_reply
--- ----------------------------
-DROP TABLE IF EXISTS `tc_reply`;
-CREATE TABLE `tc_reply`  (
-  `reply_id` int UNSIGNED NOT NULL AUTO_INCREMENT,
-  `reply_user` int UNSIGNED NULL DEFAULT NULL,
-  `reply_content` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
-  `reply_time` datetime NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`reply_id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
-
--- ----------------------------
--- Records of tc_reply
 -- ----------------------------
 
 -- ----------------------------
@@ -146,7 +148,7 @@ CREATE TABLE `tc_user`  (
   `user_sex` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
   `user_birth` datetime NULL DEFAULT NULL,
   PRIMARY KEY (`user_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of tc_user

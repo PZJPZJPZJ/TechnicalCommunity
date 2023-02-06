@@ -1,6 +1,6 @@
 package com.pzj.technicalcommunity.service;
 
-import com.pzj.technicalcommunity.entity.TcReply;
+import com.pzj.technicalcommunity.entity.TcComment;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
@@ -9,8 +9,8 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * </p>
  *
  * @author pzj
- * @since 2023-02-04
+ * @since 2023-02-06
  */
-public interface ITcReplyService extends IService<TcReply> {
+public interface ITcCommentService extends IService<TcComment> {
 
 }

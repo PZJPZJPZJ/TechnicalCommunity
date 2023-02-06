@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
  * </p>
  *
  * @author pzj
- * @since 2023-02-04
+ * @since 2023-02-06
  */
 @Service
 public class TcNewsServiceImpl extends ServiceImpl<TcNewsMapper, TcNews> implements ITcNewsService {

@@ -1,6 +1,6 @@
 package com.pzj.technicalcommunity.mapper;
 
-import com.pzj.technicalcommunity.entity.TcReply;
+import com.pzj.technicalcommunity.entity.TcComment;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.mapstruct.Mapper;
 
@@ -10,9 +10,9 @@ import org.mapstruct.Mapper;
  * </p>
  *
  * @author pzj
- * @since 2023-02-04
+ * @since 2023-02-06
  */
 @Mapper
-public interface TcReplyMapper extends BaseMapper<TcReply> {
+public interface TcCommentMapper extends BaseMapper<TcComment> {
 
 }

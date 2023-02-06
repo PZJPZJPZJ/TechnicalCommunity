@@ -1,12 +1,11 @@
 <template>
-  <p>App</p>
-  <router-link to="views/" class="router-test">查看全部水厂</router-link>
-
+  <p>123</p>
 </template>
 
 <script>
 
 </script>
+
 
 <style>
 #app {
