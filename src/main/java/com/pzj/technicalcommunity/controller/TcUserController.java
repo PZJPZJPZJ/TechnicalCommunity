@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.pzj.technicalcommunity.entity.TcUser;
 import com.pzj.technicalcommunity.service.ITcUserService;
+import com.pzj.technicalcommunity.util.ResultPackage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,18 +28,19 @@ public class TcUserController {
     private ITcUserService iTcUserService;
     //列出用户信息
     @GetMapping ("/list")
-    public List<TcUser> list(){
-        return iTcUserService.list();
+    public ResultPackage list(){
+        System.out.println(iTcUserService.count());
+        return ResultPackage.success(iTcUserService.list());
     }
 
     //分页查询用户信息
     @PostMapping("/page")
-    public List<TcUser> listPage(@RequestBody HashMap hashMap){
+    public ResultPackage listPage(@RequestBody HashMap hashMap){
         Page<TcUser> page = new Page<>();
         page.setCurrent((int)hashMap.get("pageNum"));
         page.setSize((int)hashMap.get("pageSize"));
         IPage<TcUser> iPage = iTcUserService.page(page);
-        return iPage.getRecords();
+        return ResultPackage.success(iPage.getRecords(),iPage.getTotal());
     }
 
     //模糊查询用户信息
