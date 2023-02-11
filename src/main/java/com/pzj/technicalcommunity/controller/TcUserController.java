@@ -29,7 +29,6 @@ public class TcUserController {
     //列出用户信息
     @GetMapping ("/list")
     public ResultPackage list(){
-        System.out.println(iTcUserService.count());
         return ResultPackage.success(iTcUserService.list());
     }
 
