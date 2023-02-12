@@ -14,7 +14,7 @@ public class ResultPackage {
     //数据
     private Object data;
 
-    public static ResultPackage result(int code,String msg,Long total,Object data){
+    private static ResultPackage set(int code,String msg,Long total,Object data){
         ResultPackage resultPackage = new ResultPackage();
         resultPackage.setCode(code);
         resultPackage.setMsg(msg);
@@ -23,16 +23,15 @@ public class ResultPackage {
         return resultPackage;
     }
 
-    //查询成功调用
-    public static ResultPackage success(Object data){
-        return result(200,"成功",null,data);
-    }
-    public static ResultPackage success(Object data,Long total){
-        return result(200,"成功",total,data);
+    public static ResultPackage pack(){
+        return set(204,"成功",0L,null);
     }
 
-    //无数据时调用
-    public static ResultPackage fail(){
-        return result(204,"失败",null,null);
+    public static ResultPackage pack(Object data){
+        return set(200,"成功",1L,data);
+    }
+
+    public static ResultPackage pack(Object data,Long total){
+        return set(200,"成功",total,data);
     }
 }

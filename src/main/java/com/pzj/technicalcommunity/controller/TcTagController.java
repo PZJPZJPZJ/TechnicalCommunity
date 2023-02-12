@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.pzj.technicalcommunity.entity.TcTag;
 import com.pzj.technicalcommunity.entity.TcUser;
+import com.pzj.technicalcommunity.service.ITcPostService;
 import com.pzj.technicalcommunity.service.ITcTagService;
 import com.pzj.technicalcommunity.util.ResultPackage;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +36,7 @@ public class TcTagController {
         page.setCurrent((int)hashMap.get("pageNum"));
         page.setSize((int)hashMap.get("pageSize"));
         IPage<TcTag> iPage = iTcTagService.page(page);
-        return ResultPackage.success(iPage.getRecords(),iPage.getTotal());
+        return ResultPackage.pack(iPage.getRecords(),iPage.getTotal());
     }
 
     //标签名模糊查询

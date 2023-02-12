@@ -29,7 +29,7 @@ public class TcUserController {
     //列出用户信息
     @GetMapping ("/list")
     public ResultPackage list(){
-        return ResultPackage.success(iTcUserService.list());
+        return ResultPackage.pack(iTcUserService.list());
     }
 
     //分页查询用户信息
@@ -39,15 +39,18 @@ public class TcUserController {
         page.setCurrent((int)hashMap.get("pageNum"));
         page.setSize((int)hashMap.get("pageSize"));
         IPage<TcUser> iPage = iTcUserService.page(page);
-        return ResultPackage.success(iPage.getRecords(),iPage.getTotal());
+        return ResultPackage.pack(iPage.getRecords(),iPage.getTotal());
     }
 
     //模糊查询用户信息
     @PostMapping ("/search")
-    public List<TcUser> search(@RequestBody TcUser tcUser){
+    public ResultPackage search(@RequestBody TcUser tcUser){
+        //设置查询条件
         LambdaQueryWrapper<TcUser> lambdaQueryWrapper = new LambdaQueryWrapper<>();
         lambdaQueryWrapper.like(TcUser::getUserName,tcUser.getUserName());
-        return iTcUserService.list(lambdaQueryWrapper);
+        //执行查询
+        List<TcUser> list = iTcUserService.list(lambdaQueryWrapper);
+        return ResultPackage.pack(list);
     }
 
     //新增用户信息
