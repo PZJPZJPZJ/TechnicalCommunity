@@ -3,13 +3,10 @@ package com.pzj.technicalcommunity.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.pzj.technicalcommunity.entity.TcPicture;
-import com.pzj.technicalcommunity.entity.TcPost;
 import com.pzj.technicalcommunity.service.ITcPictureService;
 import com.pzj.technicalcommunity.util.ResultPackage;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;

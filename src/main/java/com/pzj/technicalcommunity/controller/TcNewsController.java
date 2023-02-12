@@ -2,20 +2,12 @@ package com.pzj.technicalcommunity.controller;
 
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.pzj.technicalcommunity.entity.TcNews;
-import com.pzj.technicalcommunity.entity.TcPost;
 import com.pzj.technicalcommunity.service.ITcNewsService;
 import com.pzj.technicalcommunity.util.ResultPackage;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
-import org.springframework.web.bind.annotation.RestController;
-
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -27,7 +19,7 @@ import java.util.List;
  * @since 2023-02-06
  */
 @RestController
-@RequestMapping("/tc-news")
+@RequestMapping("/news")
 public class TcNewsController {
     @Autowired
     private ITcNewsService iTcNewsService;
@@ -41,10 +33,49 @@ public class TcNewsController {
     public ResultPackage list(){
         //设置查询条件
         QueryWrapper<TcNews> queryWrapper = new QueryWrapper<>();
-        queryWrapper.orderByDesc("news_time");
+        queryWrapper.orderByDesc("news_time").last("limit 10");
         //执行查询
         List<TcNews> list = iTcNewsService.list(queryWrapper);
         return ResultPackage.pack(list);
     }
 
+    /**
+     * Description 新增新闻
+     * Param 新闻实体(json)
+     * Return 执行结果(bool)
+     */
+    @PostMapping("/save")
+    public boolean save(@RequestBody TcNews tcNews){
+        return iTcNewsService.save(tcNews);
+    }
+
+    /**
+     * Description 修改新闻
+     * Param 新闻实体(json)
+     * Return 执行结果(bool)
+     */
+    @PostMapping("/update")
+    public boolean update(@RequestBody TcNews tcNews){
+        return iTcNewsService.updateById(tcNews);
+    }
+
+    /**
+     * Description 新增或修改新闻
+     * Param 新闻实体(json)
+     * Return 执行结果(bool)
+     */
+    @PostMapping("/mod")
+    public boolean mod(@RequestBody TcNews tcNews){
+        return iTcNewsService.saveOrUpdate(tcNews);
+    }
+
+    /**
+     * Description 删除新闻
+     * Param 新闻ID(url)
+     * Return 执行结果(bool)
+     */
+    @GetMapping("/delete")
+    public boolean delete(Integer id){
+        return iTcNewsService.removeById(id);
+    }
 }

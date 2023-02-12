@@ -1,12 +1,10 @@
 package com.pzj.technicalcommunity.controller;
 
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.pzj.technicalcommunity.entity.TcPost;
-import com.pzj.technicalcommunity.entity.TcUser;
 import com.pzj.technicalcommunity.service.ITcPostService;
 import com.pzj.technicalcommunity.util.ResultPackage;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,7 +55,7 @@ public class TcPostController {
         page.setSize((int)hashMap.get("pageSize"));
         //设置查询条件
         QueryWrapper<TcPost> queryWrapper = new QueryWrapper<>();
-        queryWrapper.like("post_title",hashMap.get("title"));
+        queryWrapper.like("post_title",hashMap.get("postTitle"));
         //执行查询
         IPage<TcPost> iPage = iTcPostService.page(page,queryWrapper);
         return ResultPackage.pack(iPage.getRecords(),iPage.getTotal());

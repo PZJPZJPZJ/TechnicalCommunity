@@ -53,25 +53,41 @@ public class TcUserController {
         return ResultPackage.pack(list);
     }
 
-    //新增用户信息
+    /**
+     * Description 用户注册
+     * Param 用户实体(json)
+     * Return 执行结果(bool)
+     */
     @PostMapping("/save")
     public boolean save(@RequestBody TcUser tcUser){
         return iTcUserService.save(tcUser);
     }
 
-    //修改用户信息
+    /**
+     * Description 用户信息修改
+     * Param 用户实体(json)
+     * Return 执行结果(bool)
+     */
     @PostMapping("/update")
     public boolean update(@RequestBody TcUser tcUser){
         return iTcUserService.updateById(tcUser);
     }
 
-    //新增或修改用户信息
+    /**
+     * Description 新增或修改用户
+     * Param 用户实体(json)
+     * Return 执行结果(bool)
+     */
     @PostMapping("/mod")
     public boolean mod(@RequestBody TcUser tcUser){
         return iTcUserService.saveOrUpdate(tcUser);
     }
 
-    //删除用户信息
+    /**
+     * Description 删除用户
+     * Param 用户ID(url)
+     * Return 执行结果(bool)
+     */
     @GetMapping("/delete")
     public boolean delete(Integer id){
         return iTcUserService.removeById(id);

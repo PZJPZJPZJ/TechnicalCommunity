@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @since 2023-02-06
  */
 @RestController
-@RequestMapping("/tc-chat")
+@RequestMapping("/chat")
 public class TcChatController {
 
 }

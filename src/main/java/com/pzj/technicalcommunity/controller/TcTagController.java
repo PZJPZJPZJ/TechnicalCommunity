@@ -1,19 +1,19 @@
 package com.pzj.technicalcommunity.controller;
 
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.pzj.technicalcommunity.entity.TcTag;
-import com.pzj.technicalcommunity.entity.TcUser;
-import com.pzj.technicalcommunity.service.ITcPostService;
 import com.pzj.technicalcommunity.service.ITcTagService;
 import com.pzj.technicalcommunity.util.ResultPackage;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
-import java.util.List;
 
 /**
  * <p>
@@ -29,7 +29,11 @@ public class TcTagController {
     @Autowired
     private ITcTagService iTcTagService;
 
-    //分页查询标签信息
+    /**
+     * Description 分页查询标签信息
+     * Param 分页信息(json)
+     * Return 分页标签(json)
+     */
     @PostMapping("/page")
     public ResultPackage listPage(@RequestBody HashMap hashMap){
         Page<TcTag> page = new Page<>();
@@ -39,31 +43,50 @@ public class TcTagController {
         return ResultPackage.pack(iPage.getRecords(),iPage.getTotal());
     }
 
-    //标签名模糊查询
-    //新建帖子时可以键入选择，分类展示页面可以键入查询
+    /**
+     * Description 新建帖子时可以键入选择，分类展示页面可以键入查询
+     * Param 分页信息，查询关键词(json)
+     * Return 查询结果(json)
+     */
     @PostMapping ("/search")
-    public List<TcTag> search(@RequestBody TcTag tcTag){
-        LambdaQueryWrapper<TcTag> lambdaQueryWrapper = new LambdaQueryWrapper<>();
-        lambdaQueryWrapper.like(TcTag::getTagName,tcTag.getTagName());
-        return iTcTagService.list(lambdaQueryWrapper);
+    public ResultPackage search(@RequestBody HashMap hashMap){
+        //设置页数和页大小
+        Page<TcTag> page = new Page<>();
+        page.setCurrent((int)hashMap.get("pageNum"));
+        page.setSize((int)hashMap.get("pageSize"));
+        //设置查询条件
+        QueryWrapper<TcTag> queryWrapper = new QueryWrapper<>();
+        queryWrapper.like("tag_name",hashMap.get("tagName"));
+        //执行查询
+        IPage<TcTag> iPage = iTcTagService.page(page,queryWrapper);
+        return ResultPackage.pack(iPage.getRecords(),iPage.getTotal());
     }
 
-    //用户新建标签
-    //新建帖子的时候
+    /**
+     * Description 用户新建标签
+     * Param 标签实体(json)
+     * Return 执行结果(bool)
+     */
     @PostMapping("/save")
     public boolean save(@RequestBody TcTag tcTag){
         return iTcTagService.save(tcTag);
     }
 
-    //修改标签信息
-    //管理员维护标签
+    /**
+     * Description 管理员修改标签信息
+     * Param 标签实体(json)
+     * Return 执行结果(bool)
+     */
     @PostMapping("/update")
     public boolean update(@RequestBody TcTag tcTag){
         return iTcTagService.updateById(tcTag);
     }
 
-    //删除标签
-    //管理员维护标签
+    /**
+     * Description 管理员维护标签
+     * Param 标签ID(url)
+     * Return 执行结果(bool)
+     */
     @PostMapping("/mod")
     public boolean delete(Integer id){
         return iTcTagService.removeById(id);
