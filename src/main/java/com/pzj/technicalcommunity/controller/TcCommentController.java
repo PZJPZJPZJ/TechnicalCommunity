@@ -46,8 +46,8 @@ public class TcCommentController {
     }
 
     /**
-     * Description 新建帖子
-     * Param 帖子实体(json)
+     * Description 新建评论
+     * Param 评论实体(json)
      * Return 执行结果(bool)
      */
     @PostMapping("/save")
@@ -56,8 +56,8 @@ public class TcCommentController {
     }
 
     /**
-     * Description 删除帖子
-     * Param 帖子ID(url)
+     * Description 删除评论
+     * Param 评论ID(url)
      * Return 执行结果(bool)
      */
     @GetMapping("/delete")

@@ -2,8 +2,10 @@ package com.pzj.technicalcommunity.controller;
 
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.pzj.technicalcommunity.entity.TcPost;
 import com.pzj.technicalcommunity.entity.TcUser;
 import com.pzj.technicalcommunity.service.ITcUserService;
 import com.pzj.technicalcommunity.util.ResultPackage;
@@ -26,19 +28,22 @@ import java.util.List;
 public class TcUserController {
     @Autowired
     private ITcUserService iTcUserService;
-    //列出用户信息
-    @GetMapping ("/list")
-    public ResultPackage list(){
-        return ResultPackage.pack(iTcUserService.list());
-    }
 
-    //分页查询用户信息
+    /**
+     * Description 分页查询用户信息
+     * Param 分页信息(json)
+     * Return 分页用户数据(bool)
+     */
     @PostMapping("/page")
     public ResultPackage listPage(@RequestBody HashMap hashMap){
         Page<TcUser> page = new Page<>();
         page.setCurrent((int)hashMap.get("pageNum"));
         page.setSize((int)hashMap.get("pageSize"));
-        IPage<TcUser> iPage = iTcUserService.page(page);
+        //设置随机查询热门条件
+        QueryWrapper<TcUser> queryWrapper = new QueryWrapper<>();
+        queryWrapper.select("user_id").select("user_admin").select("user_name").select("user_sign").select("user_sex").select("user_birth");
+        //执行查询
+        IPage<TcUser> iPage = iTcUserService.page(page,queryWrapper);
         return ResultPackage.pack(iPage.getRecords(),iPage.getTotal());
     }
 
@@ -71,25 +76,5 @@ public class TcUserController {
     @PostMapping("/update")
     public boolean update(@RequestBody TcUser tcUser){
         return iTcUserService.updateById(tcUser);
-    }
-
-    /**
-     * Description 新增或修改用户
-     * Param 用户实体(json)
-     * Return 执行结果(bool)
-     */
-    @PostMapping("/mod")
-    public boolean mod(@RequestBody TcUser tcUser){
-        return iTcUserService.saveOrUpdate(tcUser);
-    }
-
-    /**
-     * Description 删除用户
-     * Param 用户ID(url)
-     * Return 执行结果(bool)
-     */
-    @GetMapping("/delete")
-    public boolean delete(Integer id){
-        return iTcUserService.removeById(id);
     }
 }
