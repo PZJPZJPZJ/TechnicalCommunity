@@ -13,7 +13,7 @@ import lombok.EqualsAndHashCode;
  * </p>
  *
  * @author pzj
- * @since 2023-02-06
+ * @since 2023-02-13
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -24,11 +24,11 @@ public class TcComment implements Serializable {
     @TableId(value = "comment_id", type = IdType.AUTO)
     private Integer commentId;
 
+    private Integer commentPost;
+
     private Integer commentUser;
 
     private String commentContent;
-
-    private Integer commentLike;
 
     private LocalDateTime commentTime;
 

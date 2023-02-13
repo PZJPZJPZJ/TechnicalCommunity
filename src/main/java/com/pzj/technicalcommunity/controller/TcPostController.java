@@ -78,9 +78,9 @@ public class TcPostController {
     }
 
     /**
-     * Description 首页筛选热门帖子
+     * Description 随机展示首页热门帖子
      * Param 分页数据(json)
-     * Return 热门帖子(json)
+     * Return 随机热门帖子(json)
      */
     @RequestMapping("/hot")
     public ResultPackage hot(@RequestBody HashMap hashMap){
@@ -88,9 +88,28 @@ public class TcPostController {
         Page<TcPost> page = new Page<>();
         page.setCurrent((int)hashMap.get("pageNum"));
         page.setSize((int)hashMap.get("pageSize"));
+        //设置随机查询热门条件
+        QueryWrapper<TcPost> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("post_top",1).last("ORDER BY RAND()");
+        //执行查询
+        IPage<TcPost> iPage = iTcPostService.page(page,queryWrapper);
+        return ResultPackage.pack(iPage.getRecords(),iPage.getTotal());
+    }
+
+    /**
+     * Description 时间倒叙展示当前用户所有已发布帖子
+     * Param 分页数据(json)
+     * Return 用户帖子(json)
+     */
+    @RequestMapping("/user")
+    public ResultPackage user(@RequestBody HashMap hashMap){
+        //设置页数和页大小
+        Page<TcPost> page = new Page<>();
+        page.setCurrent((int)hashMap.get("pageNum"));
+        page.setSize((int)hashMap.get("pageSize"));
         //设置查询条件
         QueryWrapper<TcPost> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("post_top",1);
+        queryWrapper.eq("post_user",hashMap.get("postUser")).orderByDesc("post_time");
         //执行查询
         IPage<TcPost> iPage = iTcPostService.page(page,queryWrapper);
         return ResultPackage.pack(iPage.getRecords(),iPage.getTotal());
@@ -138,4 +157,25 @@ public class TcPostController {
         tcPost.setPostTop(false);
         return iTcPostService.updateById(tcPost);
     }
+
+    /**
+     * Description 新建帖子
+     * Param 帖子实体(json)
+     * Return 执行结果(bool)
+     */
+    @PostMapping("/save")
+    public boolean save(@RequestBody TcPost tcPost){
+        return iTcPostService.save(tcPost);
+    }
+
+    /**
+     * Description 删除帖子
+     * Param 帖子ID(url)
+     * Return 执行结果(bool)
+     */
+    @GetMapping("/delete")
+    public boolean delete(Integer id){
+        return iTcPostService.removeById(id);
+    }
+
 }

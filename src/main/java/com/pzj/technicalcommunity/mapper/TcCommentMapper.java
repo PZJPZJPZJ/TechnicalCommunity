@@ -10,7 +10,7 @@ import org.mapstruct.Mapper;
  * </p>
  *
  * @author pzj
- * @since 2023-02-06
+ * @since 2023-02-13
  */
 @Mapper
 public interface TcCommentMapper extends BaseMapper<TcComment> {

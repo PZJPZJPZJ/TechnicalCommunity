@@ -26,8 +26,6 @@ public class TcUser implements Serializable {
 
     private Boolean userAdmin;
 
-    private String userAccount;
-
     private String userPassword;
 
     private String userName;

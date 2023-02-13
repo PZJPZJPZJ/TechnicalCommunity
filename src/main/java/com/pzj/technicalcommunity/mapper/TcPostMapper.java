@@ -1,7 +1,7 @@
 package com.pzj.technicalcommunity.mapper;
 
-import com.pzj.technicalcommunity.entity.TcPost;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.pzj.technicalcommunity.entity.TcPost;
 import org.mapstruct.Mapper;
 
 /**

@@ -1,7 +1,7 @@
 package com.pzj.technicalcommunity.service;
 
-import com.pzj.technicalcommunity.entity.TcPost;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.pzj.technicalcommunity.entity.TcPost;
 
 /**
  * <p>

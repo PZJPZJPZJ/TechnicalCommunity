@@ -37,8 +37,6 @@ public class TcPost implements Serializable {
 
     private Boolean postTop;
 
-    private Integer postLike;
-
     private BigDecimal postPrice;
 
 
