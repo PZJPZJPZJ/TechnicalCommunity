@@ -23,19 +23,19 @@ public class ResultPackage {
         return resultPackage;
     }
 
-    public static ResultPackage fail(Integer code,String msg){
+    public static ResultPackage message(Integer code, String msg){
         return set(code,msg,null,null);
     }
 
-    public static ResultPackage success(){
+    public static ResultPackage pack(){
         return set(200,"成功",0L,null);
     }
 
-    public static ResultPackage success(Object data){
+    public static ResultPackage pack(Object data){
         return set(200,"成功",1L,data);
     }
 
-    public static ResultPackage success(Object data, Long total){
+    public static ResultPackage pack(Object data, Long total){
         return set(200,"成功",total,data);
     }
 }

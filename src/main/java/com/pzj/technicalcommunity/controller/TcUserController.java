@@ -46,7 +46,7 @@ public class TcUserController {
         queryWrapper.select("user_id").select("user_admin").select("user_name").select("user_sign").select("user_sex").select("user_birth");
         //执行查询
         IPage<TcUser> iPage = iTcUserService.page(page,queryWrapper);
-        return ResultPackage.success(iPage.getRecords(),iPage.getTotal());
+        return ResultPackage.pack(iPage.getRecords(),iPage.getTotal());
     }
 
     //模糊查询用户信息
@@ -57,7 +57,7 @@ public class TcUserController {
         lambdaQueryWrapper.like(TcUser::getUserName,tcUser.getUserName());
         //执行查询
         List<TcUser> list = iTcUserService.list(lambdaQueryWrapper);
-        return ResultPackage.success(list);
+        return ResultPackage.pack(list);
     }
 
     /**

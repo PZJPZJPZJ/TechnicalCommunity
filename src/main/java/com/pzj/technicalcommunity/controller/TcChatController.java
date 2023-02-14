@@ -43,7 +43,7 @@ public class TcChatController {
         queryWrapper.eq("chat_send",hashMap.get("chatSend")).orderByDesc("chat_time").orderByDesc("chat_unread");
         //执行查询
         IPage<TcChat> iPage = iTcChatService.page(page,queryWrapper);
-        return ResultPackage.success(iPage.getRecords(),iPage.getTotal());
+        return ResultPackage.pack(iPage.getRecords(),iPage.getTotal());
     }
 
     /**

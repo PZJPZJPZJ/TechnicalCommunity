@@ -41,7 +41,7 @@ public class TcPictureController {
         queryWrapper.eq("picture_post",id);
         //执行查询
         List<TcPicture> list = iTcPictureService.list(queryWrapper);
-        return ResultPackage.success(list,list.stream().count());
+        return ResultPackage.pack(list, (long) list.size());
     }
 
     /**
@@ -53,7 +53,7 @@ public class TcPictureController {
     public ResultPackage upload(MultipartFile[] file,Integer id) throws IOException {
         //判断文件是否为空
         if (file == null || file.length == 0){
-            return ResultPackage.fail(204,"无图片");
+            return ResultPackage.message(204,"无图片");
         }
         else{
             int count=0,total=0;
@@ -82,10 +82,10 @@ public class TcPictureController {
                 total++;
             }
             if(count==total){
-                return ResultPackage.success();
+                return ResultPackage.pack();
             }
             else{
-                return ResultPackage.fail(202,"部分后缀错误");
+                return ResultPackage.message(202,"部分后缀错误");
             }
         }
     }

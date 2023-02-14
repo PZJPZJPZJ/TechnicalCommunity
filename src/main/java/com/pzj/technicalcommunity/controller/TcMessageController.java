@@ -45,7 +45,7 @@ public class TcMessageController {
         queryWrapper.eq("message_chat",hashMap.get("chatSend")).orderByDesc("message_time");
         //执行查询
         IPage<TcMessage> iPage = iTcMessageService.page(page,queryWrapper);
-        return ResultPackage.success(iPage.getRecords(),iPage.getTotal());
+        return ResultPackage.pack(iPage.getRecords(),iPage.getTotal());
     }
 
 }

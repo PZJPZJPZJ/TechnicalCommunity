@@ -36,7 +36,7 @@ public class TcNewsController {
         queryWrapper.orderByDesc("news_time").last("limit 10");
         //执行查询
         List<TcNews> list = iTcNewsService.list(queryWrapper);
-        return ResultPackage.success(list);
+        return ResultPackage.pack(list);
     }
 
     /**

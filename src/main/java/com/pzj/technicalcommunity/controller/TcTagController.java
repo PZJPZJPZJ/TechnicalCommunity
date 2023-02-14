@@ -40,7 +40,7 @@ public class TcTagController {
         page.setCurrent((int)hashMap.get("pageNum"));
         page.setSize((int)hashMap.get("pageSize"));
         IPage<TcTag> iPage = iTcTagService.page(page);
-        return ResultPackage.success(iPage.getRecords(),iPage.getTotal());
+        return ResultPackage.pack(iPage.getRecords(),iPage.getTotal());
     }
 
     /**
@@ -59,7 +59,7 @@ public class TcTagController {
         queryWrapper.like("tag_name",hashMap.get("tagName"));
         //执行查询
         IPage<TcTag> iPage = iTcTagService.page(page,queryWrapper);
-        return ResultPackage.success(iPage.getRecords(),iPage.getTotal());
+        return ResultPackage.pack(iPage.getRecords(),iPage.getTotal());
     }
 
     /**
