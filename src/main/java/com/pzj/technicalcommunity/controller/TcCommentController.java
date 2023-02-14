@@ -42,7 +42,7 @@ public class TcCommentController {
         queryWrapper.eq("comment_post",hashMap.get("postId")).orderByDesc("comment_time");
         //执行查询
         List<TcComment> list = iTcCommentService.list(queryWrapper);
-        return ResultPackage.pack(list);
+        return ResultPackage.success(list);
     }
 
     /**

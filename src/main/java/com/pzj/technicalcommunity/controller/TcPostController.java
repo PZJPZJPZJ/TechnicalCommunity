@@ -39,7 +39,7 @@ public class TcPostController {
         queryWrapper.eq("post_id",id);
         //执行查询
         List<TcPost> list = iTcPostService.list(queryWrapper);
-        return ResultPackage.pack(list);
+        return ResultPackage.success(list);
     }
 
     /**
@@ -58,7 +58,7 @@ public class TcPostController {
         queryWrapper.like("post_title",hashMap.get("postTitle"));
         //执行查询
         IPage<TcPost> iPage = iTcPostService.page(page,queryWrapper);
-        return ResultPackage.pack(iPage.getRecords(),iPage.getTotal());
+        return ResultPackage.success(iPage.getRecords(),iPage.getTotal());
     }
 
     /**
@@ -74,7 +74,7 @@ public class TcPostController {
         page.setSize((int)hashMap.get("pageSize"));
         //执行查询
         IPage<TcPost> iPage = iTcPostService.page(page);
-        return ResultPackage.pack(iPage.getRecords(),iPage.getTotal());
+        return ResultPackage.success(iPage.getRecords(),iPage.getTotal());
     }
 
     /**
@@ -93,7 +93,7 @@ public class TcPostController {
         queryWrapper.eq("post_top",1).last("ORDER BY RAND()");
         //执行查询
         IPage<TcPost> iPage = iTcPostService.page(page,queryWrapper);
-        return ResultPackage.pack(iPage.getRecords(),iPage.getTotal());
+        return ResultPackage.success(iPage.getRecords(),iPage.getTotal());
     }
 
     /**
@@ -112,7 +112,7 @@ public class TcPostController {
         queryWrapper.eq("post_user",hashMap.get("postUser")).orderByDesc("post_time");
         //执行查询
         IPage<TcPost> iPage = iTcPostService.page(page,queryWrapper);
-        return ResultPackage.pack(iPage.getRecords(),iPage.getTotal());
+        return ResultPackage.success(iPage.getRecords(),iPage.getTotal());
     }
 
     /**
@@ -127,7 +127,7 @@ public class TcPostController {
         queryWrapper.eq("post_tag",id);
         //执行查询
         Integer integer = iTcPostService.count(queryWrapper);
-        return ResultPackage.pack(integer);
+        return ResultPackage.success(integer);
     }
 
     /**

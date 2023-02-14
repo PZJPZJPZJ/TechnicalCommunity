@@ -5,12 +5,14 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.pzj.technicalcommunity.entity.TcPost;
 import com.pzj.technicalcommunity.entity.TcUser;
 import com.pzj.technicalcommunity.service.ITcUserService;
 import com.pzj.technicalcommunity.util.ResultPackage;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
 import java.util.List;
@@ -44,7 +46,7 @@ public class TcUserController {
         queryWrapper.select("user_id").select("user_admin").select("user_name").select("user_sign").select("user_sex").select("user_birth");
         //执行查询
         IPage<TcUser> iPage = iTcUserService.page(page,queryWrapper);
-        return ResultPackage.pack(iPage.getRecords(),iPage.getTotal());
+        return ResultPackage.success(iPage.getRecords(),iPage.getTotal());
     }
 
     //模糊查询用户信息
@@ -55,7 +57,7 @@ public class TcUserController {
         lambdaQueryWrapper.like(TcUser::getUserName,tcUser.getUserName());
         //执行查询
         List<TcUser> list = iTcUserService.list(lambdaQueryWrapper);
-        return ResultPackage.pack(list);
+        return ResultPackage.success(list);
     }
 
     /**

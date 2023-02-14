@@ -4,7 +4,6 @@ package com.pzj.technicalcommunity.controller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.pzj.technicalcommunity.entity.TcChat;
 import com.pzj.technicalcommunity.entity.TcMessage;
 import com.pzj.technicalcommunity.service.ITcMessageService;
 import com.pzj.technicalcommunity.util.ResultPackage;
@@ -46,7 +45,7 @@ public class TcMessageController {
         queryWrapper.eq("message_chat",hashMap.get("chatSend")).orderByDesc("message_time");
         //执行查询
         IPage<TcMessage> iPage = iTcMessageService.page(page,queryWrapper);
-        return ResultPackage.pack(iPage.getRecords(),iPage.getTotal());
+        return ResultPackage.success(iPage.getRecords(),iPage.getTotal());
     }
 
 }
