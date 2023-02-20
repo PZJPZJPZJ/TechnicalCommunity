@@ -6,6 +6,7 @@ import org.springframework.security.authentication.AuthenticationServiceExceptio
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import javax.servlet.http.HttpServletRequest;
@@ -30,7 +31,6 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
                 Map<String,String> userInfo = new ObjectMapper().readValue(request.getInputStream(), Map.class);
                 String username = userInfo.get(getUsernameParameter());
                 String password = userInfo.get(getPasswordParameter());
-                System.out.println("用户名："+username+"密码："+password);
                 UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(username,password);
                 //允许子类设置detail
                 setDetails(request,authRequest);

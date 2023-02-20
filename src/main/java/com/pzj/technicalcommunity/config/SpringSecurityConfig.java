@@ -2,10 +2,11 @@ package com.pzj.technicalcommunity.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pzj.technicalcommunity.common.LoginFilter;
+import com.pzj.technicalcommunity.service.impl.MyUserDetailServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -15,6 +16,8 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -25,6 +28,12 @@ import java.util.Map;
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
+    private final MyUserDetailServiceImpl myUserDetailService;
+
+    @Autowired
+    public SpringSecurityConfig(MyUserDetailServiceImpl myUserDetailService) {
+        this.myUserDetailService = myUserDetailService;
+    }
 
     @Bean
     public UserDetailsService userDetailsService(){
@@ -33,9 +42,15 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
         return inMemoryUserDetailsManager;
     }
 
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userDetailsService());
+        //自定义查询数据库登录重写，定义密码加密方式
+        auth.userDetailsService(myUserDetailService).passwordEncoder(passwordEncoder());
     }
 
     @Override
@@ -114,10 +129,10 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                     resp.getWriter().println(s);
                 })
         //禁用session
-//                .and()
-//                .sessionManagement()
-//                //无状态
-//                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
+                .sessionManagement()
+                //无状态
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         //拦截规则
                 .and()
                 .authorizeRequests()
