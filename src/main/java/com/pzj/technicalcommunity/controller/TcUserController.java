@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.pzj.technicalcommunity.entity.TcUser;
 import com.pzj.technicalcommunity.service.ITcUserService;
+import com.pzj.technicalcommunity.util.PasswordEncoder;
 import com.pzj.technicalcommunity.util.ResultPackage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -53,10 +54,12 @@ public class TcUserController {
     @PostMapping ("/search")
     public ResultPackage search(@RequestBody TcUser tcUser){
         //设置查询条件
-        LambdaQueryWrapper<TcUser> lambdaQueryWrapper = new LambdaQueryWrapper<>();
-        lambdaQueryWrapper.like(TcUser::getUserName,tcUser.getUserName());
+        //LambdaQueryWrapper<TcUser> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        //lambdaQueryWrapper.like(TcUser::getUserName,tcUser.getUserName());
+        QueryWrapper<TcUser> queryWrapper = new QueryWrapper<>();
+        queryWrapper.like("user_name",tcUser.getUserName()).select("user_id").select("user_name");
         //执行查询
-        List<TcUser> list = iTcUserService.list(lambdaQueryWrapper);
+        List<TcUser> list = iTcUserService.list(queryWrapper);
         return ResultPackage.pack(list);
     }
 
@@ -67,6 +70,7 @@ public class TcUserController {
      */
     @PostMapping("/save")
     public boolean save(@RequestBody TcUser tcUser){
+        tcUser.setUserPassword(PasswordEncoder.encode(tcUser.getUserPassword()));
         return iTcUserService.save(tcUser);
     }
 
@@ -77,6 +81,9 @@ public class TcUserController {
      */
     @PostMapping("/update")
     public boolean update(@RequestBody TcUser tcUser){
+        if(tcUser.getUserPassword() != null){
+            tcUser.setUserPassword(PasswordEncoder.encode(tcUser.getUserPassword()));
+        }
         return iTcUserService.updateById(tcUser);
     }
 }
