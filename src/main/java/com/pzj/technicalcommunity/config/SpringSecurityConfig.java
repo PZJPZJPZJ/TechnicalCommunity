@@ -3,6 +3,7 @@ package com.pzj.technicalcommunity.config;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pzj.technicalcommunity.common.LoginFilter;
 import com.pzj.technicalcommunity.service.impl.MyUserDetailServiceImpl;
+import com.pzj.technicalcommunity.util.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,10 +16,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import java.util.HashMap;
@@ -33,13 +32,6 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     public SpringSecurityConfig(MyUserDetailServiceImpl myUserDetailService) {
         this.myUserDetailService = myUserDetailService;
-    }
-
-    @Bean
-    public UserDetailsService userDetailsService(){
-        InMemoryUserDetailsManager inMemoryUserDetailsManager = new InMemoryUserDetailsManager();
-        inMemoryUserDetailsManager.createUser(User.withUsername("root").password("{noop}123").roles("admin").build());
-        return inMemoryUserDetailsManager;
     }
 
     @Bean
@@ -68,12 +60,17 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
         loginFilter.setUsernameParameter("id");
         loginFilter.setPasswordParameter("password");
         loginFilter.setAuthenticationManager(authenticationManagerBean());
-        //认证成功处理（函数式接口更方便）
+        //认证成功处理
         loginFilter.setAuthenticationSuccessHandler((req,resp,auth)->{
             Map<String,Object> result = new HashMap<String,Object>();
+            //设定HTTP状态
             resp.setStatus(HttpStatus.OK.value());
+            //根据用户ID生成token，写入HTTP头
+            String jwt = JwtUtils.generateToken(auth.getName());
+            resp.setHeader("Authorization",jwt);
+            //返回json信息
             result.put("msg","登陆成功");
-            result.put("用户信息",(User)(auth.getPrincipal()));
+            result.put("userinfo",(User)(auth.getPrincipal()));
             resp.setContentType("application/json;charset=UTF-8");
             String s = new ObjectMapper().writeValueAsString(result);
             resp.getWriter().println(s);
