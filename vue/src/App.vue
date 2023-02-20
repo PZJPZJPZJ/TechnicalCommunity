@@ -1,16 +1,15 @@
 <template>
-    <div id="app">
-      <router-link to="/">Go Home</router-link>
-      <router-view></router-view>
-    </div>
+  <router-view></router-view>
 </template>
 
 <script>
-  export default {
-    name: "App"
+export default {
+  name: 'App',
+  mounted() {
+    this.$router.push('/login')
   }
+}
 </script>
-
 
 <style>
 *{
@@ -23,6 +22,7 @@
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+  padding: 0;
   height: 100vh;
 }
 </style>
