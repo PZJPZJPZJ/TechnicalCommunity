@@ -1,7 +1,6 @@
 package com.pzj.technicalcommunity.common;
 
 import com.pzj.technicalcommunity.util.JwtUtils;
-import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -24,11 +23,10 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
         String jwt = request.getHeader("Authorization");
         if ("undefined".equals(jwt) || null == jwt || "".equals(jwt)) {
             chain.doFilter(request, response);
-            throw new JwtException("token 不存在");
+            throw new JwtException("token不存在");
         }
-
         if (JwtUtils.getClaimByToken(jwt) == null) {
-            throw new JwtException("token 异常");
+            throw new JwtException("token异常");
         }
         if (JwtUtils.isTokenExpired(jwt)) {
             throw new JwtException("token已过期");

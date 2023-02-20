@@ -125,6 +125,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .logoutSuccessHandler((req,resp,auth)->{
                     Map<String,Object> result = new HashMap<String,Object>();
                     resp.setStatus(HttpStatus.OK.value());
+                    resp.setHeader("Authorization",null);
                     result.put("msg","注销成功");
                     resp.setContentType("application/json;charset=UTF-8");
                     String s = new ObjectMapper().writeValueAsString(result);
