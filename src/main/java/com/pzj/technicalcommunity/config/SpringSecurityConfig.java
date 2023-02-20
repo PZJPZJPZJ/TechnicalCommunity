@@ -1,6 +1,7 @@
 package com.pzj.technicalcommunity.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.pzj.technicalcommunity.common.JwtAuthenticationFilter;
 import com.pzj.technicalcommunity.common.LoginFilter;
 import com.pzj.technicalcommunity.service.impl.MyUserDetailServiceImpl;
 import com.pzj.technicalcommunity.util.JwtUtils;
@@ -43,6 +44,13 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         //自定义查询数据库登录重写，定义密码加密方式
         auth.userDetailsService(myUserDetailService).passwordEncoder(passwordEncoder());
+    }
+
+    //自定义认证过滤器
+    @Bean
+    JwtAuthenticationFilter jwtAuthenticationFilter() throws Exception {
+        JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(authenticationManager());
+        return jwtAuthenticationFilter;
     }
 
     @Override
@@ -90,9 +98,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     private static final String URL_WHITELIST[] = {
             "/login",
             "/logout",
-            "/captcha",
-            "/password",
-            "/image/**"
+            "/captcha"
     };
 
     @Override
@@ -120,16 +126,13 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                     Map<String,Object> result = new HashMap<String,Object>();
                     resp.setStatus(HttpStatus.OK.value());
                     result.put("msg","注销成功");
-                    //result.put("用户信息",auth.getPrincipal());
                     resp.setContentType("application/json;charset=UTF-8");
                     String s = new ObjectMapper().writeValueAsString(result);
                     resp.getWriter().println(s);
                 })
-        //禁用session
+        //不通过session获取SecurityContext
                 .and()
-                .sessionManagement()
-                //无状态
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         //拦截规则
                 .and()
                 .authorizeRequests()
@@ -139,6 +142,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest().authenticated()
         //自定义过滤器
                 .and()
+                .addFilter(jwtAuthenticationFilter())
                 .addFilterAt(loginFilter(), UsernamePasswordAuthenticationFilter.class);
     }
 }

@@ -4,6 +4,9 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.Data;
 
 import java.util.Date;
@@ -16,33 +19,43 @@ public class JwtUtils {
 
     /**
      * 生成 token
-     * @param userId 用户 ID
-     * @return 返回生成的 token 字符串
      */
     public static String generateToken(String userId) {
-        Date expireDate = new Date(System.currentTimeMillis() + EXPIRE_TIME);
 
-        return JWT.create()
-                .withIssuer("auth0")
-                .withSubject("login_token")
-                .withIssuedAt(new Date())
-                .withExpiresAt(expireDate)
-                .withClaim("user_id", userId)
-                .sign(Algorithm.HMAC256(SECRET));
+        Date nowDate = new Date();
+        Date expireDate = new Date(nowDate.getTime() + EXPIRE_TIME);
+        return Jwts.builder()
+                .setHeaderParam("typ", "JWT")
+                .setSubject(userId)
+                .setIssuedAt(nowDate)
+                .setExpiration(expireDate)
+                .signWith(SignatureAlgorithm.HS512, SECRET)
+                .compact();
     }
 
     /**
      * 从 token 中解析出用户信息
-     * @param token JWT 令牌
-     * @return 返回解析出的用户 ID
      */
-    public static String getUserInfo(String token) {
+    public static Claims getClaimByToken(String token) {
         try {
-            DecodedJWT jwt = JWT.decode(token);
-            return jwt.getClaim("user_id").asString();
-        } catch (JWTDecodeException e) {
-            // 解码失败，返回 null
+            return Jwts.parser()
+                    .setSigningKey(SECRET)
+                    .parseClaimsJws(token)
+                    .getBody();
+        } catch (Exception e) {
             return null;
         }
+    }
+
+    /**
+     * 验证 JWT Token 是否过期
+     */
+    public static boolean isTokenExpired(String token) {
+        Claims claims = Jwts.parser()
+                .setSigningKey(SECRET)
+                .parseClaimsJws(token)
+                .getBody();
+        Date expiration = claims.getExpiration();
+        return expiration.before(new Date());
     }
 }
