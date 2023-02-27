@@ -12,8 +12,8 @@
           <el-col :span="8">
             <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="100px"
                      class="demo-ruleForm">
-              <el-form-item label="账号" prop="account">
-                <el-input type="text" v-model="ruleForm.account" autocomplete="off"></el-input>
+              <el-form-item label="账号" prop="id">
+                <el-input type="text" v-model="ruleForm.id" autocomplete="off"></el-input>
               </el-form-item>
               <el-form-item label="密码" prop="password">
                 <el-input type="password" v-model="ruleForm.password" autocomplete="off"></el-input>
@@ -39,34 +39,24 @@ import axios from "axios";
 export default {
   name: "Login",
   data() {
-    var validateAccount = (rule, value, callback) => {
+    const validateId = (rule, value, callback) => {
       if (value === '') {
         callback(new Error('请输入账号'));
-      } else {
-        if (this.ruleForm.checkPass !== '') {
-          this.$refs.ruleForm.validateField('Pass');
-        }
-        callback();
       }
     };
-    var validatePassword = (rule, value, callback) => {
+    const validatePassword = (rule, value, callback) => {
       if (value === '') {
         callback(new Error('请输入密码'));
-      } else {
-        if (this.ruleForm.checkPass !== '') {
-          this.$refs.ruleForm.validateField('checkPass');
-        }
-        callback();
       }
     };
     return {
       ruleForm: {
-        account: '',
+        id: '',
         password: ''
       },
       rules: {
-        account: [
-          {validator: validateAccount, trigger: 'blur'}
+        id: [
+          {validator: validateId, trigger: 'blur'}
         ],
         password: [
           {validator: validatePassword, trigger: 'blur'}
@@ -78,9 +68,18 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          alert('登录')
-          axios.post('http://localhost:8080/user/list').then(res =>{
-            this.ruleForm.token=res.data.data().token
+          axios({
+            method: 'POST',
+            withCredentials: true,
+            headers: {
+              'Access-Control-Allow-Origin': '*',
+              'Content-Type': 'multipart/form-data'
+            },
+            url: 'http://localhost/api/login',
+            data: this.ruleForm
+          })
+          .then(response => {
+            console.log('/a', response.data)
           })
         } else {
           console.log('error submit!!');
@@ -103,5 +102,7 @@ export default {
 .el-form{
   padding: 50px 20px;
   background-color: rgba(255,255,255,0.5);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
 }
 </style>

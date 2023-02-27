@@ -6,11 +6,15 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.pzj.technicalcommunity.entity.TcChat;
 import com.pzj.technicalcommunity.service.ITcChatService;
+import com.pzj.technicalcommunity.util.JwtUtils;
 import com.pzj.technicalcommunity.util.ResultPackage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
+import java.net.http.HttpHeaders;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * <p>
@@ -52,7 +56,9 @@ public class TcChatController {
      * Return 执行结果(bool)
      */
     @PostMapping("/save")
-    public boolean save(@RequestBody TcChat tcChat){
+    public boolean save(@RequestBody TcChat tcChat, @RequestHeader("Authorization") String token){
+        //根据token设置发送者
+        tcChat.setChatSend(Integer.valueOf(JwtUtils.getClaimByToken(token).getSubject()));
         return iTcChatService.save(tcChat);
     }
 
