@@ -43,10 +43,16 @@ export default {
       if (value === '') {
         callback(new Error('请输入账号'));
       }
+      else{
+        callback();
+      }
     };
     const validatePassword = (rule, value, callback) => {
       if (value === '') {
         callback(new Error('请输入密码'));
+      }
+      else{
+        callback();
       }
     };
     return {
@@ -70,25 +76,28 @@ export default {
         if (valid) {
           axios({
             method: 'POST',
-            withCredentials: true,
-            headers: {
-              'Access-Control-Allow-Origin': '*',
-              'Content-Type': 'multipart/form-data'
-            },
+            // headers: {
+            //   'Access-Control-Allow-Origin': '*',
+            //   'Content-Type': 'multipart/form-data'
+            // },
             url: 'http://localhost/api/login',
             data: this.ruleForm
           })
           .then(response => {
-            console.log('/a', response.data)
+            localStorage.setItem('token',response.headers['authorization'])
+            this.$router.push('/home')
+          }
+          ,error=>{
+            alert('账号或密码错误')
           })
-        } else {
-          console.log('error submit!!');
-          return false;
+        }
+        else {
+          console.log('表单错误');
         }
       });
     },
     register() {
-      alert('注册')
+      console.log('注册')
     }
   }
 }
@@ -97,10 +106,10 @@ export default {
 <style scoped>
 .common-layout {
   height: 100vh;
-  background-image: url("https://bing.img.run/uhd.php");
+  background-color: gray;
 }
 .el-form{
-  padding: 50px 20px;
+  padding: 20px;
   background-color: rgba(255,255,255,0.5);
   backdrop-filter: blur(10px);
   border-radius: 20px;

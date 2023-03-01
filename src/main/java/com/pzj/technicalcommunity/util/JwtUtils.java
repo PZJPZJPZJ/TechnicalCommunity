@@ -49,6 +49,8 @@ public class JwtUtils {
 
     /**
      * 验证 JWT Token 是否过期
+     * @param token
+     * @return true过期，false有效
      */
     public static boolean isTokenExpired(String token) {
         Claims claims = Jwts.parser()

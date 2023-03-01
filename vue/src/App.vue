@@ -3,19 +3,34 @@
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
   name: 'App',
   mounted() {
-    this.$router.push('/login')
+    axios({
+      method: 'POST',
+      url: 'http://localhost/api/user/token',
+      data: {
+        'token': localStorage.getItem('token')
+      }
+    })
+        .then(response => {
+              this.$router.push('/home')
+            }
+            , error => {
+              this.$router.push('/login')
+            })
   }
 }
 </script>
 
 <style>
-*{
+* {
   margin: 0;
   padding: 0;
 }
+
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;

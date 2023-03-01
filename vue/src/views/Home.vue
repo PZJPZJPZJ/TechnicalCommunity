@@ -1,6 +1,9 @@
 <template>
   <div class="app">
     <div class="nav-bar"></div>
+    <ul v-infinite-scroll="load" class="infinite-list" style="overflow: auto">
+      <li v-for="i in count" :key="i" class="infinite-list-item">{{ i }}</li>
+    </ul>
   </div>
 </template>
 
@@ -44,7 +47,7 @@ export default {
   justify-content: center;
   height: 100px;
   border-radius: 20px;
-  background: rgba(255,255,255,0.75);
+  background: rgba(0,0,0,0.25);
   backdrop-filter: saturate(200%) blur(20px);
   margin: 10px;
   color: var(--el-color-primary);

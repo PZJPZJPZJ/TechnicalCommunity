@@ -8,11 +8,14 @@ import com.pzj.technicalcommunity.util.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.BeanIds;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -75,7 +78,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
             resp.setStatus(HttpStatus.OK.value());
             //根据用户ID生成token，写入HTTP头
             String jwt = JwtUtils.generateToken(auth.getName());
-            resp.setHeader("Authorization",jwt);
+            resp.setHeader("authorization",jwt);
             //返回json信息
             result.put("msg","登陆成功");
             result.put("userinfo",(User)(auth.getPrincipal()));
@@ -96,9 +99,12 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     private static final String URL_WHITELIST[] = {
+            //放行登录
             "/login",
+            //放行登出
             "/logout",
-            "/captcha"
+            //放行主页检测登陆状态
+            "/user/token"
     };
 
     @Override
@@ -125,7 +131,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .logoutSuccessHandler((req,resp,auth)->{
                     Map<String,Object> result = new HashMap<String,Object>();
                     resp.setStatus(HttpStatus.OK.value());
-                    resp.setHeader("Authorization",null);
+                    resp.setHeader("authorization",null);
                     result.put("msg","注销成功");
                     resp.setContentType("application/json;charset=UTF-8");
                     String s = new ObjectMapper().writeValueAsString(result);
