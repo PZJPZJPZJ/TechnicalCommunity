@@ -1,122 +1,88 @@
 <template>
   <div class="container">
-
     <el-main>
-      <el-row type="flex" justify="space-between">
-        <el-col :span="24">
-          <el-carousel height="150px">
-            <el-carousel-item v-for="item in 4" :key="item">
-              <h3 class="small justify-center" text="2xl">{{ item }}</h3>
-            </el-carousel-item>
-          </el-carousel>
+      <div class="post-list">
+        <el-col :xs="0" :sm="4" :md="4" :lg="4" :xl="6"></el-col>
+        <el-col :xs="24" :sm="16" :md="16" :lg="16" :xl="12">
+          <el-card v-for="post in postData" :key="post.id" :body-style="{ padding: '20px' }" @click.native="handleViewPost(post.id)">
+            <h3>{{ post.postTitle }}</h3>
+            <p>{{ post.postContent }}</p>
+            <span>{{ post.postTime }}</span>
+          </el-card>
+          <div v-if="loading">Loading...</div>
         </el-col>
-        <el-col :span="24">
-          <ul v-infinite-scroll="load" class="infinite-list" style="overflow: auto">
-            <li v-for="i in count" :key="i" class="infinite-list-item">{{ postData[i] }}</li>
-          </ul>
-        </el-col>
-        <el-col :span="4"></el-col>
-        <el-col :span="16">
-<!--          <el-table-->
-<!--              v-infinite-scroll="loadMoreData"-->
-<!--              :data="postData"-->
-<!--              :row-key="row => row.id"-->
-<!--              :max-height="tableHeight"-->
-<!--              @row-dblclick="handleRowDblclick"-->
-<!--          >-->
-<!--            <el-table-column prop="postTitle"></el-table-column>-->
-<!--            <el-table-column prop="postContent"></el-table-column>-->
-<!--            <el-table-column prop="postTime"></el-table-column>-->
-<!--            <el-table-column>-->
-<!--              <template #default="{ row }">-->
-<!--                <el-button @click="handleViewPost(row.id)">查看</el-button>-->
-<!--              </template>-->
-<!--            </el-table-column>-->
-<!--          </el-table>-->
-          <div v-if="loading" class="loading">
-            <span class="el-icon-loading"></span>
-          </div>
-        </el-col>
-        <el-col :span="4"></el-col>
-      </el-row>
-
-
-
+        <el-col :xs="0" :sm="4" :md="4" :lg="4" :xl="6"></el-col>
+      </div>
     </el-main>
   </div>
 </template>
 
 <script>
-import {ref} from 'vue'
+
+import {ref, reactive, onMounted} from 'vue'
+import {ElLoading} from 'element-plus'
 import axios from 'axios'
-import {ElHeader, ElMain, ElRow, ElCol, ElTable, ElTableColumn, ElButton} from 'element-plus'
-import {useRouter} from 'vue-router'
 
 export default {
-  components: {
-    ElHeader,
-    ElMain,
-    ElRow,
-    ElCol,
-    ElTable,
-    ElTableColumn,
-    ElButton,
-  },
+
   setup() {
     const postData = ref([])
     const currentPage = ref(1)
     const pageSize = ref(5)
     const total = ref(0)
-    const tableHeight = ref(1000)
     const loading = ref(false)
+    const state = reactive({
+      posts: [],
+      currentPage: 1,
+      pageSize: 10,
+      total: 0,
+      loading: false,
+    })
 
-    const router = useRouter()
-
-    // const loadMoreData = async () => {
-    //   if (postData.value.length < total.value) {
-    //     currentPage.value++
-    //     const {data} = await axios.post('/api/post/hot', {
-    //       pageNum: currentPage.value,
-    //       pageSize: pageSize.value,
-    //     }, {
-    //       headers: {Authorization: localStorage.getItem('token')}
-    //     })
-    //     postData.value = [...postData.value, ...data.rows]
-    //   }
-    // }
-    // const handleRowDblclick = (row) => {
-    //   console.log(row)
-    // }
-    // const handleViewPost = (postId) => {
-    //   router.push(`/post/${postId}`)
-    // }
-
-    const count = ref(0)
-    const load = async () =>{
-      loading.value = true
+    const loadMoreData = async () => {
+      if (state.loading) return
+      state.loading = true
       const {data} = await axios.post('/api/post/hot', {
-        pageNum: currentPage.value,
-        pageSize: pageSize.value,
-      }, {
-        headers: {Authorization: localStorage.getItem('token')}
-      })
+            pageNum: state.currentPage,
+            pageSize: state.pageSize,
+          }
+          , {
+            headers: {Authorization: localStorage.getItem('token')}
+          })
+      state.posts = [...state.posts, ...data.rows]
       postData.value = [...postData.value, ...data.rows]
-      console.log({data}.data.total)
-      count.value += 5
-      currentPage.value++
-      loading.value = false
+      state.total = data.total
+      state.currentPage++
+      state.loading = false
     }
+
+    const handleViewPost = (postId) => {
+      window.location.href = `/post/${postId}`
+    }
+
+    onMounted(() => {
+      const loadingInstance = ElLoading.service({text: 'Loading...', fullscreen: true})
+      loadMoreData().finally(() => {
+        loadingInstance.close()
+      })
+    })
 
     return {
+      ...state,
       postData,
-      tableHeight,
-      // handleRowDblclick,
-      // handleViewPost,
-      // loadMoreData,
-      loading,
-      count,
-      load
+      loadMoreData,
+      handleViewPost,
     }
+  },
+  mounted() {
+    window.addEventListener('scroll', () => {
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
+      const windowHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight
+      const scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight
+      if (scrollTop + windowHeight >= scrollHeight) {
+        this.loadMoreData()
+      }
+    })
   },
 }
 </script>
@@ -125,32 +91,27 @@ export default {
 .container {
   width: 100%;
   height: 100%;
-  background-color: #f0f2f5;
 }
 
-
-
-.el-main {
-
-}
-.infinite-list {
-  height: 80vh;
-  padding: 0;
-  margin: 0;
-  list-style: none;
-}
-.infinite-list .infinite-list-item {
+.post-list {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  height: 200px;
-  width: 80%;
-  background: var(--el-color-primary-light-8);
-  margin: 30px;
-  border-radius: 20px;
-  color: var(--el-color-primary);
 }
-.infinite-list .infinite-list-item + .list-item {
-  margin-top: 10px;
+
+.el-card{
+  background-color: rgba(255,255,255,0.25);
+  border-radius: 20px;
+  margin: 10px 0;
+}
+.el-card:hover{
+  background-color: rgba(255,255,255,0.75);
+}
+
+.post-item {
+  margin: 10px 0;
+  padding: 10px;
+  border: 1px solid #ddd;
+  cursor: pointer;
 }
 </style>

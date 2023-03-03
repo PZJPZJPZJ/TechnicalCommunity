@@ -2,7 +2,7 @@
   <el-header>
     <el-row type="flex" justify="space-between">
       <el-col :span="6">
-        <h2>科技论坛</h2>
+        <h3>科技论坛</h3>
       </el-col>
       <el-col :span="6">
         <el-button @click="logout">注销</el-button>
@@ -55,9 +55,9 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
+  background-color: #f0f2f5;
   color: #2c3e50;
   padding: 0;
-  height: 100vh;
 }
 
 .el-header {
@@ -65,8 +65,6 @@ export default {
   top: 0;
   background-color: rgba(255, 255, 255, 0.25);
   backdrop-filter: blur(20px);
-  padding: 20px;
-  z-index: 120;
 }
 
 ::-webkit-scrollbar {
