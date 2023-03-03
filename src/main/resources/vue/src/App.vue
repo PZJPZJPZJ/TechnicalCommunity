@@ -4,6 +4,9 @@
       <el-col :span="6">
         <h2>科技论坛</h2>
       </el-col>
+      <el-col :span="6">
+        <el-button @click="logout">注销</el-button>
+      </el-col>
     </el-row>
   </el-header>
   <router-view></router-view>
@@ -28,6 +31,15 @@ export default {
             , error => {
               this.$router.push('/login')
             })
+  },
+  setup(){
+    const logout = () =>{
+      localStorage.setItem('token',null)
+      window.location.reload();
+    }
+    return{
+      logout
+    }
   }
 }
 </script>
