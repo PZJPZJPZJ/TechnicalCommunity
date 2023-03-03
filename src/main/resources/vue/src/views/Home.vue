@@ -4,7 +4,7 @@
       <div class="post-list">
         <el-col :xs="0" :sm="4" :md="4" :lg="4" :xl="6"></el-col>
         <el-col :xs="24" :sm="16" :md="16" :lg="16" :xl="12">
-          <el-card v-for="post in postData" :key="post.id" :body-style="{ padding: '20px' }" @click.native="handleViewPost(post.id)">
+          <el-card v-for="post in postData" :key="post.id" @click.native="handleViewPost(post.id)">
             <h3>{{ post.postTitle }}</h3>
             <p>{{ post.postContent }}</p>
             <span>{{ post.postTime }}</span>
@@ -27,33 +27,25 @@ export default {
 
   setup() {
     const postData = ref([])
-    const currentPage = ref(1)
-    const pageSize = ref(5)
-    const total = ref(0)
     const loading = ref(false)
-    const state = reactive({
-      posts: [],
-      currentPage: 1,
-      pageSize: 10,
-      total: 0,
-      loading: false,
-    })
+    const currentPage = ref(1)
+    const pageSize = ref(10)
+    const total = ref(0)
 
     const loadMoreData = async () => {
-      if (state.loading) return
-      state.loading = true
+      if (loading.value) return
+      loading.value = true
       const {data} = await axios.post('/api/post/hot', {
-            pageNum: state.currentPage,
-            pageSize: state.pageSize,
+            pageNum: currentPage.value,
+            pageSize: pageSize.value,
           }
           , {
             headers: {Authorization: localStorage.getItem('token')}
           })
-      state.posts = [...state.posts, ...data.rows]
       postData.value = [...postData.value, ...data.rows]
-      state.total = data.total
-      state.currentPage++
-      state.loading = false
+      total.value = data.total
+      currentPage.value++
+      loading.value = false
     }
 
     const handleViewPost = (postId) => {
@@ -68,8 +60,8 @@ export default {
     })
 
     return {
-      ...state,
       postData,
+      loading,
       loadMoreData,
       handleViewPost,
     }
