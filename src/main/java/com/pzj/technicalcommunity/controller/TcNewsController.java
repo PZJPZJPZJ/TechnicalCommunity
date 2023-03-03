@@ -4,10 +4,12 @@ package com.pzj.technicalcommunity.controller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.pzj.technicalcommunity.entity.TcNews;
 import com.pzj.technicalcommunity.service.ITcNewsService;
+import com.pzj.technicalcommunity.util.JwtUtils;
 import com.pzj.technicalcommunity.util.ResultPackage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -45,7 +47,10 @@ public class TcNewsController {
      * Return 执行结果(bool)
      */
     @PostMapping("/save")
-    public boolean save(@RequestBody TcNews tcNews){
+    public boolean save(@RequestBody TcNews tcNews, @RequestHeader HashMap hashMap){
+        System.out.println(hashMap.get("authorization"));
+        String userId = JwtUtils.getClaimByToken((String) hashMap.get("authorization")).getId();
+
         return iTcNewsService.save(tcNews);
     }
 

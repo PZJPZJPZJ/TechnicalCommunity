@@ -12,14 +12,14 @@ public class ResultPackage {
     //总记录数
     private Long total;
     //数据
-    private Object data;
+    private Object rows;
 
-    private static ResultPackage set(int code,String msg,Long total,Object data){
+    private static ResultPackage set(int code,String msg,Long total,Object rows){
         ResultPackage resultPackage = new ResultPackage();
         resultPackage.setCode(code);
         resultPackage.setMsg(msg);
         resultPackage.setTotal(total);
-        resultPackage.setData(data);
+        resultPackage.setRows(rows);
         return resultPackage;
     }
 
@@ -31,11 +31,11 @@ public class ResultPackage {
         return set(200,"成功",0L,null);
     }
 
-    public static ResultPackage pack(Object data){
-        return set(200,"成功",1L,data);
+    public static ResultPackage pack(Object rows){
+        return set(200,"成功",1L,rows);
     }
 
-    public static ResultPackage pack(Object data, Long total){
-        return set(200,"成功",total,data);
+    public static ResultPackage pack(Object rows, Long total){
+        return set(200,"成功",total,rows);
     }
 }

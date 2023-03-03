@@ -1,15 +1,12 @@
 <template>
   <div class="common-layout">
     <el-container>
-      <el-header>
-
-      </el-header>
       <el-main>
         <el-row>
-          <el-col :span="8">
+          <el-col :span="2">
             <div class="grid-content ep-bg-purple"/>
           </el-col>
-          <el-col :span="8">
+          <el-col :span="20">
             <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="100px"
                      class="demo-ruleForm">
               <el-form-item label="账号" prop="id">
@@ -24,7 +21,7 @@
               </el-form-item>
             </el-form>
           </el-col>
-          <el-col :span="8">
+          <el-col :span="2">
             <div class="grid-content ep-bg-purple"/>
           </el-col>
         </el-row>
@@ -76,11 +73,7 @@ export default {
         if (valid) {
           axios({
             method: 'POST',
-            // headers: {
-            //   'Access-Control-Allow-Origin': '*',
-            //   'Content-Type': 'multipart/form-data'
-            // },
-            url: 'http://localhost/api/login',
+            url: '/api/login',
             data: this.ruleForm
           })
           .then(response => {
@@ -88,6 +81,7 @@ export default {
             this.$router.push('/home')
           }
           ,error=>{
+            alert(error)
             alert('账号或密码错误')
           })
         }
@@ -106,12 +100,12 @@ export default {
 <style scoped>
 .common-layout {
   height: 100vh;
-  background-color: gray;
+  background-color: #f0f2f5;
 }
 .el-form{
-  padding: 20px;
+  padding: 0;
   background-color: rgba(255,255,255,0.5);
-  backdrop-filter: blur(10px);
+  backdrop-filter: blur(20px);
   border-radius: 20px;
 }
 </style>
