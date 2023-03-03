@@ -1,20 +1,30 @@
 <template>
-  <div class="container">
-    <el-main>
-      <div class="post-list">
-        <el-col :xs="0" :sm="4" :md="4" :lg="4" :xl="6"></el-col>
-        <el-col :xs="24" :sm="16" :md="16" :lg="16" :xl="12">
-          <el-card v-for="post in postData" :key="post.id" @click.native="handleViewPost(post.id)">
-            <h3>{{ post.postTitle }}</h3>
-            <p>{{ post.postContent }}</p>
-            <span>{{ post.postTime }}</span>
-          </el-card>
-          <div v-if="loading">Loading...</div>
-        </el-col>
-        <el-col :xs="0" :sm="4" :md="4" :lg="4" :xl="6"></el-col>
-      </div>
-    </el-main>
-  </div>
+  <el-main>
+    <div class="car-box">
+      <el-col :xs="0" :sm="4" :md="4" :lg="4" :xl="6"></el-col>
+      <el-col :xs="24" :sm="16" :md="16" :lg="16" :xl="12">
+        <el-carousel height="150px" arrow="never">
+          <el-carousel-item v-for="item in 4" :key="item">
+            <img src="" alt="">
+          </el-carousel-item>
+        </el-carousel>
+      </el-col>
+      <el-col :xs="0" :sm="4" :md="4" :lg="4" :xl="6"></el-col>
+    </div>
+    <div class="post-list">
+      <el-col :xs="0" :sm="4" :md="4" :lg="4" :xl="6"></el-col>
+      <el-col :xs="24" :sm="16" :md="16" :lg="16" :xl="12">
+        <el-card v-for="post in postData" :key="post.id" @click.native="handleViewPost(post.id)">
+          <h3>{{ post.postTitle }}</h3>
+          <p>{{ post.postContent }}</p>
+          <span>{{ post.postTime }}</span>
+        </el-card>
+        <div v-if="loading">Loading...</div>
+      </el-col>
+      <el-col :xs="0" :sm="4" :md="4" :lg="4" :xl="6"></el-col>
+    </div>
+    <el-backtop :right="10" :bottom="10" />
+  </el-main>
 </template>
 
 <script>
@@ -80,24 +90,25 @@ export default {
 </script>
 
 <style scoped>
-.container {
-  width: 100%;
-  height: 100%;
-}
-
 .post-list {
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-.el-card{
-  background-color: rgba(255,255,255,0.25);
+.car-box {
+  display: flex;
+  align-items: center;
+}
+
+.el-card {
+  background-color: rgba(255, 255, 255, 0.25);
   border-radius: 20px;
   margin: 10px 0;
 }
-.el-card:hover{
-  background-color: rgba(255,255,255,0.75);
+
+.el-card:hover {
+  background-color: rgba(255, 255, 255, 0.75);
 }
 
 .post-item {

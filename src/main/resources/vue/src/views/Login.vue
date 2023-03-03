@@ -77,16 +77,17 @@ export default {
             data: this.ruleForm
           })
           .then(response => {
+            this.$message.success('登录成功')
             localStorage.setItem('token',response.headers['authorization'])
             this.$router.push('/home')
           }
           ,error=>{
-            alert(error)
-            alert('账号或密码错误')
+            this.$message.error('用户名或密码错误')
+            localStorage.setItem('token',null)
           })
         }
         else {
-          console.log('表单错误');
+          this.$message.warning('表单错误')
         }
       });
     },

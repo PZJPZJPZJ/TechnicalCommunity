@@ -63,8 +63,9 @@ export default {
 .el-header {
   position: sticky;
   top: 0;
-  background-color: rgba(255, 255, 255, 0.25);
+  background-color: rgba(255, 255, 255, 0.5);
   backdrop-filter: blur(20px);
+  z-index: 120;
 }
 
 ::-webkit-scrollbar {
