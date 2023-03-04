@@ -5,7 +5,23 @@
         <h3>科技论坛</h3>
       </el-col>
       <el-col :span="6">
-        <el-button @click="logout">注销</el-button>
+        <el-dropdown :hide-on-click="false">
+    <span class="el-dropdown-link">用户
+    <el-icon class="el-icon--right"><arrow-down /></el-icon>
+    </span>
+          <template #dropdown>
+            <el-dropdown-menu>
+              <el-dropdown-item>
+                <el-button @click="logout">注销</el-button>
+              </el-dropdown-item>
+              <el-dropdown-item>Action 2</el-dropdown-item>
+              <el-dropdown-item>Action 3</el-dropdown-item>
+              <el-dropdown-item disabled>Action 4</el-dropdown-item>
+              <el-dropdown-item divided>Action 5</el-dropdown-item>
+              <el-dropdown-item divided>Action 6</el-dropdown-item>
+            </el-dropdown-menu>
+          </template>
+        </el-dropdown>
       </el-col>
     </el-row>
   </el-header>

@@ -5,7 +5,11 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.pzj.technicalcommunity.entity.TcPost;
+import com.pzj.technicalcommunity.entity.TcPostDTO;
+import com.pzj.technicalcommunity.service.ITcPictureService;
 import com.pzj.technicalcommunity.service.ITcPostService;
+import com.pzj.technicalcommunity.service.ITcTagService;
+import com.pzj.technicalcommunity.service.ITcUserService;
 import com.pzj.technicalcommunity.util.ResultPackage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -26,6 +30,9 @@ import java.util.List;
 public class TcPostController {
     @Autowired
     private ITcPostService iTcPostService;
+    private ITcPictureService iTcPictureService;
+    private ITcUserService iTcUserService;
+    private ITcTagService iTcTagService;
 
     /**
      * Description 精确展示当前帖子
@@ -85,14 +92,13 @@ public class TcPostController {
     @RequestMapping("/hot")
     public ResultPackage hot(@RequestBody HashMap hashMap){
         //设置页数和页大小
-        Page<TcPost> page = new Page<>();
+//        Page<TcPost> page = new Page<>();
+        Page<TcPostDTO> page = new Page<>();
         page.setCurrent((int)hashMap.get("pageNum"));
         page.setSize((int)hashMap.get("pageSize"));
-        //设置随机查询热门条件
-        QueryWrapper<TcPost> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("post_top",1).last("ORDER BY RAND()");
-        //执行查询
-        IPage<TcPost> iPage = iTcPostService.page(page,queryWrapper);
+        //执行自定义查询
+        IPage<TcPostDTO> iPage = iTcPostService.pageTop(page);
+        System.out.println(iPage.getRecords());
         return ResultPackage.pack(iPage.getRecords(),iPage.getTotal());
     }
 

@@ -1,46 +1,56 @@
 <template>
   <el-main>
-      <el-row>
+    <el-row>
 
-        <el-col :span="24">
-          <el-carousel height="150px" arrow="never">
-            <el-carousel-item v-for="item in 4" :key="item">
-              <img src="" alt="">
-            </el-carousel-item>
-          </el-carousel>
-        </el-col>
+      <el-col :span="24">
+        <el-carousel height="150px" arrow="never">
+          <el-carousel-item v-for="item in 4" :key="item">
+            <img src="" alt="">
+          </el-carousel-item>
+        </el-carousel>
+      </el-col>
 
-        <el-col :xs="0" :sm="0" :md="4" :lg="4" :xl="4"></el-col>
+      <el-col :xs="0" :sm="0" :md="4" :lg="4" :xl="4"></el-col>
 
-        <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="12">
-          <el-card class="post-card" v-for="post in postData" :key="post.id" @click="handleViewPost(post.postId)">
-            <div class="header">
-              <el-avatar class="avatar" :src="'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png'"
-                         :size="30"></el-avatar>
-              <div class="user-info">123</div>
+      <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="12">
+        <el-card class="post-card" v-for="post in postData" :key="post.id" @click="handleViewPost(post.postId)">
+          <div class="header">
+            <el-avatar class="avatar" :src="'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png'"
+                       :size="30"></el-avatar>
+            <div class="user-info">{{ post.userName }}</div>
+          </div>
+          <div class="title">{{ post.postTitle }}</div>
+          <div class="content">{{ post.postContent.substring(0, 100) }}...</div>
+          <div class="images">
+            <el-image class="image" v-for="(image, index) in post.images" :key="index" :src="image" fit="contain"
+                      :preview-src-list="post.images"></el-image>
+            <div class="demo-image__preview">
+              <el-image
+                  style="width: 100px; height: 100px"
+                  :src="url"
+                  :zoom-rate="1.2"
+                  :preview-src-list="srcList"
+                  :initial-index="4"
+                  fit="cover"
+              />
             </div>
-            <div class="title">{{ post.postTitle }}</div>
-            <div class="content">{{ post.postContent.substring(0, 1000) }}...</div>
-            <div class="images">
-              <el-image class="image" v-for="(image, index) in post.images" :key="index" :src="image" fit="contain"
-                        :preview-src-list="post.images"></el-image>
-            </div>
-            <div class="post-footer">
-              <el-tag class="tag">{{ post.postTag }}</el-tag>
-              <div class="time">{{ post.postTime }}</div>
-            </div>
-          </el-card>
-          <div v-if="loading" style="text-align: center">Loading...</div>
-        </el-col>
+          </div>
+          <div class="post-footer">
+            <el-tag class="tag">{{ post.tagName }}</el-tag>
+            <div class="time">{{ post.postTime }}</div>
+          </div>
+        </el-card>
+        <div v-if="loading" style="text-align: center">Loading...</div>
+      </el-col>
 
-        <el-col :xs="0" :sm="0" :md="4" :lg="4" :xl="4">
-          <el-card class="side-card">
-            <div v-for="o in 4" :key="o" class="text item">{{ 'List item ' + o }}</div>
-          </el-card>
-        </el-col>
-        <el-col :xs="0" :sm="0" :md="4" :lg="4" :xl="4"></el-col>
+      <el-col :xs="0" :sm="0" :md="4" :lg="4" :xl="4">
+        <el-card class="side-card">
+          <div v-for="o in 4" :key="o" class="text item">{{ 'List item ' + o }}</div>
+        </el-card>
+      </el-col>
+      <el-col :xs="0" :sm="0" :md="4" :lg="4" :xl="4"></el-col>
 
-      </el-row>
+    </el-row>
     <el-backtop :right="10" :bottom="10"/>
   </el-main>
 </template>
@@ -109,7 +119,7 @@ export default {
 <style scoped>
 .el-card {
   background-color: rgba(255, 255, 255, 0.25);
-  margin: 10px;
+  margin-top: 10px;
   height: 300px;
 }
 
@@ -119,8 +129,9 @@ export default {
   cursor: pointer;
 }
 
-.side-card{
+.side-card {
   background-color: rgba(255, 255, 255, 0.25);
+  margin: 10px;
   height: 500px;
 }
 

@@ -1,7 +1,10 @@
 package com.pzj.technicalcommunity.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.pzj.technicalcommunity.entity.TcPost;
+import com.pzj.technicalcommunity.entity.TcPostDTO;
 import org.mapstruct.Mapper;
 
 /**
@@ -14,5 +17,5 @@ import org.mapstruct.Mapper;
  */
 @Mapper
 public interface TcPostMapper extends BaseMapper<TcPost> {
-
+    IPage<TcPostDTO> pageTop(Page<TcPostDTO> page);
 }

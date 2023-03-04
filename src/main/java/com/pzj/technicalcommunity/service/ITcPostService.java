@@ -1,7 +1,10 @@
 package com.pzj.technicalcommunity.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.pzj.technicalcommunity.entity.TcPost;
+import com.pzj.technicalcommunity.entity.TcPostDTO;
 
 /**
  * <p>
@@ -13,4 +16,5 @@ import com.pzj.technicalcommunity.entity.TcPost;
  */
 public interface ITcPostService extends IService<TcPost> {
 
+    IPage<TcPostDTO> pageTop(Page<TcPostDTO> page);
 }
