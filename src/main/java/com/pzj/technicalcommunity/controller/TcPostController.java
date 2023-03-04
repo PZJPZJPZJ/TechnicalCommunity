@@ -92,13 +92,11 @@ public class TcPostController {
     @RequestMapping("/hot")
     public ResultPackage hot(@RequestBody HashMap hashMap){
         //设置页数和页大小
-//        Page<TcPost> page = new Page<>();
         Page<TcPostDTO> page = new Page<>();
         page.setCurrent((int)hashMap.get("pageNum"));
         page.setSize((int)hashMap.get("pageSize"));
         //执行自定义查询
         IPage<TcPostDTO> iPage = iTcPostService.pageTop(page);
-        System.out.println(iPage.getRecords());
         return ResultPackage.pack(iPage.getRecords(),iPage.getTotal());
     }
 

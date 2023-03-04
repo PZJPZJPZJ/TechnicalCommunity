@@ -1,7 +1,6 @@
 <template>
   <el-main>
     <el-row>
-
       <el-col :span="24">
         <el-carousel height="150px" arrow="never">
           <el-carousel-item v-for="item in 4" :key="item">
@@ -19,21 +18,33 @@
                        :size="30"></el-avatar>
             <div class="user-info">{{ post.userName }}</div>
           </div>
-          <div class="title">{{ post.postTitle }}</div>
+          <div class="title">{{ post.postTitle.substring(0, 20) }}</div>
           <div class="content">{{ post.postContent.substring(0, 100) }}...</div>
           <div class="images">
-            <el-image class="image" v-for="(image, index) in post.images" :key="index" :src="image" fit="contain"
-                      :preview-src-list="post.images"></el-image>
-            <div class="demo-image__preview">
-              <el-image
-                  style="width: 100px; height: 100px"
-                  :src="url"
-                  :zoom-rate="1.2"
-                  :preview-src-list="srcList"
-                  :initial-index="4"
-                  fit="cover"
-              />
-            </div>
+            <el-image
+                class="card-img"
+                :src="'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg'"
+                :zoom-rate="1.2"
+                :preview-src-list="srcList"
+                :initial-index="4"
+                fit="cover"
+            />
+            <el-image
+                class="card-img"
+                :src="'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg'"
+                :zoom-rate="1.2"
+                :preview-src-list="srcList"
+                :initial-index="4"
+                fit="cover"
+            />
+            <el-image
+                class="card-img"
+                :src="'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg'"
+                :zoom-rate="1.2"
+                :preview-src-list="srcList"
+                :initial-index="4"
+                fit="cover"
+            />
           </div>
           <div class="post-footer">
             <el-tag class="tag">{{ post.tagName }}</el-tag>
@@ -69,6 +80,7 @@ export default {
   },
   setup() {
     const postData = ref([])
+    const pictureUrl = ref([])
     const loading = ref(false)
     const currentPage = ref(1)
     const pageSize = ref(10)
@@ -88,6 +100,10 @@ export default {
       total.value = data.total
       currentPage.value++
       loading.value = false
+    }
+
+    const loadPicture = async ()=>{
+      const {data} = await axios.post('/api/picture/download')
     }
 
     onMounted(() => {
@@ -133,6 +149,12 @@ export default {
   background-color: rgba(255, 255, 255, 0.25);
   margin: 10px;
   height: 500px;
+}
+
+.card-img{
+  width: 80px;
+  height: 80px;
+  margin: 8px;
 }
 
 .post-card {

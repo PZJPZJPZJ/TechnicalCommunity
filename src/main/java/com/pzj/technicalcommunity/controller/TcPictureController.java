@@ -69,7 +69,7 @@ public class TcPictureController {
                     String uuid = UUID.randomUUID().toString().trim();
                     //组合文件名
                     String fileNames=time+uuid+suffix;
-                    String pathName="C:\\Users\\13425\\Documents\\JetBrains\\TechnicalCommunity\\src\\main\\resources\\vue\\src\\public\\"+fileNames;
+                    String pathName="C:\\Users\\13425\\Documents\\JetBrains\\TechnicalCommunity\\src\\main\\resources\\vue\\public\\"+fileNames;
                     //实体类赋值
                     TcPicture tcPicture = new TcPicture();
                     tcPicture.setPicturePost(id);

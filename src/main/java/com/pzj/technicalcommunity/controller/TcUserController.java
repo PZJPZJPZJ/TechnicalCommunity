@@ -46,7 +46,7 @@ public class TcUserController {
         Page<TcUser> page = new Page<>();
         page.setCurrent((int)hashMap.get("pageNum"));
         page.setSize((int)hashMap.get("pageSize"));
-        //设置随机查询热门条件
+        //设置查询条件
         QueryWrapper<TcUser> queryWrapper = new QueryWrapper<>();
         queryWrapper.select("user_id").select("user_admin").select("user_name").select("user_sign").select("user_sex").select("user_birth");
         //执行查询
