@@ -1,6 +1,25 @@
 <template>
   <el-main>
     <el-row>
+      <el-col :span="24">
+        <el-card class="post-card">
+          <div class="header">
+            <el-avatar class="avatar" :src="'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png'"
+                       :size="30"></el-avatar>
+            <div class="user-info">{{ post.userName }}</div>
+          </div>
+          <div class="title">{{ post.postTitle.substring(0, 20) }}</div>
+          <div class="content">{{ post.postContent.substring(0, 100) }}...</div>
+          <div class="images">
+
+          </div>
+          <div class="post-footer">
+            <el-tag class="tag">{{ post.tagName }}</el-tag>
+            <div class="time">{{ post.postTime }}</div>
+          </div>
+        </el-card>
+      </el-col>
+
       <el-col :xs="0" :sm="0" :md="4" :lg="4" :xl="4"></el-col>
 
       <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="12">
@@ -47,12 +66,18 @@ export default {
     }
   },
   setup() {
+    const queryString = window.location.search;
+    const thisPost = ref([])
     const postData = ref([])
     const pictureUrl = ref([])
     const loading = ref(false)
     const currentPage = ref(1)
     const pageSize = ref(10)
     const total = ref(0)
+
+    const loadThisPost = async () =>{
+      const {data} = await axios.post('/api/post/show')
+    }
 
     const loadMoreData = async () => {
       if (loading.value) return
