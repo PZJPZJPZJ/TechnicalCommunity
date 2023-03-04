@@ -82,12 +82,12 @@ export default {
             this.$router.push('/home')
           }
           ,error=>{
-            this.$message.error('用户名或密码错误')
+            this.$message.warning('用户名或密码错误')
             localStorage.setItem('token',null)
           })
         }
         else {
-          this.$message.warning('表单错误')
+          this.$message.error('表单错误')
         }
       });
     },
