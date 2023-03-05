@@ -18,4 +18,6 @@ import org.mapstruct.Mapper;
 @Mapper
 public interface TcPostMapper extends BaseMapper<TcPost> {
     IPage<TcPostDTO> pageTop(Page<TcPostDTO> page);
+
+    TcPostDTO listOne(Integer id);
 }

@@ -6,16 +6,16 @@
           <div class="header">
             <el-avatar class="avatar" :src="'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png'"
                        :size="30"></el-avatar>
-            <div class="user-info">{{ post.userName }}</div>
+            <div class="user-info">{{ thisPost.userName }}</div>
           </div>
-          <div class="title">{{ post.postTitle.substring(0, 20) }}</div>
-          <div class="content">{{ post.postContent.substring(0, 100) }}...</div>
+          <div class="title">{{ thisPost.postTitle }}</div>
+          <div class="content">{{ thisPost.postContent }}...</div>
           <div class="images">
 
           </div>
           <div class="post-footer">
-            <el-tag class="tag">{{ post.tagName }}</el-tag>
-            <div class="time">{{ post.postTime }}</div>
+            <el-tag class="tag">{{ thisPost.tagName }}</el-tag>
+            <div class="time">{{ thisPost.postTime }}</div>
           </div>
         </el-card>
       </el-col>
@@ -60,67 +60,102 @@ import {ElLoading} from 'element-plus'
 import axios from 'axios'
 
 export default {
-  methods: {
-    handleViewPost(postId) {
-      this.$router.push(`/post?id=${postId}`)
-    }
-  },
   setup() {
+    //获取当前url参数
     const queryString = window.location.search;
+    const queryParams = new URLSearchParams(queryString);
+    //当前帖子信息
     const thisPost = ref([])
-    const postData = ref([])
+    //帖子图片
     const pictureUrl = ref([])
+    //全部评论信息
+    const postData = ref([])
+    //评论加载状态
     const loading = ref(false)
+    //评论分页
     const currentPage = ref(1)
     const pageSize = ref(10)
+    //评论总数
     const total = ref(0)
+    //新增评论
+    const addComment = ref([])
 
-    const loadThisPost = async () =>{
-      const {data} = await axios.post('/api/post/show')
+    //获取当前帖子
+    const loadThisPost = async () => {
+      const {data} = await axios({
+        method: 'GET',
+        url: '/api/post/show?id=' + queryParams.get('id'),
+        headers: {
+          Authorization: localStorage.getItem('token')
+        }
+      })
+      //直接覆盖写入数组
+      thisPost.value = data.rows
+    }
+
+    //加载当前帖子图片
+    const loadPicture = async () => {
+      const {data} = await axios({
+        method: 'GET',
+        url: '/api/picture/download?id=' + queryParams.get('id'),
+        headers: {
+          Authorization: localStorage.getItem('token')
+        }
+      })
+      //直接覆盖写入数组
+      pictureUrl.value = data.rows
+      console.log(pictureUrl.value)
     }
 
     const loadMoreData = async () => {
+      //正在加载时不再提交请求防止一直处于页面底部刷新
       if (loading.value) return
+      //开启加载状态
       loading.value = true
-      const {data} = await axios.post('/api/post/hot', {
-            pageNum: currentPage.value,
-            pageSize: pageSize.value,
-          }
-          , {
-            headers: {Authorization: localStorage.getItem('token')}
-          })
+      //提交请求
+      const {data} = await axios({
+        method: 'POST',
+        url: '/api/post/hot',
+        data: {
+          pageNum: currentPage.value,
+          pageSize: pageSize.value,
+        },
+        headers: {
+          Authorization: localStorage.getItem('token')
+        }
+      })
+      //在数组后增加数据
       postData.value = [...postData.value, ...data.rows]
       total.value = data.total
       currentPage.value++
+      //禁用加载状态
       loading.value = false
     }
 
-    const loadPicture = async ()=>{
-      const {data} = await axios.post('/api/picture/download')
-    }
-
-    onMounted(() => {
-      const loadingInstance = ElLoading.service({text: 'Loading...', fullscreen: true})
-      loadMoreData().finally(() => {
-        loadingInstance.close()
-      })
-    })
-
-    return {
-      postData,
-      loading,
-      loadMoreData
-    }
-  },
-  mounted() {
-    window.addEventListener('scroll', () => {
+    const handleScroll = () => {
       const scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
       const windowHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight
       const scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight
       if (scrollTop + windowHeight >= scrollHeight) {
-        this.loadMoreData()
+        loadMoreData()
       }
+    }
+
+    onMounted(() => {
+      window.addEventListener('scroll', handleScroll)
+      const loadingInstance = ElLoading.service({text: 'Loading...', fullscreen: true})
+      loadThisPost()
+      loadPicture()
+      loadMoreData().finally(() => {
+        loadingInstance.close()
+      })
     })
+    return {
+      thisPost,
+      postData,
+      loading,
+      loadMoreData
+    }
   }
 }
 </script>

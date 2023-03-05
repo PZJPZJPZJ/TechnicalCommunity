@@ -2,6 +2,7 @@ package com.pzj.technicalcommunity.controller;
 
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.pzj.technicalcommunity.entity.TcComment;
 import com.pzj.technicalcommunity.service.ITcCommentService;
@@ -27,7 +28,7 @@ public class TcCommentController {
     private ITcCommentService iTcCommentService;
 
     /**
-     * Description 时间倒叙展示当前帖子的所有评论
+     * Description 时间倒叙分页展示当前帖子的所有评论
      * Param 分页数据，帖子ID(json)
      * Return 当前帖子所有评论(json)
      */
@@ -41,8 +42,8 @@ public class TcCommentController {
         QueryWrapper<TcComment> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("comment_post",hashMap.get("postId")).orderByDesc("comment_time");
         //执行查询
-        List<TcComment> list = iTcCommentService.list(queryWrapper);
-        return ResultPackage.pack(list);
+        IPage<TcComment> iPage = iTcCommentService.page(page,queryWrapper);
+        return ResultPackage.pack(iPage);
     }
 
     /**

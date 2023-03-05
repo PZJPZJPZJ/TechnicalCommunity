@@ -71,14 +71,11 @@
 import {ref, onMounted} from 'vue'
 import {ElLoading} from 'element-plus'
 import axios from 'axios'
+import {useRouter} from "vue-router";
 
 export default {
-  methods: {
-    handleViewPost(postId) {
-      this.$router.push(`/post?id=${postId}`)
-    }
-  },
   setup() {
+    const router = useRouter()
     const postData = ref([])
     const pictureUrl = ref([])
     const loading = ref(false)
@@ -102,11 +99,29 @@ export default {
       loading.value = false
     }
 
+    //加载帖子图片
     const loadPicture = async ()=>{
       const {data} = await axios.post('/api/picture/download')
     }
 
+    //滚动到底部执行自动刷新
+    const handleScroll = () => {
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
+      const windowHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight
+      const scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight
+      if (scrollTop + windowHeight >= scrollHeight) {
+        loadMoreData()
+      }
+    }
+
+    //点击跳转对应帖子
+    const handleViewPost = (postId) => {
+      router.push(`/post?id=${postId}`)
+    }
+
+    //加载触发
     onMounted(() => {
+      window.addEventListener('scroll', handleScroll)
       const loadingInstance = ElLoading.service({text: 'Loading...', fullscreen: true})
       loadMoreData().finally(() => {
         loadingInstance.close()
@@ -116,18 +131,9 @@ export default {
     return {
       postData,
       loading,
-      loadMoreData
+      loadMoreData,
+      handleViewPost
     }
-  },
-  mounted() {
-    window.addEventListener('scroll', () => {
-      const scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
-      const windowHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight
-      const scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight
-      if (scrollTop + windowHeight >= scrollHeight) {
-        this.loadMoreData()
-      }
-    })
   }
 }
 </script>

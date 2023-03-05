@@ -4,9 +4,16 @@
     <select id="pageTop" resultType="com.pzj.technicalcommunity.entity.TcPostDTO">
         SELECT *
         FROM tc_post
-            LEFT JOIN tc_user on tc_user.user_id=tc_post.post_user
-            LEFT JOIN tc_tag on tc_tag.tag_id=tc_post.post_tag
-        WHERE post_top=1
+                 LEFT JOIN tc_user on tc_user.user_id = tc_post.post_user
+                 LEFT JOIN tc_tag on tc_tag.tag_id = tc_post.post_tag
+        WHERE post_top = 1
         ORDER BY RAND()
+    </select>
+    <select id="listOne" parameterType="Integer" resultType="com.pzj.technicalcommunity.entity.TcPostDTO">
+        SELECT *
+        FROM tc_post
+                 LEFT JOIN tc_user on tc_user.user_id = tc_post.post_user
+                 LEFT JOIN tc_tag on tc_tag.tag_id = tc_post.post_tag
+        WHERE post_id = #{id}
     </select>
 </mapper>

@@ -15,10 +15,8 @@
                 <el-button @click="logout">注销</el-button>
               </el-dropdown-item>
               <el-dropdown-item>Action 2</el-dropdown-item>
-              <el-dropdown-item>Action 3</el-dropdown-item>
               <el-dropdown-item disabled>Action 4</el-dropdown-item>
               <el-dropdown-item divided>Action 5</el-dropdown-item>
-              <el-dropdown-item divided>Action 6</el-dropdown-item>
             </el-dropdown-menu>
           </template>
         </el-dropdown>
@@ -30,29 +28,38 @@
 
 <script>
 import axios from "axios";
+import {onMounted} from "vue";
+import {useRouter} from "vue-router";
 
 export default {
-  name: 'App',
-  mounted() {
-    axios({
-      method: 'POST',
-      url: '/api/user/token',
-      data: {
-        'token': localStorage.getItem('token')
-      }
-    })
-        .then(response => {
-              this.$router.push('/home')
-            }
-            , error => {
-              this.$router.push('/login')
-            })
-  },
   setup(){
+    const router = useRouter()
+
+    //检查登陆状态
+    const checkLoginStatus = () => {
+      axios({
+        method: 'POST',
+        url: '/api/user/token',
+        data: {
+          'token': localStorage.getItem('token')
+        }
+      }).then(response => {
+        router.push('/home')
+      }, error => {
+        router.push('/login')
+      })
+    }
+
+    //处理登出
     const logout = () =>{
       localStorage.setItem('token',null)
       window.location.reload();
     }
+
+    onMounted(() => {
+      checkLoginStatus()
+    })
+
     return{
       logout
     }

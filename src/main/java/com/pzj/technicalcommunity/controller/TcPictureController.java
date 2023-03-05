@@ -6,6 +6,7 @@ import com.pzj.technicalcommunity.entity.TcPicture;
 import com.pzj.technicalcommunity.service.ITcPictureService;
 import com.pzj.technicalcommunity.util.ResultPackage;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -34,7 +35,7 @@ public class TcPictureController {
      * Param 帖子ID(url)
      * Return 所有图片URL(json)
      */
-    @RequestMapping("/download")
+    @GetMapping("/download")
     public ResultPackage download(Integer id){
         //设置查询条件
         QueryWrapper<TcPicture> queryWrapper = new QueryWrapper<>();

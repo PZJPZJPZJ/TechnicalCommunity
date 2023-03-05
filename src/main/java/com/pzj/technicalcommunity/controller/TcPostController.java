@@ -39,14 +39,12 @@ public class TcPostController {
      * Param 帖子ID(url)
      * Return 当前帖子内容(json)
      */
-    @RequestMapping("/show")
+    @GetMapping("/show")
     public ResultPackage show(Integer id){
-        //设置查询条件
-        QueryWrapper<TcPost> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("post_id",id);
-        //执行查询
-        List<TcPost> list = iTcPostService.list(queryWrapper);
-        return ResultPackage.pack(list);
+        //执行自定义查询
+        TcPostDTO tcPostDTO = iTcPostService.listOne(id);
+        System.out.println(tcPostDTO);
+        return ResultPackage.pack(tcPostDTO);
     }
 
     /**

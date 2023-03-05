@@ -28,4 +28,11 @@ public class TcPostServiceImpl extends ServiceImpl<TcPostMapper, TcPost> impleme
     public IPage<TcPostDTO> pageTop(Page<TcPostDTO> page) {
         return tcPostMapper.pageTop(page);
     }
+
+    @Override
+    public TcPostDTO listOne(Integer id) {
+        return tcPostMapper.listOne(id);
+    }
+
+
 }

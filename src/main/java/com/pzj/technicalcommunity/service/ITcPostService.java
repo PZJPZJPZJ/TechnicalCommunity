@@ -17,4 +17,5 @@ import com.pzj.technicalcommunity.entity.TcPostDTO;
 public interface ITcPostService extends IService<TcPost> {
 
     IPage<TcPostDTO> pageTop(Page<TcPostDTO> page);
+    TcPostDTO listOne(Integer id);
 }
