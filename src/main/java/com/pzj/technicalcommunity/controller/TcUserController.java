@@ -14,10 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
@@ -104,5 +101,15 @@ public class TcUserController {
         else{
             return ResponseEntity.status(HttpStatus.OK).build();
         }
+    }
+
+    /**
+     * 根据token获取用户名
+     * @param token
+     * @return 用户名
+     */
+    @GetMapping("/name")
+    public String name(String token){
+        return JwtUtils.getClaimByToken(token).getSubject();
     }
 }

@@ -91,6 +91,25 @@ export default {
   z-index: 120;
 }
 
+.el-overlay{
+  background-color: transparent !important;
+}
+.el-drawer{
+  background-color: rgba(255,255,255,0.25) !important;
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+}
+
+.el-image-viewer__mask{
+  background-color: rgba(255,255,255,0.25) !important;
+  backdrop-filter: blur(10px);
+  opacity: 1 !important;
+}
+
+.el-textarea__inner{
+  background-color: rgba(255,255,255,0.5) !important;
+}
+
 ::-webkit-scrollbar {
   width: 6px;
   height: 8px;

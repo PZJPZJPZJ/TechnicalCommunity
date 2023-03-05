@@ -22,22 +22,7 @@
           <div class="content">{{ post.postContent.substring(0, 100) }}...</div>
           <div class="images">
             <el-image
-                class="card-img"
-                :src="'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg'"
-                :zoom-rate="1.2"
-                :preview-src-list="srcList"
-                :initial-index="4"
-                fit="cover"
-            />
-            <el-image
-                class="card-img"
-                :src="'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg'"
-                :zoom-rate="1.2"
-                :preview-src-list="srcList"
-                :initial-index="4"
-                fit="cover"
-            />
-            <el-image
+                v-for="picture in pictureUrl"
                 class="card-img"
                 :src="'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg'"
                 :zoom-rate="1.2"
@@ -62,8 +47,22 @@
       <el-col :xs="0" :sm="0" :md="4" :lg="4" :xl="4"></el-col>
 
     </el-row>
-    <el-backtop :right="10" :bottom="10"/>
   </el-main>
+  <el-affix position="bottom" :offset="20">
+    <el-button type="primary" style="margin-left: 16px" @click="drawer = true">评论</el-button>
+  </el-affix>
+  <el-drawer v-model="drawer" :direction="'btt'" :with-header="false">
+    <el-input
+        v-model="commentArea"
+        maxlength="500"
+        placeholder="写评论"
+        :autosize="true"
+        show-word-limit
+        type="textarea"
+    />
+    <el-button @click="uploadComment()">发布</el-button>
+  </el-drawer>
+  <el-backtop :right="15" :bottom="15"/>
 </template>
 
 <script>
@@ -82,6 +81,8 @@ export default {
     const currentPage = ref(1)
     const pageSize = ref(10)
     const total = ref(0)
+    //抽屉开启状态
+    const drawer = ref(false)
 
     const loadMoreData = async () => {
       if (loading.value) return
@@ -132,7 +133,8 @@ export default {
       postData,
       loading,
       loadMoreData,
-      handleViewPost
+      handleViewPost,
+      drawer
     }
   }
 }
@@ -147,7 +149,6 @@ export default {
 
 .el-card:hover {
   background-color: rgba(255, 255, 255, 0.75);
-  transform: translateY(-1px);
   cursor: pointer;
 }
 

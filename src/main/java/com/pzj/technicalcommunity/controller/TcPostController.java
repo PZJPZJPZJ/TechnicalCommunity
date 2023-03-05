@@ -30,9 +30,6 @@ import java.util.List;
 public class TcPostController {
     @Autowired
     private ITcPostService iTcPostService;
-    private ITcPictureService iTcPictureService;
-    private ITcUserService iTcUserService;
-    private ITcTagService iTcTagService;
 
     /**
      * Description 精确展示当前帖子
@@ -43,7 +40,6 @@ public class TcPostController {
     public ResultPackage show(Integer id){
         //执行自定义查询
         TcPostDTO tcPostDTO = iTcPostService.listOne(id);
-        System.out.println(tcPostDTO);
         return ResultPackage.pack(tcPostDTO);
     }
 
