@@ -83,8 +83,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
             result.put("msg","登陆成功");
             result.put("userinfo",(User)(auth.getPrincipal()));
             resp.setContentType("application/json;charset=UTF-8");
-            String s = new ObjectMapper().writeValueAsString(result);
-            resp.getWriter().println(s);
+            resp.getWriter().println(new ObjectMapper().writeValueAsString(result));
         });
         //认证失败处理
         loginFilter.setAuthenticationFailureHandler((req,resp,ex)->{
@@ -92,8 +91,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
             resp.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
             result.put("msg","登陆失败"+ex.getMessage());
             resp.setContentType("application/json;charset=UTF-8");
-            String s = new ObjectMapper().writeValueAsString(result);
-            resp.getWriter().println(s);
+            resp.getWriter().println(new ObjectMapper().writeValueAsString(result));
         });
         return loginFilter;
     }
@@ -134,8 +132,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                     resp.setHeader("authorization",null);
                     result.put("msg","注销成功");
                     resp.setContentType("application/json;charset=UTF-8");
-                    String s = new ObjectMapper().writeValueAsString(result);
-                    resp.getWriter().println(s);
+                    resp.getWriter().println(new ObjectMapper().writeValueAsString(result));
                 })
         //不通过session获取SecurityContext
                 .and()

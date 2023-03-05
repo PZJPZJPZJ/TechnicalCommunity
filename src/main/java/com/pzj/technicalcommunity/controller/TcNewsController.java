@@ -35,7 +35,7 @@ public class TcNewsController {
     public ResultPackage list(){
         //设置查询条件
         QueryWrapper<TcNews> queryWrapper = new QueryWrapper<>();
-        queryWrapper.orderByDesc("news_time").last("limit 4");
+        queryWrapper.orderByDesc("news_time").last("LIMIT 4");
         //执行查询
         List<TcNews> list = iTcNewsService.list(queryWrapper);
         return ResultPackage.pack(list);

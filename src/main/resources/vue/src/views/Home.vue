@@ -3,8 +3,12 @@
     <el-row>
       <el-col :span="24">
         <el-carousel height="150px" arrow="never">
-          <el-carousel-item v-for="item in 4" :key="item">
-            <img src="" alt="">
+          <el-carousel-item v-for="news in newsData" :key="news" @click="handleViewNews(news.newsId)">
+            <el-image
+                class="news-img"
+                :src="news.newsCover"
+                fit="cover"
+            />
           </el-carousel-item>
         </el-carousel>
       </el-col>
@@ -92,13 +96,15 @@ export default {
 
     //加载新闻
     const loadNews = async ()=>{
-      const {data} = await axios.post('/api/post/hot', {
-            pageNum: currentPage.value,
-            pageSize: pageSize.value,
-          }
-          , {
-            headers: {Authorization: localStorage.getItem('token')}
-          })
+      const {data} = await axios({
+        method: 'GET',
+        url: '/api/news/list',
+        headers: {
+          Authorization: localStorage.getItem('token')
+        }
+      })
+      newsData.value =  data.rows
+      console.log(newsData.value)
     }
 
     //滚动到底部执行自动刷新
@@ -121,10 +127,16 @@ export default {
       router.push(`/post?id=${postId}`)
     }
 
+    //点击跳转对应新闻
+    const handleViewNews = (newsId) =>{
+      router.push(`/news?id=${newsId}`)
+    }
+
     //加载触发
     onMounted(() => {
       window.addEventListener('scroll', handleScroll)
       const loadingInstance = ElLoading.service({text: 'Loading...', fullscreen: true})
+      loadNews()
       loadMoreData().finally(() => {
         loadingInstance.close()
       })
@@ -135,7 +147,9 @@ export default {
       loading,
       loadMoreData,
       handleViewPost,
-      drawer
+      drawer,
+      newsData,
+      handleViewNews
     }
   }
 }
