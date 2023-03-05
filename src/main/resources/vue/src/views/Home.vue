@@ -20,17 +20,7 @@
           </div>
           <div class="title">{{ post.postTitle.substring(0, 20) }}</div>
           <div class="content">{{ post.postContent.substring(0, 100) }}...</div>
-          <div class="images">
-            <el-image
-                v-for="picture in pictureUrl"
-                class="card-img"
-                :src="'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg'"
-                :zoom-rate="1.2"
-                :preview-src-list="srcList"
-                :initial-index="4"
-                fit="cover"
-            />
-          </div>
+          <el-skeleton :rows="2" />
           <div class="post-footer">
             <el-tag class="tag">{{ post.tagName }}</el-tag>
             <div class="time">{{ post.postTime }}</div>
@@ -49,7 +39,7 @@
     </el-row>
   </el-main>
   <el-affix position="bottom" :offset="20">
-    <el-button type="primary" style="margin-left: 16px" @click="drawer = true">评论</el-button>
+    <el-button type="success" style="margin-left: 16px" @click="drawer = true">发帖</el-button>
   </el-affix>
   <el-drawer v-model="drawer" :direction="'btt'" :with-header="false">
     <el-input
@@ -76,7 +66,7 @@ export default {
   setup() {
     const router = useRouter()
     const postData = ref([])
-    const pictureUrl = ref([])
+    const newsData = ref([])
     const loading = ref(false)
     const currentPage = ref(1)
     const pageSize = ref(10)
@@ -100,9 +90,15 @@ export default {
       loading.value = false
     }
 
-    //加载帖子图片
-    const loadPicture = async ()=>{
-      const {data} = await axios.post('/api/picture/download')
+    //加载新闻
+    const loadNews = async ()=>{
+      const {data} = await axios.post('/api/post/hot', {
+            pageNum: currentPage.value,
+            pageSize: pageSize.value,
+          }
+          , {
+            headers: {Authorization: localStorage.getItem('token')}
+          })
     }
 
     //滚动到底部执行自动刷新
@@ -113,6 +109,11 @@ export default {
       if (scrollTop + windowHeight >= scrollHeight) {
         loadMoreData()
       }
+    }
+
+    //加载随机标签
+    const loadRandTag = () =>{
+
     }
 
     //点击跳转对应帖子
@@ -141,21 +142,8 @@ export default {
 </script>
 
 <style scoped>
-.el-card {
-  background-color: rgba(255, 255, 255, 0.25);
-  margin-top: 10px;
-  height: 300px;
-}
-
-.el-card:hover {
-  background-color: rgba(255, 255, 255, 0.75);
-  cursor: pointer;
-}
-
 .side-card {
-  background-color: rgba(255, 255, 255, 0.25);
   margin: 10px;
-  height: 500px;
 }
 
 .card-img{
@@ -196,19 +184,6 @@ export default {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-}
-
-.images {
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  margin-bottom: 10px;
-}
-
-.image {
-  width: 100px;
-  height: 100px;
-  margin-right: 10px;
 }
 
 .post-footer {

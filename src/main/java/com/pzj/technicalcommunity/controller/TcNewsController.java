@@ -27,7 +27,7 @@ public class TcNewsController {
     private ITcNewsService iTcNewsService;
 
     /**
-     * Description 展示最新10条新闻
+     * Description 展示最新4条新闻
      * Param 无
      * Return 当前标签所有帖子(json)
      */
@@ -35,7 +35,7 @@ public class TcNewsController {
     public ResultPackage list(){
         //设置查询条件
         QueryWrapper<TcNews> queryWrapper = new QueryWrapper<>();
-        queryWrapper.orderByDesc("news_time").last("limit 10");
+        queryWrapper.orderByDesc("news_time").last("limit 4");
         //执行查询
         List<TcNews> list = iTcNewsService.list(queryWrapper);
         return ResultPackage.pack(list);

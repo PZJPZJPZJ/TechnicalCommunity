@@ -11,8 +11,9 @@
                        :size="30"></el-avatar>
             <div class="user-info">{{ thisPost.userName }}</div>
           </div>
+          <div v-if="thisPost.postPrice" class="price">￥{{ thisPost.postPrice }}</div>
           <div class="title">{{ thisPost.postTitle }}</div>
-          <div class="content">{{ thisPost.postContent }}...</div>
+          <div class="content">{{ thisPost.postContent }}</div>
           <el-badge v-if="pictureUrl.length" :value="pictureUrl.length" :max="99" class="item">
             <div class="images">
               <el-image
@@ -33,7 +34,7 @@
         </el-card>
 
         <el-card class="title-card">
-          <span>全部评论({{commentData.length}})</span>
+          <span>全部评论({{ commentData.length }})</span>
         </el-card>
         <el-card class="comment-card" v-for="comment in commentData" :key="comment.id">
           <div class="header">
@@ -60,9 +61,11 @@
   </el-main>
   <el-backtop :right="15" :bottom="15"/>
   <el-affix position="bottom" :offset="20">
-    <el-button type="primary" style="margin-left: 16px" @click="drawer = true">评论</el-button>
+    <el-button type="primary" style="margin-left: 16px" @click="drawerComment = true">评论</el-button>
+    <el-button v-if="thisPost.postPrice" type="danger" style="margin-left: 16px" @click="drawerBuy = true">购买
+    </el-button>
   </el-affix>
-  <el-drawer v-model="drawer" :direction="'btt'" :with-header="false">
+  <el-drawer v-model="drawerComment" :direction="'btt'" :with-header="false">
     <el-input
         v-model="commentArea"
         maxlength="500"
@@ -72,6 +75,9 @@
         type="textarea"
     />
     <el-button @click="uploadComment()">发布</el-button>
+  </el-drawer>
+  <el-drawer v-model="drawerBuy" :direction="'btt'" :with-header="false">
+    <el-button @click="submitBuy()">结算</el-button>
   </el-drawer>
 
 </template>
@@ -101,10 +107,9 @@ export default {
     const pageSize = ref(10)
     //评论总数
     const total = ref(0)
-    //新增评论
-    const addComment = ref([])
     //抽屉开启状态
-    const drawer = ref(false)
+    const drawerComment = ref(false)
+    const drawerBuy = ref(false)
     //新增评论文本框
     const commentArea = ref('')
 
@@ -146,7 +151,7 @@ export default {
         data: {
           pageNum: currentPage.value,
           pageSize: pageSize.value,
-          postId : queryParams.get('id')
+          postId: queryParams.get('id')
         },
         headers: {
           Authorization: localStorage.getItem('token')
@@ -161,9 +166,9 @@ export default {
     }
 
     //上传评论
-    const uploadComment = async ()=> {
+    const uploadComment = async () => {
       //消息为空则禁止提交
-      if (commentArea.value==='') {
+      if (commentArea.value === '') {
         ElMessage({
           message: '请输入评论内容',
           type: 'warning',
@@ -173,7 +178,7 @@ export default {
       //获取用户ID
       const {data} = await axios({
         method: 'GET',
-        url: '/api/user/name?token='+localStorage.getItem('token'),
+        url: '/api/user/name?token=' + localStorage.getItem('token'),
         headers: {
           Authorization: localStorage.getItem('token')
         }
@@ -185,17 +190,26 @@ export default {
         data: {
           commentContent: commentArea.value,
           commentUser: data,
-          commentPost : queryParams.get('id')
+          commentPost: queryParams.get('id')
         },
         headers: {
           Authorization: localStorage.getItem('token')
         }
       })
       commentArea.value = ''
-      drawer.value = false
+      drawerComment.value = false
       currentPage.value = 1
       commentData.value = []
       loadMoreData()
+    }
+
+    //提交购买
+    const submitBuy = () =>{
+        ElMessage({
+          message: '交易成功',
+          type: 'success',
+        })
+      router.push('/home')
     }
 
     //滚动到底部执行自动刷新
@@ -223,30 +237,19 @@ export default {
       loading,
       pictureUrl,
       loadMoreData,
-      drawer,
+      drawerComment,
       commentArea,
-      uploadComment
+      uploadComment,
+      drawerBuy,
+      submitBuy
     }
   }
 }
 </script>
 
 <style scoped>
-.el-card {
-  background-color: rgba(255, 255, 255, 0.25);
-  margin-top: 10px;
-  height: 300px;
-}
-
-.el-card:hover {
-  background-color: rgba(255, 255, 255, 0.75);
-  cursor: pointer;
-}
-
 .side-card {
-  background-color: rgba(255, 255, 255, 0.25);
   margin: 10px;
-  height: 500px;
 }
 
 .card-img {
@@ -260,20 +263,18 @@ export default {
   text-align: left;
 }
 
-.title-card{
+.title-card {
   margin-bottom: 20px;
   text-align: left;
-  height: 65px;
   box-shadow: none;
   border: none;
 }
 
-.comment-card{
+.comment-card {
   margin-bottom: 20px;
   text-align: left;
   box-shadow: none;
   border: none;
-  height: 200px;
 }
 
 .header {
@@ -301,7 +302,6 @@ export default {
   font-size: 16px;
   margin-bottom: 10px;
   overflow: hidden;
-  max-height: 90px;
 }
 
 .images {
@@ -334,5 +334,12 @@ export default {
 
 .time {
   font-size: 14px;
+}
+
+.price {
+  color: red;
+  font-size: 30px;
+  margin: 5px 0;
+  font-weight: bolder;
 }
 </style>

@@ -110,6 +110,17 @@ export default {
   background-color: rgba(255,255,255,0.5) !important;
 }
 
+.el-card {
+  background-color: rgba(255, 255, 255, 0.25);
+  margin-top: 10px;
+  height: auto;
+}
+
+.el-card:hover {
+  background-color: rgba(255, 255, 255, 0.75);
+  cursor: pointer;
+}
+
 ::-webkit-scrollbar {
   width: 6px;
   height: 8px;
