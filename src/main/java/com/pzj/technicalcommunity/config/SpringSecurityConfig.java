@@ -106,7 +106,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
             //放行用户注册
             "/user/save",
             //放行静态资源
-            "/images/**"
+            "/img/**"
     };
 
     @Override

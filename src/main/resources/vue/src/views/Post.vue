@@ -97,7 +97,7 @@
         show-word-limit
         type="textarea"
     />
-    <el-button @click="uploadComment()">发布</el-button>
+    <el-button @click="uploadComment">发布</el-button>
   </el-drawer>
   <el-drawer v-model="drawerBuy" :direction="'btt'" :with-header="false">
     <el-button @click="submitBuy()">结算</el-button>

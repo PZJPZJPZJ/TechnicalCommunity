@@ -79,6 +79,10 @@ export default {
   opacity: 1 !important;
 }
 
+.el-input__wrapper{
+  background-color: rgba(255, 255, 255, 0.5) !important;
+}
+
 .el-textarea__inner {
   background-color: rgba(255, 255, 255, 0.5) !important;
 }

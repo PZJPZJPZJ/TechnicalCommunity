@@ -186,25 +186,25 @@ export default {
               userName: registerForm.name,
               userPassword: registerForm.password
             }
-          })
-              .then(response => {
-                    ElMessage({
-                      showClose: true,
-                      duration: 0,
-                      message: '注册成功，您的账号为'+response.data.rows,
-                      type: 'success',
-                    })
+          }).then(
+              response => {
+                ElMessage({
+                  showClose: true,
+                  duration: 0,
+                  message: '注册成功，您的账号为' + response.data.rows,
+                  type: 'success',
+                })
                 //切换窗口
                 mySwitch()
-                  }
-                  , error => {
-                    ElMessage({
-                      showClose: true,
-                      message: '注册失败，网络错误',
-                      type: 'warning',
-                    })
-                    localStorage.setItem('token', null)
-                  })
+              }
+              , error => {
+                ElMessage({
+                  showClose: true,
+                  message: '注册失败，网络错误',
+                  type: 'warning',
+                })
+                localStorage.setItem('token', null)
+              })
         } else {
           ElMessage({
             showClose: true,
@@ -280,7 +280,7 @@ input {
   top: 0;
   z-index: 99;
   border-radius: 4px;
-  background-color: rgba(0,0,0,0.2);
+  background-color: rgba(0, 0, 0, 0.2);
   backdrop-filter: blur(10px) saturate(200%);
   box-shadow: 2px 1px 19px rgba(0, 0, 0, 0.1);
   transition: 0.5s ease-in-out;
@@ -380,7 +380,7 @@ button {
   user-select: none;
   font-size: 14px;
   color: white;
-  text-shadow: 0 0 10px rgb(0,0,0,0.5);
+  text-shadow: 0 0 10px rgb(0, 0, 0, 0.5);
 }
 
 .btn-box p:hover {

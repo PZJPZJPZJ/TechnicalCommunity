@@ -61,7 +61,7 @@ public class TcPictureController {
             // 生成新的文件名
             String name = generateUUID() + getFileExtension(file.getOriginalFilename());
             String path = "C:\\Users\\13425\\Documents\\JetBrains\\TechnicalCommunity\\src\\main\\resources\\static\\"+name;
-            String url = "http://localhost:8080/images/" + name;
+            String url = "http://localhost:8080/img/" + name;
             //写入文件
             file.transferTo(new File(path));
             //实体类赋值

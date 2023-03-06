@@ -47,7 +47,7 @@
           </div>
           <div class="title">{{ post.postTitle.substring(0, 20) }}</div>
           <div class="content">{{ post.postContent.substring(0, 100) }}...</div>
-          <el-skeleton :rows="2" />
+          <el-skeleton :rows="2"/>
           <div class="post-footer">
             <el-tag class="tag">{{ post.tagName }}</el-tag>
             <div class="time">{{ post.postTime }}</div>
@@ -68,24 +68,62 @@
   <el-affix position="bottom" :offset="20">
     <el-button type="success" style="margin-left: 16px" @click="drawer = true">发帖</el-button>
   </el-affix>
-  <el-drawer v-model="drawer" :direction="'btt'" :with-header="false">
+  <el-drawer v-model="drawer" :direction="'btt'" :with-header="false" size="50%">
     <el-input
-        v-model="commentArea"
+        v-model="newPost.title"
+        maxlength="50"
+        placeholder="帖子标题"
+        :autosize="true"
+        show-word-limit
+        type="text"
+    />
+    <el-input
+        v-model="newPost.content"
         maxlength="500"
-        placeholder="写评论"
+        placeholder="帖子内容"
         :autosize="true"
         show-word-limit
         type="textarea"
     />
-    <el-button @click="uploadComment()">发布</el-button>
+    <el-autocomplete
+        v-model="selectTag"
+        :fetch-suggestions="querySearchAsync"
+        placeholder="帖子标签"
+        @select="handleSelect"
+    />
+    <br>
+    <el-switch
+        v-model="isGoods"
+        active-text="物品价格"
+        inactive-text="发布帖子"
+        class="ml-2"
+        style="--el-switch-on-color: #13ce66; --el-switch-off-color: #409EFF"
+    />
+    <el-input-number
+        v-if="isGoods"
+        v-model="newPost.price"
+        :precision="2"
+        :step="1"
+        :max="9999"
+        :min="0"
+        controls-position="right"
+    />
+    <el-upload
+        v-model:file-list="fileList"
+        action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15"
+        list-type="picture-card"
+        :on-preview="handlePictureCardPreview"
+        :on-remove="handleRemove"
+    ></el-upload>
+    <el-button type="success" @click="uploadPost">发布</el-button>
   </el-drawer>
   <el-backtop :right="15" :bottom="15"/>
 </template>
 
 <script>
 
-import {ref, onMounted} from 'vue'
-import {ElLoading} from 'element-plus'
+import {ref, onMounted, reactive} from 'vue'
+import {ElLoading, ElMessage} from 'element-plus'
 import axios from 'axios'
 import {useRouter} from "vue-router";
 
@@ -93,6 +131,19 @@ export default {
   setup() {
     const router = useRouter()
     const postData = ref([])
+    //上传新帖子数据
+    const newPost = reactive({
+      title: '',
+      content: '',
+      tag: '',
+      price: ''
+    })
+    //判断是否新建帖子为商品
+    const isGoods = ref(false)
+    //全部tag
+    const allTags = ref([])
+    //选择tag
+    const selectTag = ref('')
     const newsData = ref([])
     const loading = ref(false)
     const currentPage = ref(1)
@@ -118,7 +169,7 @@ export default {
     }
 
     //加载新闻
-    const loadNews = async ()=>{
+    const loadNews = async () => {
       const {data} = await axios({
         method: 'GET',
         url: '/api/news/list',
@@ -126,7 +177,7 @@ export default {
           Authorization: localStorage.getItem('token')
         }
       })
-      newsData.value =  data.rows
+      newsData.value = data.rows
       console.log(newsData.value)
     }
 
@@ -141,8 +192,65 @@ export default {
     }
 
     //加载随机标签
-    const loadRandTag = () =>{
+    const loadRandTag = () => {
 
+    }
+
+    //查询可用标签
+    const loadTags = async () =>{
+      const {data} = await axios({
+        method: 'GET',
+        url: '/api/tag/list',
+        headers: {
+          Authorization: localStorage.getItem('token')
+        }
+      })
+      allTags.value = data.rows
+      console.log(allTags.value)
+    }
+
+    //点击标签
+    const handleSelect = () =>{
+
+    }
+
+    //上传帖子
+    const uploadPost = async () => {
+      //根据token获取用户ID
+      const {data} = await axios({
+        method: 'GET',
+        url: '/api/user/name?token=' + localStorage.getItem('token'),
+        headers: {
+          Authorization: localStorage.getItem('token')
+        }
+      })
+      await axios({
+        method: 'POST',
+        url: '/api/post/save',
+        data: {
+          postUser: data,
+          postTag: newPost.tag,
+          postTitle: newPost.title,
+          postContent: newPost.content,
+          postPrice: newPost.price
+        },
+        headers: {
+          Authorization: localStorage.getItem('token')
+        }
+      }).then(
+          response => {
+            ElMessage({
+              message: '发布成功',
+              type: 'success',
+            })
+          }
+          , error => {
+            ElMessage({
+              message: '输入有误',
+              type: 'error',
+            })
+          }
+      )
     }
 
     //点击跳转对应帖子
@@ -151,7 +259,7 @@ export default {
     }
 
     //点击跳转对应新闻
-    const handleViewNews = (newsId) =>{
+    const handleViewNews = (newsId) => {
       router.push(`/news?id=${newsId}`)
     }
 
@@ -171,6 +279,19 @@ export default {
       window.location.reload();
     }
 
+    //
+    const dialogImageUrl = ref('')
+    const dialogVisible = ref(false)
+
+    const handleRemove = (uploadFile, uploadFiles) => {
+      console.log(uploadFile, uploadFiles)
+    }
+
+    const handlePictureCardPreview = (uploadFile) => {
+      dialogImageUrl.value = uploadFile.url
+          dialogVisible.value = true
+    }
+
     return {
       postData,
       loading,
@@ -179,7 +300,15 @@ export default {
       drawer,
       newsData,
       handleViewNews,
-      logout
+      logout,
+      newPost,
+      uploadPost,
+      isGoods,
+      allTags,
+      loadTags,
+      selectTag,
+      handleRemove,
+      handlePictureCardPreview
     }
   }
 }
@@ -190,7 +319,7 @@ export default {
   margin: 10px;
 }
 
-.card-img{
+.card-img {
   width: 80px;
   height: 80px;
   margin: 8px;

@@ -8,10 +8,7 @@ import com.pzj.technicalcommunity.entity.TcTag;
 import com.pzj.technicalcommunity.service.ITcTagService;
 import com.pzj.technicalcommunity.util.ResultPackage;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 
@@ -28,6 +25,15 @@ import java.util.HashMap;
 public class TcTagController {
     @Autowired
     private ITcTagService iTcTagService;
+
+    /**
+     * 获取全部标签
+     * @return
+     */
+    @GetMapping("/list")
+    public ResultPackage list(){
+        return ResultPackage.pack(iTcTagService.list());
+    }
 
     /**
      * Description 分页查询标签信息
