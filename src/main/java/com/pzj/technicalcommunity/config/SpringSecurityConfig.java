@@ -104,7 +104,9 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
             //放行主页检测登陆状态
             "/user/token",
             //放行用户注册
-            "/user/save"
+            "/user/save",
+            //放行静态资源
+            "/images/**"
     };
 
     @Override

@@ -60,7 +60,6 @@ export default {
   top: 0;
   background-color: rgba(255, 255, 255, 0.5);
   backdrop-filter: blur(20px);
-  --el-header-padding: 0 30px;
   z-index: 120;
 }
 

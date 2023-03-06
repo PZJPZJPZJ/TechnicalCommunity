@@ -6,14 +6,6 @@
       </el-col>
       <el-col :span="6"></el-col>
       <el-col :span="6">
-        <el-autocomplete
-            v-model="inputValue"
-            :fetch-suggestions="querySearchAsync"
-            placeholder="搜索帖子"
-            @select="handleSelect"
-        />
-      </el-col>
-      <el-col :span="6">
         <el-dropdown :hide-on-click="false">
     <span class="el-dropdown-link">用户
     <el-icon class="el-icon--right"><arrow-down/></el-icon>
