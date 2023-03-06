@@ -1,28 +1,4 @@
 <template>
-  <el-header>
-    <el-row type="flex" justify="space-between">
-      <el-col :span="6">
-        <h3>科技论坛</h3>
-      </el-col>
-      <el-col :span="6">
-        <el-dropdown :hide-on-click="false">
-    <span class="el-dropdown-link">用户
-    <el-icon class="el-icon--right"><arrow-down /></el-icon>
-    </span>
-          <template #dropdown>
-            <el-dropdown-menu>
-              <el-dropdown-item>
-                <el-button @click="logout">注销</el-button>
-              </el-dropdown-item>
-              <el-dropdown-item>Action 2</el-dropdown-item>
-              <el-dropdown-item disabled>Action 4</el-dropdown-item>
-              <el-dropdown-item divided>Action 5</el-dropdown-item>
-            </el-dropdown-menu>
-          </template>
-        </el-dropdown>
-      </el-col>
-    </el-row>
-  </el-header>
   <router-view></router-view>
 </template>
 
@@ -32,7 +8,7 @@ import {onMounted} from "vue";
 import {useRouter} from "vue-router";
 
 export default {
-  setup(){
+  setup() {
     const router = useRouter()
 
     //检查登陆状态
@@ -50,24 +26,19 @@ export default {
       })
     }
 
-    //处理登出
-    const logout = () =>{
-      localStorage.setItem('token',null)
-      window.location.reload();
-    }
-
     onMounted(() => {
       checkLoginStatus()
     })
 
-    return{
-      logout
+    return {
+
     }
   }
 }
 </script>
 
 <style>
+/*全局样式*/
 * {
   margin: 0;
   padding: 0;
@@ -83,31 +54,34 @@ export default {
   padding: 0;
 }
 
+/*element美化*/
 .el-header {
   position: sticky;
   top: 0;
   background-color: rgba(255, 255, 255, 0.5);
   backdrop-filter: blur(20px);
+  --el-header-padding: 0 30px;
   z-index: 120;
 }
 
-.el-overlay{
+.el-overlay {
   background-color: transparent !important;
 }
-.el-drawer{
-  background-color: rgba(255,255,255,0.25) !important;
+
+.el-drawer {
+  background-color: rgba(255, 255, 255, 0.25) !important;
   backdrop-filter: blur(10px);
   border-radius: 20px;
 }
 
-.el-image-viewer__mask{
-  background-color: rgba(255,255,255,0.25) !important;
+.el-image-viewer__mask {
+  background-color: rgba(255, 255, 255, 0.25) !important;
   backdrop-filter: blur(10px);
   opacity: 1 !important;
 }
 
-.el-textarea__inner{
-  background-color: rgba(255,255,255,0.5) !important;
+.el-textarea__inner {
+  background-color: rgba(255, 255, 255, 0.5) !important;
 }
 
 .el-card {
@@ -121,19 +95,19 @@ export default {
   cursor: pointer;
 }
 
+/*滚动指示器美化*/
 ::-webkit-scrollbar {
   width: 6px;
-  height: 8px;
-  background-color: #ebeef5;
+  background-color: #F5F5F5;
 }
+
 ::-webkit-scrollbar-thumb {
-  box-shadow: inset 0 0 6px rgba(0, 0, 0, .3);
-  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, .3);
-  background-color: #ccc;
+  background-color: #0003;
+  border-radius: 10px;
+  transition: all .2s ease-in-out;
 }
-::-webkit-scrollbar-track{
-  box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
-  border-radius: 3px;
-  background: rgba(255, 255, 255, 1);
+
+::-webkit-scrollbar-track {
+  border-radius: 10px;
 }
 </style>

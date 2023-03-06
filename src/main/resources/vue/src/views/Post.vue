@@ -1,4 +1,35 @@
 <template>
+  <el-header>
+    <el-row class="header-box">
+      <el-col :span="6">
+        <h3>科技论坛</h3>
+      </el-col>
+      <el-col :span="6"></el-col>
+      <el-col :span="6">
+        <el-autocomplete
+            v-model="inputValue"
+            :fetch-suggestions="querySearchAsync"
+            placeholder="搜索帖子"
+            @select="handleSelect"
+        />
+      </el-col>
+      <el-col :span="6">
+        <el-dropdown :hide-on-click="false">
+    <span class="el-dropdown-link">用户
+    <el-icon class="el-icon--right"><arrow-down/></el-icon>
+    </span>
+          <template #dropdown>
+            <el-dropdown-menu>
+              <el-dropdown-item @click="logout">注销</el-dropdown-item>
+              <el-dropdown-item>Action 2</el-dropdown-item>
+              <el-dropdown-item disabled>Action 4</el-dropdown-item>
+              <el-dropdown-item divided>Action 5</el-dropdown-item>
+            </el-dropdown-menu>
+          </template>
+        </el-dropdown>
+      </el-col>
+    </el-row>
+  </el-header>
   <el-main>
     <el-row>
       <el-col :xs="0" :sm="0" :md="4" :lg="4" :xl="4"></el-col>
@@ -231,6 +262,13 @@ export default {
         loadingInstance.close()
       })
     })
+
+    //处理登出
+    const logout = () => {
+      localStorage.setItem('token', null)
+      window.location.reload();
+    }
+
     return {
       thisPost,
       commentData,
@@ -241,7 +279,8 @@ export default {
       commentArea,
       uploadComment,
       drawerBuy,
-      submitBuy
+      submitBuy,
+      logout
     }
   }
 }
@@ -341,5 +380,10 @@ export default {
   font-size: 30px;
   margin: 5px 0;
   font-weight: bolder;
+}
+
+/*自定义顶栏*/
+.header-box {
+  justify-content: space-between;
 }
 </style>

@@ -102,7 +102,9 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
             //放行登出
             "/logout",
             //放行主页检测登陆状态
-            "/user/token"
+            "/user/token",
+            //放行用户注册
+            "/user/save"
     };
 
     @Override

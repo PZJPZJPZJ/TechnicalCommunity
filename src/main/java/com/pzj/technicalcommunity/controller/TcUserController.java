@@ -70,9 +70,15 @@ public class TcUserController {
      * Return 执行结果(bool)
      */
     @PostMapping("/save")
-    public boolean save(@RequestBody TcUser tcUser){
+    public ResultPackage save(@RequestBody TcUser tcUser){
+        //加密密码
         tcUser.setUserPassword(PasswordEncoder.encode(tcUser.getUserPassword()));
-        return iTcUserService.save(tcUser);
+        //防止前端修改数据
+        tcUser.setUserAdmin(false);
+        //执行方法
+        iTcUserService.save(tcUser);
+        //返回用户ID
+        return ResultPackage.pack(tcUser.getUserId());
     }
 
     /**
