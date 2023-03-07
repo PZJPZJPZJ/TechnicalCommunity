@@ -2,15 +2,28 @@ package com.pzj.technicalcommunity.controller;
 
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.pzj.technicalcommunity.entity.TcNews;
+import com.pzj.technicalcommunity.entity.TcPost;
+import com.pzj.technicalcommunity.entity.TcPostDTO;
 import com.pzj.technicalcommunity.service.ITcNewsService;
+import com.pzj.technicalcommunity.service.ITcUserService;
 import com.pzj.technicalcommunity.util.JwtUtils;
 import com.pzj.technicalcommunity.util.ResultPackage;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
+
+import static com.pzj.technicalcommunity.util.PictureUtils.generateUUID;
+import static com.pzj.technicalcommunity.util.PictureUtils.getFileExtension;
 
 /**
  * <p>
@@ -25,6 +38,8 @@ import java.util.List;
 public class TcNewsController {
     @Autowired
     private ITcNewsService iTcNewsService;
+    @Autowired
+    private ITcUserService iTcUserService;
 
     /**
      * Description 展示最新4条新闻
@@ -47,11 +62,43 @@ public class TcNewsController {
      * Return 执行结果(bool)
      */
     @PostMapping("/save")
-    public boolean save(@RequestBody TcNews tcNews, @RequestHeader HashMap hashMap){
-        System.out.println(hashMap.get("authorization"));
-        String userId = JwtUtils.getClaimByToken((String) hashMap.get("authorization")).getId();
+    public ResponseEntity<String> save(@RequestBody TcNews tcNews, @RequestHeader HashMap hashMapHeader, @RequestParam("file") MultipartFile file) throws IOException {
+        //根据token获取当前用户
+        Integer userId = Integer.valueOf(JwtUtils.getClaimByToken((String) hashMapHeader.get("authorization")).getSubject());
+        if (iTcUserService.getById(userId).getUserAdmin()){
+            // 生成新的文件名
+            String name = generateUUID() + getFileExtension(file.getOriginalFilename());
+            String path = "C:\\Users\\13425\\Documents\\JetBrains\\TechnicalCommunity\\target\\classes\\static\\img\\"+name;
+            String url = "http://localhost:8080/img/" + name;
+            //写入文件
+            file.transferTo(new File(path));
+            tcNews.setNewsCover(url);
+            tcNews.setNewsAdmin(userId);
+            iTcNewsService.save(tcNews);
+            return ResponseEntity.status(HttpStatus.OK).build();
+        }
+        else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+    }
 
-        return iTcNewsService.save(tcNews);
+    /**
+     * 分页时间倒叙展示所有新闻
+     * @param hashMapBody
+     * @return json
+     */
+    @RequestMapping("/page")
+    public ResultPackage page(@RequestBody HashMap hashMapBody){
+        //设置页数和页大小
+        Page<TcNews> page = new Page<>();
+        page.setCurrent((int)hashMapBody.get("pageNum"));
+        page.setSize((int)hashMapBody.get("pageSize"));
+        //设置查询条件
+        QueryWrapper<TcNews> queryWrapper = new QueryWrapper<>();
+        queryWrapper.orderByDesc("news_time");
+        //执行查询
+        IPage<TcNews> iPage = iTcNewsService.page(page,queryWrapper);
+        return ResultPackage.pack(iPage.getRecords(), iPage.getTotal());
     }
 
     /**

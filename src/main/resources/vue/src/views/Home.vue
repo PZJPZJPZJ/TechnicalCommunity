@@ -53,7 +53,7 @@
       <el-col :xs="0" :sm="0" :md="4" :lg="4" :xl="4"></el-col>
 
       <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="12">
-        <el-card class="post-card" v-for="post in postData" :key="post.id">
+        <el-card class="post-card" v-for="post in postData" :key="post.postId">
           <div class="header">
             <el-avatar class="avatar" :src="'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png'"
                        :size="30"></el-avatar>
@@ -133,24 +133,14 @@
 </template>
 
 <script setup>
-
 import {ref, onMounted, reactive} from 'vue'
 import {ElLoading, ElMessage} from 'element-plus'
 import axios from 'axios'
 import {useRouter} from "vue-router";
 
-const router = useRouter()
-const postData = ref([])
-
-//选择tag
-const inputTag = ref('')
-const selectTag = ref('')
-const newsData = ref([])
-const loading = ref(false)
-const currentPage = ref(1)
-const pageSize = ref(10)
-const total = ref(0)
-//抽屉开启状态
+/**
+ * 抽屉
+ */
 const drawer = ref(false)
 
 /**
@@ -178,7 +168,6 @@ const uploadFiles = async (postId) => {
         'Authorization': localStorage.getItem('token')
       },
     });
-    console.log(response);
   } catch (error) {
     console.error(error);
   }
@@ -187,6 +176,11 @@ const uploadFiles = async (postId) => {
 /**
  * 刷新方法
  */
+const postData = ref([])
+const loading = ref(false)
+const currentPage = ref(1)
+const pageSize = ref(10)
+const total = ref(0)
 const loadMoreData = async () => {
   if (loading.value) return
   loading.value = true
@@ -215,6 +209,7 @@ const handleScroll = () => {
 /**
  * 加载方法
  */
+const newsData = ref([])
 //加载新闻
 const loadNews = async () => {
   const {data} = await axios({
@@ -234,6 +229,9 @@ const loadRandTag = () => {
 /**
  * 自动完成输入框
  */
+//选择tag
+const inputTag = ref('')
+const selectTag = ref('')
 //点击标签获取ID写入变量
 const handleSelect = (value) => {
   selectTag.value = value.label
@@ -327,6 +325,7 @@ const uploadPost = async () => {
 /**
  * 跳转
  */
+const router = useRouter()
 //点击跳转对应帖子
 const handleViewPost = (postId) => {
   router.push(`/post?id=${postId}`)

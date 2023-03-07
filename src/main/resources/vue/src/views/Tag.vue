@@ -43,6 +43,7 @@
 
 <script setup>
 import {ref} from "vue";
+import router from "@/router";
 
 /**
  * 顶栏
