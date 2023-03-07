@@ -138,4 +138,15 @@ public class TcUserController {
     public String name(String token){
         return JwtUtils.getClaimByToken(token).getSubject();
     }
+
+    @GetMapping("/admin")
+    public ResponseEntity<String> admin(String token){
+        Integer userId = Integer.valueOf(JwtUtils.getClaimByToken(token).getSubject());
+        if (iTcUserService.getById(userId).getUserAdmin()){
+            return ResponseEntity.status(HttpStatus.OK).build();
+        }
+        else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+    }
 }

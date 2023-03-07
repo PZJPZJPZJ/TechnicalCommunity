@@ -31,12 +31,10 @@
       </el-col>
       <el-col :span="6">
         <el-dropdown :hide-on-click="false">
-    <span class="el-dropdown-link">用户
-    <el-icon class="el-icon--right"><arrow-down/></el-icon>
-    </span>
+    <span class="el-dropdown-link">用户</span>
           <template #dropdown>
             <el-dropdown-menu>
-              <el-dropdown-item @click="editInfo">编辑信息</el-dropdown-item>
+              <el-dropdown-item @click="editInfo">用户中心</el-dropdown-item>
               <el-dropdown-item @click="toChat">用户私信</el-dropdown-item>
               <el-dropdown-item @click="logout">注销登录</el-dropdown-item>
             </el-dropdown-menu>
@@ -62,17 +60,19 @@
       <el-col :xs="0" :sm="0" :md="4" :lg="4" :xl="4"></el-col>
 
       <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="12">
-        <el-card class="post-card" v-for="post in postData" :key="post.id" @click="handleViewPost(post.postId)">
+        <el-card class="post-card" v-for="post in postData" :key="post.id">
           <div class="header">
             <el-avatar class="avatar" :src="'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png'"
                        :size="30"></el-avatar>
             <div class="user-info">{{ post.userName }}</div>
           </div>
-          <div class="title">{{ post.postTitle.substring(0, 20) }}</div>
-          <div class="content">{{ post.postContent.substring(0, 100) }}...</div>
-          <el-skeleton :rows="2"/>
+          <div class="center" @click="handleViewPost(post.postId)">
+            <div class="title">{{ post.postTitle.substring(0, 20) }}</div>
+            <div class="content">{{ post.postContent.substring(0, 100) }}...</div>
+            <el-skeleton :rows="2"/>
+          </div>
           <div class="post-footer">
-            <el-tag class="tag">{{ post.tagName }}</el-tag>
+            <el-tag class="tag" @click="handleViewTag(post.postTag)">{{ post.tagName }}</el-tag>
             <div class="time">{{ post.postTime }}</div>
           </div>
         </el-card>
@@ -214,6 +214,11 @@ const loadMoreData = async () => {
   loading.value = false
 }
 
+//点击跳转对应标签
+const handleViewTag = (tagId) =>{
+  router.push(`/detail?id=${tagId}`)
+}
+
 //加载新闻
 const loadNews = async () => {
   const {data} = await axios({
@@ -224,7 +229,6 @@ const loadNews = async () => {
     }
   })
   newsData.value = data.rows
-  console.log(newsData.value)
 }
 
 //滚动到底部执行自动刷新

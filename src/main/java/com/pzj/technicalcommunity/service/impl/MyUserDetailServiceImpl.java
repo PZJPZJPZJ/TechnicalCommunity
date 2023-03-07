@@ -31,10 +31,10 @@ public class MyUserDetailServiceImpl implements UserDetailsService {
         String userRole;
         //将判断字段转换为字符串以便区分
         if(tcUser.getUserAdmin()){
-            userRole = "ROLE_ADMIN";
+            userRole = "ADMIN";
         }
         else{
-            userRole = "ROLE_USER";
+            userRole = "USER";
         }
         //将字符串装入Security的角色类中
         List<GrantedAuthority> authorities = new ArrayList<>();

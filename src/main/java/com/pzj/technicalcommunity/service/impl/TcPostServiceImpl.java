@@ -30,6 +30,16 @@ public class TcPostServiceImpl extends ServiceImpl<TcPostMapper, TcPost> impleme
     }
 
     @Override
+    public IPage<TcPostDTO> pageAll(Page<TcPostDTO> page) {
+        return tcPostMapper.pageAll(page);
+    }
+
+    @Override
+    public IPage<TcPostDTO> pageUser(Page<TcPostDTO> page,Integer id) {
+        return tcPostMapper.pageUser(page,id);
+    }
+
+    @Override
     public TcPostDTO listOne(Integer id) {
         return tcPostMapper.listOne(id);
     }

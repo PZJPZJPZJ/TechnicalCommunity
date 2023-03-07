@@ -58,6 +58,48 @@
           </el-form-item>
         </el-card>
 
+        <el-card class="title-card">
+          <span v-if="!isAdmin">我的帖子</span>
+          <span v-if="isAdmin">全部帖子</span>
+        </el-card>
+
+        <el-card class="post-card" v-for="post in postData" :key="post.id">
+          <div class="header">
+            <el-avatar class="avatar" :src="'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png'"
+                       :size="30"></el-avatar>
+            <div class="user-info">{{ post.userName }}</div>
+          </div>
+          <div class="center" @click="handleViewPost(post.postId)">
+            <div class="title">{{ post.postTitle.substring(0, 20) }}</div>
+            <div class="content">{{ post.postContent.substring(0, 100) }}...</div>
+          </div>
+          <div class="post-footer">
+            <el-tag class="tag" @click="handleViewTag(post.postTag)">{{ post.tagName }}</el-tag>
+            <div class="topOrBottom" v-if="isAdmin">
+              <el-popconfirm v-if="!post.postTop" title="确定要置顶吗？" confirm-button-text="确认" cancel-button-text="取消"
+                              @confirm="topPost(post.postId)">
+                <template #reference>
+                  <el-button type="success">置顶该帖</el-button>
+                </template>
+              </el-popconfirm>
+              <el-popconfirm v-if="post.postTop" title="确定要取消置顶吗？" confirm-button-text="确认" cancel-button-text="取消"
+                              @confirm="bottomPost(post.postId)">
+                <template #reference>
+                  <el-button type="warning">取消置顶</el-button>
+                </template>
+              </el-popconfirm>
+            </div>
+            <el-popconfirm title="确定要删除吗？" confirm-button-text="确认" cancel-button-text="取消"
+                           @confirm="deletePost(post.postId)">
+              <template #reference>
+                <el-button type="danger">删除该帖</el-button>
+              </template>
+            </el-popconfirm>
+            <div class="time">{{ post.postTime }}</div>
+          </div>
+        </el-card>
+        <div v-if="loading" style="text-align: center">Loading...</div>
+
       </el-col>
       <el-col :xs="0" :sm="0" :md="4" :lg="4" :xl="4"></el-col>
     </el-row>
@@ -68,18 +110,25 @@
 //加载触发
 import {onMounted, reactive, ref} from "vue";
 import axios from "axios";
-import {ElMessage} from "element-plus";
+import {ElLoading, ElMessage} from "element-plus";
 import router from "@/router";
 
 const myInfo = ref([])
 const changePassword = ref(false)
 const myPassword = ref('')
+const loading = ref(false)
+const postData = ref([])
+const currentPage = ref(1)
+const pageSize = ref(10)
+const total = ref(0)
+//管理员标识
+const isAdmin = ref(false)
 
 //加载用户信息
-const loadMyInfo = async () =>{
+const loadMyInfo = async () => {
   const {data} = await axios({
     method: 'GET',
-    url: '/api/user/info?id='+localStorage.getItem('user'),
+    url: '/api/user/info?id=' + localStorage.getItem('user'),
     headers: {
       Authorization: localStorage.getItem('token')
     }
@@ -88,7 +137,7 @@ const loadMyInfo = async () =>{
 }
 
 //更新用户信息
-const updateMyInfo = async () =>{
+const updateMyInfo = async () => {
   await axios({
     method: 'POST',
     url: '/api/user/update',
@@ -108,6 +157,7 @@ const updateMyInfo = async () =>{
           message: '修改成功',
           type: 'success',
         })
+        changePassword.value = false
       }
       , error => {
         ElMessage({
@@ -118,8 +168,51 @@ const updateMyInfo = async () =>{
   )
 }
 //跳转用户详情页
-const editInfo = () =>{
+const editInfo = () => {
   router.push("/info")
+}
+
+const loadMoreData = async () => {
+  if (loading.value) return
+  loading.value = true
+  const {data} = await axios.post('/api/post/user', {
+        pageNum: currentPage.value,
+        pageSize: pageSize.value,
+      }
+      , {
+        headers: {Authorization: localStorage.getItem('token')}
+      })
+  postData.value = [...postData.value, ...data.rows]
+  total.value = data.total
+  currentPage.value++
+  loading.value = false
+}
+
+//点击跳转对应帖子
+const handleViewPost = (postId) => {
+  router.push(`/post?id=${postId}`)
+}
+
+//检查是否为管理员
+const checkAdmin = async () =>{
+  await axios({
+    method: 'GET',
+    url: '/api/user/admin?token=' + localStorage.getItem('token'),
+    headers: {
+      Authorization: localStorage.getItem('token')
+    }
+  }).then(
+      response => {
+        isAdmin.value=true
+      }
+      , error => {
+        isAdmin.value=false
+      })
+}
+
+//点击跳转对应标签
+const handleViewTag = (tagId) => {
+  router.push(`/detail?id=${tagId}`)
 }
 
 //处理登出
@@ -128,11 +221,173 @@ const logout = () => {
   window.location.reload();
 }
 
+//删除选中帖子
+const deletePost = async (postId) => {
+  await axios({
+    method: 'GET',
+    url: '/api/post/delete?id=' + postId,
+    headers: {
+      Authorization: localStorage.getItem('token')
+    }
+  }).then(
+      response => {
+        ElMessage({
+          message: '删除成功',
+          type: 'success',
+        })
+        //刷新页面
+        currentPage.value = 1
+        postData.value = []
+        loadMoreData()
+      }
+      , error => {
+        ElMessage({
+          message: '删除失败',
+          type: 'error',
+        })
+      })
+}
+
+//置顶帖子
+const topPost = async (postId) => {
+  await axios({
+    method: 'GET',
+    url: '/api/post/top?id=' + postId,
+    headers: {
+      Authorization: localStorage.getItem('token')
+    }
+  }).then(
+      response => {
+        ElMessage({
+          message: '置顶成功',
+          type: 'success',
+        })
+        //刷新页面
+        currentPage.value = 1
+        postData.value = []
+        loadMoreData()
+      }
+      , error => {
+        ElMessage({
+          message: '置顶失败',
+          type: 'error',
+        })
+      })
+}
+
+//置顶帖子
+const bottomPost = async (postId) => {
+  await axios({
+    method: 'GET',
+    url: '/api/post/bottom?id=' + postId,
+    headers: {
+      Authorization: localStorage.getItem('token')
+    }
+  }).then(
+      response => {
+        ElMessage({
+          message: '取消置顶成功',
+          type: 'success',
+        })
+        //刷新页面
+        currentPage.value = 1
+        postData.value = []
+        loadMoreData()
+      }
+      , error => {
+        ElMessage({
+          message: '取消置顶失败',
+          type: 'error',
+        })
+      })
+}
+
+//滚动到底部执行自动刷新
+const handleScroll = () => {
+  const scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
+  const windowHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight
+  const scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight
+  if (scrollTop + windowHeight >= scrollHeight) {
+    loadMoreData()
+  }
+}
+
 onMounted(() => {
+  window.addEventListener('scroll', handleScroll)
+  const loadingInstance = ElLoading.service({text: 'Loading...', fullscreen: true})
   loadMyInfo()
+  checkAdmin()
+  loadMoreData().finally(() => {
+    loadingInstance.close()
+  })
 })
 </script>
 
 <style scoped>
+.post-card {
+  margin-bottom: 20px;
+  text-align: left;
+}
 
+.header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.avatar {
+  margin-right: 10px;
+}
+
+.user-info {
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.title {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.content {
+  font-size: 16px;
+  margin-bottom: 10px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.post-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid #e4e7ed;
+}
+
+.tag {
+  font-size: 14px;
+  margin-right: 10px;
+}
+
+.time {
+  font-size: 14px;
+}
+
+.title-card {
+  margin-bottom: 20px;
+  text-align: left;
+  box-shadow: none;
+  border: none;
+}
+
+.post-card {
+  margin-bottom: 20px;
+  text-align: left;
+  box-shadow: none;
+  border: none;
+}
 </style>
