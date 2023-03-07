@@ -91,6 +91,7 @@
         placeholder="帖子标签"
         @select="handleSelect"
     />
+    <input class="custom-upload-button" type="file" ref="fileInput" accept=".jpg,.jpeg,.png" multiple @change="onFileChange">
     <br>
     <el-switch
         v-model="isGoods"
@@ -108,7 +109,7 @@
         :min="0"
         controls-position="right"
     />
-    <input type="file" ref="fileInput" multiple @change="onFileChange">
+    <br>
     <el-button type="success" @click="uploadPost">发布</el-button>
   </el-drawer>
   <el-backtop :right="15" :bottom="15"/>
@@ -162,7 +163,7 @@ export default {
       }
       // 发送请求
       try {
-        const response = await axios.post('/api/picture/upload?id='+ postId , formData, {
+        const response = await axios.post('/api/picture/upload?id=' + postId, formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
             'Authorization': localStorage.getItem('token')
@@ -219,7 +220,7 @@ export default {
     }
 
     //查询可用标签
-    const loadTags = async () =>{
+    const loadTags = async () => {
       const {data} = await axios({
         method: 'GET',
         url: '/api/tag/list',
@@ -232,7 +233,7 @@ export default {
     }
 
     //点击标签
-    const handleSelect = () =>{
+    const handleSelect = () => {
 
     }
 
@@ -395,5 +396,15 @@ export default {
 /*自定义顶栏*/
 .header-box {
   justify-content: space-between;
+}
+
+.custom-upload-button {
+  display: inline-block;
+  padding: 4px;
+  margin: 8px;
+  font-size: 14px;
+  box-shadow: 0 0 0 1px var(--el-input-border-color,var(--el-border-color)) inset;
+  border-radius: 4px;
+  cursor: pointer;
 }
 </style>
