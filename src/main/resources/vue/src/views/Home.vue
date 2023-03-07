@@ -159,8 +159,6 @@ const newPost = reactive({
 })
 //判断是否新建帖子为商品
 const isGoods = ref(false)
-//全部tag
-const allTags = ref([])
 //选择tag
 const inputTag = ref('')
 const selectTag = ref('')
@@ -298,7 +296,17 @@ const uploadPost = async () => {
           message: '发布成功',
           type: 'success',
         })
+        //清除信息
         drawer.value = false
+        files.value = []
+        newPost.title=''
+        newPost.content=''
+        newPost.tag=''
+        newPost.price=''
+        inputTag.value=''
+        selectTag.value=''
+        isGoods.value=false
+        //刷新首页
         currentPage.value = 1
         postData.value = []
         loadMoreData()
