@@ -2,39 +2,32 @@
   <router-view></router-view>
 </template>
 
-<script>
+<script setup>
 import axios from "axios";
 import {onMounted} from "vue";
 import {useRouter} from "vue-router";
 
-export default {
-  setup() {
-    const router = useRouter()
+const router = useRouter()
 
-    //检查登陆状态
-    const checkLoginStatus = () => {
-      axios({
-        method: 'POST',
-        url: '/api/user/token',
-        data: {
-          'token': localStorage.getItem('token')
-        }
-      }).then(response => {
-        router.push('/home')
-      }, error => {
-        router.push('/login')
-      })
+//检查登陆状态
+const checkLoginStatus = () => {
+  axios({
+    method: 'POST',
+    url: '/api/user/token',
+    data: {
+      'token': localStorage.getItem('token')
     }
-
-    onMounted(() => {
-      checkLoginStatus()
-    })
-
-    return {
-
-    }
-  }
+  }).then(response => {
+    router.push('/home')
+  }, error => {
+    router.push('/login')
+  })
 }
+
+onMounted(() => {
+  checkLoginStatus()
+})
+
 </script>
 
 <style>
@@ -79,7 +72,7 @@ export default {
   opacity: 1 !important;
 }
 
-.el-input__wrapper{
+.el-input__wrapper {
   background-color: rgba(255, 255, 255, 0.5) !important;
 }
 
@@ -98,6 +91,10 @@ export default {
   cursor: pointer;
 }
 
+.el-input-group__append, .el-input-group__prepend{
+  background-color: rgba(255,255,255,0.2) !important;
+}
+
 /*滚动指示器美化*/
 ::-webkit-scrollbar {
   width: 6px;
@@ -112,5 +109,10 @@ export default {
 
 ::-webkit-scrollbar-track {
   border-radius: 10px;
+}
+
+/*自定义顶栏*/
+.header-box {
+  justify-content: space-between;
 }
 </style>

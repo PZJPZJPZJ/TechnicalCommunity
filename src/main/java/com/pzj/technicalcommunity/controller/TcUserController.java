@@ -6,10 +6,12 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.pzj.technicalcommunity.entity.TcUser;
+import com.pzj.technicalcommunity.entity.TcUserDTO;
 import com.pzj.technicalcommunity.service.ITcUserService;
 import com.pzj.technicalcommunity.util.JwtUtils;
 import com.pzj.technicalcommunity.util.PasswordEncoder;
 import com.pzj.technicalcommunity.util.ResultPackage;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -51,6 +53,20 @@ public class TcUserController {
         return ResultPackage.pack(iPage.getRecords(),iPage.getTotal());
     }
 
+    /**
+     * 获取用户信息不包含密码
+     * @param id
+     * @return json
+     */
+    @GetMapping("/info")
+    public ResultPackage info(Integer id){
+        TcUserDTO tcUserDTO = new TcUserDTO();
+        TcUser tcUser = iTcUserService.getById(id);
+        //防止不必要信息返回到前端
+        BeanUtils.copyProperties(tcUser,tcUserDTO);
+        return ResultPackage.pack(tcUserDTO);
+    }
+
     //模糊查询用户信息
     @PostMapping ("/search")
     public ResultPackage search(@RequestBody TcUser tcUser){
@@ -87,7 +103,11 @@ public class TcUserController {
      * Return 执行结果(bool)
      */
     @PostMapping("/update")
-    public boolean update(@RequestBody TcUser tcUser){
+    public boolean update(@RequestBody TcUser tcUser,@RequestHeader HashMap hashMapHeader){
+        //根据token写入用户id
+        Integer userId = Integer.valueOf(JwtUtils.getClaimByToken((String) hashMapHeader.get("authorization")).getSubject());
+        tcUser.setUserId(userId);
+        //密码不为空时更新加密密码
         if(tcUser.getUserPassword() != null){
             tcUser.setUserPassword(PasswordEncoder.encode(tcUser.getUserPassword()));
         }

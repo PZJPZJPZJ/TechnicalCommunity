@@ -6,16 +6,12 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.pzj.technicalcommunity.entity.TcPost;
 import com.pzj.technicalcommunity.entity.TcPostDTO;
-import com.pzj.technicalcommunity.service.ITcPictureService;
 import com.pzj.technicalcommunity.service.ITcPostService;
-import com.pzj.technicalcommunity.service.ITcTagService;
-import com.pzj.technicalcommunity.service.ITcUserService;
 import com.pzj.technicalcommunity.util.ResultPackage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
-import java.util.List;
 
 /**
  * <p>

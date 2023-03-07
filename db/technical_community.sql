@@ -11,7 +11,7 @@
  Target Server Version : 80031
  File Encoding         : 65001
 
- Date: 13/02/2023 18:11:01
+ Date: 07/03/2023 15:23:58
 */
 
 SET NAMES utf8mb4;
@@ -28,15 +28,7 @@ CREATE TABLE `tc_chat`  (
   `chat_unread` int UNSIGNED NOT NULL DEFAULT 0,
   `chat_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`chat_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
-
--- ----------------------------
--- Records of tc_chat
--- ----------------------------
-INSERT INTO `tc_chat` VALUES (1, 1, 2, 3, '2023-02-13 17:59:22');
-INSERT INTO `tc_chat` VALUES (2, 1, 2, 1, '2023-02-13 17:59:30');
-INSERT INTO `tc_chat` VALUES (3, 2, 1, 2, '2023-02-13 17:59:38');
-INSERT INTO `tc_chat` VALUES (4, 1, 2, 0, '2023-02-13 18:00:03');
+) ENGINE = InnoDB AUTO_INCREMENT = 11 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Table structure for tc_comment
@@ -49,11 +41,7 @@ CREATE TABLE `tc_comment`  (
   `comment_content` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `comment_time` datetime NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`comment_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
-
--- ----------------------------
--- Records of tc_comment
--- ----------------------------
+) ENGINE = InnoDB AUTO_INCREMENT = 39 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Table structure for tc_message
@@ -68,10 +56,6 @@ CREATE TABLE `tc_message`  (
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
--- Records of tc_message
--- ----------------------------
-
--- ----------------------------
 -- Table structure for tc_news
 -- ----------------------------
 DROP TABLE IF EXISTS `tc_news`;
@@ -83,13 +67,7 @@ CREATE TABLE `tc_news`  (
   `news_cover` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `news_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`news_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
-
--- ----------------------------
--- Records of tc_news
--- ----------------------------
-INSERT INTO `tc_news` VALUES (1, 1, '新闻标题', '新闻内容', 'url1', '2023-02-11 18:05:18');
-INSERT INTO `tc_news` VALUES (2, 1, '新闻', '内容', 'url2', '2023-02-12 18:06:05');
+) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Table structure for tc_picture
@@ -100,15 +78,7 @@ CREATE TABLE `tc_picture`  (
   `picture_post` int UNSIGNED NOT NULL,
   `picture_url` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL,
   PRIMARY KEY (`picture_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
-
--- ----------------------------
--- Records of tc_picture
--- ----------------------------
-INSERT INTO `tc_picture` VALUES (1, 1, 'url1');
-INSERT INTO `tc_picture` VALUES (2, 1, 'url2');
-INSERT INTO `tc_picture` VALUES (3, 2, 'url3');
-INSERT INTO `tc_picture` VALUES (4, 1, 'url4');
+) ENGINE = InnoDB AUTO_INCREMENT = 49 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Table structure for tc_post
@@ -124,16 +94,7 @@ CREATE TABLE `tc_post`  (
   `post_top` tinyint(1) NOT NULL DEFAULT 0,
   `post_price` decimal(10, 2) NULL DEFAULT NULL,
   PRIMARY KEY (`post_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
-
--- ----------------------------
--- Records of tc_post
--- ----------------------------
-INSERT INTO `tc_post` VALUES (1, 1, 1, 'ChatGPT注册教程', '教程如下', '2023-02-12 15:21:39', 1, NULL);
-INSERT INTO `tc_post` VALUES (2, 1, 2, '如何装一台属于自己的台式机', '教程如下', '2023-02-12 17:02:59', 1, NULL);
-INSERT INTO `tc_post` VALUES (3, 2, 1, '加装内存条', '教程如下', '2023-02-12 15:23:34', 0, NULL);
-INSERT INTO `tc_post` VALUES (4, 1, 1, '如何建立一个Vue工程', '建立工程所具备的工具', '2023-02-13 17:00:44', 0, NULL);
-INSERT INTO `tc_post` VALUES (5, 1, 1, '如何建立一个Vue工程', '建立工程所具备的工具', '2023-02-13 17:15:35', 0, NULL);
+) ENGINE = InnoDB AUTO_INCREMENT = 66 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Table structure for tc_tag
@@ -144,11 +105,7 @@ CREATE TABLE `tc_tag`  (
   `tag_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `tag_cover` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL,
   PRIMARY KEY (`tag_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
-
--- ----------------------------
--- Records of tc_tag
--- ----------------------------
+) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Table structure for tc_user
@@ -163,13 +120,6 @@ CREATE TABLE `tc_user`  (
   `user_sex` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
   `user_birth` datetime NULL DEFAULT NULL,
   PRIMARY KEY (`user_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
-
--- ----------------------------
--- Records of tc_user
--- ----------------------------
-INSERT INTO `tc_user` VALUES (1, 0, '1111', '测试用户', NULL, NULL, NULL);
-INSERT INTO `tc_user` VALUES (2, 0, '67890', '测试', NULL, NULL, NULL);
-INSERT INTO `tc_user` VALUES (3, 0, '12345', '测试', NULL, NULL, NULL);
+) ENGINE = InnoDB AUTO_INCREMENT = 100017 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
 
 SET FOREIGN_KEY_CHECKS = 1;

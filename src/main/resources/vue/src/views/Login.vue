@@ -30,6 +30,7 @@
                 type="password"
                 placeholder="密码"
                 v-model="registerForm.password"
+                show-password
             />
           </el-form-item>
           <el-form-item prop="confirmPassword" label=" ">
@@ -37,6 +38,7 @@
                 type="password"
                 placeholder="确认密码"
                 v-model="registerForm.confirmPassword"
+                show-password
             />
           </el-form-item>
         </el-form>
@@ -70,6 +72,7 @@
                 type="password"
                 placeholder="密码"
                 v-model="loginForm.password"
+                show-password
             />
           </el-form-item>
         </el-form>
@@ -82,150 +85,135 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import {reactive, ref} from 'vue'
 import {ElMessage} from 'element-plus'
 import {useRouter} from 'vue-router'
 import axios from "axios";
 
-export default {
-  setup() {
-    const router = useRouter()
-    const loginFormRef = ref('')
-    const registerFormRef = ref('')
-    const loginForm = reactive({
-      id: '',
-      password: ''
-    })
-    const registerForm = reactive({
-      name: '',
-      password: '',
-      confirmPassword: ''
-    })
+const router = useRouter()
+const loginFormRef = ref('')
+const registerFormRef = ref('')
+const loginForm = reactive({
+  id: '',
+  password: ''
+})
+const registerForm = reactive({
+  name: '',
+  password: '',
+  confirmPassword: ''
+})
 
-    const rules = reactive({
-      id: [
-        {required: true, message: '请输入账号', trigger: 'blur'},
-        {min: 6, message: '请输入正确的账号', trigger: 'blur'},
-      ],
-      name: [
-        {required: true, message: '请输入用户名', trigger: 'blur'},
-        {min: 3, message: '用户名过短', trigger: 'blur'},
-      ],
-      password: [
-        {required: true, message: '请输入密码', trigger: 'blur'},
-        {min: 6, message: '密码长度应该大于6位且小于20位', trigger: 'blur'},
-      ],
-      confirmPassword: [
-        {required: true, message: '请输入确认密码', trigger: 'blur'},
-        {min: 6, message: '密码长度应该大于6位且小于20位', trigger: 'blur'},
-        {
-          validator: (rule, value, callback) => {
-            if (value !== registerForm.password) {
-              callback(new Error('两次密码输入不一致'));
-            } else {
-              callback();
-            }
-          }, trigger: 'blur'
-        }
-      ],
-    })
-
-    let flag = ref(true)
-    const mySwitch = () => {
-      const pre_box = document.querySelector('.pre-box')
-      const img = document.querySelector("#avatar")
-      if (flag.value) {
-        pre_box.style.transform = "translateX(100%)"
-      } else {
-        pre_box.style.transform = "translateX(0%)"
-      }
-      flag.value = !flag.value
-    }
-
-
-    const login = () => {
-      loginFormRef.value.validate((valid) => {
-        if (valid) {
-          axios({
-            method: 'POST',
-            url: '/api/login',
-            data: loginForm
-          })
-              .then(response => {
-                    ElMessage({
-                      message: '登录成功',
-                      type: 'success',
-                    })
-                    localStorage.setItem('token', response.headers['authorization'])
-                    localStorage.setItem('user', response.data.userinfo.username)
-                    router.push('/home')
-                  }
-                  , error => {
-                    ElMessage({
-                      message: '用户名或密码错误',
-                      type: 'warning',
-                    })
-                    localStorage.setItem('token', null)
-                  })
+const rules = reactive({
+  id: [
+    {required: true, message: '请输入账号', trigger: 'blur'},
+    {min: 6, message: '请输入正确的账号', trigger: 'blur'},
+  ],
+  name: [
+    {required: true, message: '请输入用户名', trigger: 'blur'},
+    {min: 3, message: '用户名过短', trigger: 'blur'},
+  ],
+  password: [
+    {required: true, message: '请输入密码', trigger: 'blur'},
+    {min: 6, message: '密码长度应该大于6位且小于20位', trigger: 'blur'},
+  ],
+  confirmPassword: [
+    {required: true, message: '请输入确认密码', trigger: 'blur'},
+    {min: 6, message: '密码长度应该大于6位且小于20位', trigger: 'blur'},
+    {
+      validator: (rule, value, callback) => {
+        if (value !== registerForm.password) {
+          callback(new Error('两次密码输入不一致'));
         } else {
-          ElMessage({
-            message: '登录信息填写错误',
-            type: 'error',
-          })
+          callback();
         }
-      })
+      }, trigger: 'blur'
     }
+  ],
+})
 
-    const register = () => {
-      registerFormRef.value.validate((valid) => {
-        if (valid) {
-          axios({
-            method: 'POST',
-            url: '/api/user/save',
-            data: {
-              userName: registerForm.name,
-              userPassword: registerForm.password
-            }
-          }).then(
-              response => {
+let flag = ref(true)
+const mySwitch = () => {
+  const pre_box = document.querySelector('.pre-box')
+  if (flag.value) {
+    pre_box.style.transform = "translateX(100%)"
+  } else {
+    pre_box.style.transform = "translateX(0%)"
+  }
+  flag.value = !flag.value
+}
+
+
+const login = () => {
+  loginFormRef.value.validate((valid) => {
+    if (valid) {
+      axios({
+        method: 'POST',
+        url: '/api/login',
+        data: loginForm
+      })
+          .then(response => {
                 ElMessage({
-                  showClose: true,
-                  duration: 0,
-                  message: '注册成功，您的账号为' + response.data.rows,
+                  message: '登录成功',
                   type: 'success',
                 })
-                //切换窗口
-                mySwitch()
+                localStorage.setItem('token', response.headers['authorization'])
+                localStorage.setItem('user', response.data.userinfo.username)
+                router.push('/home')
               }
               , error => {
                 ElMessage({
-                  showClose: true,
-                  message: '注册失败，网络错误',
+                  message: '用户名或密码错误',
                   type: 'warning',
                 })
                 localStorage.setItem('token', null)
               })
-        } else {
-          ElMessage({
-            showClose: true,
-            message: '注册信息填写错误，请重新填写',
-            type: 'error',
-          })
-        }
+    } else {
+      ElMessage({
+        message: '登录信息填写错误',
+        type: 'error',
       })
     }
-    return {
-      loginForm,
-      registerForm,
-      loginFormRef,
-      registerFormRef,
-      mySwitch,
-      login,
-      register,
-      rules
+  })
+}
+
+const register = () => {
+  registerFormRef.value.validate((valid) => {
+    if (valid) {
+      axios({
+        method: 'POST',
+        url: '/api/user/save',
+        data: {
+          userName: registerForm.name,
+          userPassword: registerForm.password
+        }
+      }).then(
+          response => {
+            ElMessage({
+              showClose: true,
+              duration: 0,
+              message: '注册成功，您的账号为' + response.data.rows,
+              type: 'success',
+            })
+            //切换窗口
+            mySwitch()
+          }
+          , error => {
+            ElMessage({
+              showClose: true,
+              message: '注册失败，网络错误',
+              type: 'warning',
+            })
+            localStorage.setItem('token', null)
+          })
+    } else {
+      ElMessage({
+        showClose: true,
+        message: '注册信息填写错误，请重新填写',
+        type: 'error',
+      })
     }
-  }
+  })
 }
 </script>
 

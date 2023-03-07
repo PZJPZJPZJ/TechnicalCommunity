@@ -105,175 +105,156 @@
 
 </template>
 
-<script>
+<script setup>
 
 import {ref, onMounted} from 'vue'
 import {ElLoading, ElMessage} from 'element-plus'
 import axios from 'axios'
 import router from "@/router";
 
-export default {
-  setup() {
-    //获取当前url参数
-    const queryString = window.location.search;
-    const queryParams = new URLSearchParams(queryString);
-    //当前帖子信息
-    const thisPost = ref([])
-    //帖子图片
-    const pictureUrl = ref([])
-    //全部评论信息
-    const commentData = ref([])
-    //评论加载状态
-    const loading = ref(false)
-    //评论分页
-    const currentPage = ref(1)
-    const pageSize = ref(10)
-    //评论总数
-    const total = ref(0)
-    //抽屉开启状态
-    const drawerComment = ref(false)
-    const drawerBuy = ref(false)
-    //新增评论文本框
-    const commentArea = ref('')
-    //这是我的帖子
-    const isMyPost = ref(false)
+//获取当前url参数
+const queryString = window.location.search;
+const queryParams = new URLSearchParams(queryString);
+//当前帖子信息
+const thisPost = ref([])
+//帖子图片
+const pictureUrl = ref([])
+//全部评论信息
+const commentData = ref([])
+//评论加载状态
+const loading = ref(false)
+//评论分页
+const currentPage = ref(1)
+const pageSize = ref(10)
+//评论总数
+const total = ref(0)
+//抽屉开启状态
+const drawerComment = ref(false)
+const drawerBuy = ref(false)
+//新增评论文本框
+const commentArea = ref('')
+//这是我的帖子
+const isMyPost = ref(false)
 
-    //获取当前帖子
-    const loadThisPost = async () => {
-      const {data} = await axios({
-        method: 'GET',
-        url: '/api/post/show?id=' + queryParams.get('id'),
-        headers: {
-          Authorization: localStorage.getItem('token')
-        }
-      })
-      //直接覆盖写入数组
-      thisPost.value = data.rows
-      //判断是否为当前用户的帖子
-      if(thisPost.value.postUser.toString()===localStorage.getItem('user').toString()){
-        isMyPost.value = true
-      }
+//获取当前帖子
+const loadThisPost = async () => {
+  const {data} = await axios({
+    method: 'GET',
+    url: '/api/post/show?id=' + queryParams.get('id'),
+    headers: {
+      Authorization: localStorage.getItem('token')
     }
-
-    //加载当前帖子图片
-    const loadPicture = async () => {
-      const {data} = await axios({
-        method: 'GET',
-        url: '/api/picture/download?id=' + queryParams.get('id'),
-        headers: {
-          Authorization: localStorage.getItem('token')
-        }
-      })
-      //直接覆盖写入数组
-      pictureUrl.value = data.rows.map((row) => row.pictureUrl)
-    }
-
-    const loadMoreData = async () => {
-      //正在加载时不再提交请求防止一直处于页面底部刷新
-      if (loading.value) return
-      //开启加载状态
-      loading.value = true
-      //提交请求
-      const {data} = await axios({
-        method: 'POST',
-        url: '/api/comment/list',
-        data: {
-          pageNum: currentPage.value,
-          pageSize: pageSize.value,
-          postId: queryParams.get('id')
-        },
-        headers: {
-          Authorization: localStorage.getItem('token')
-        }
-      })
-      //在数组后增加数据
-      commentData.value = [...commentData.value, ...data.rows]
-      total.value = data.total
-      currentPage.value++
-      //禁用加载状态
-      loading.value = false
-    }
-
-    //上传评论
-    const uploadComment = async () => {
-      //消息为空则禁止提交
-      if (commentArea.value === '') {
-        ElMessage({
-          message: '请输入评论内容',
-          type: 'warning',
-        })
-        return
-      }
-      //提交请求
-      await axios({
-        method: 'POST',
-        url: '/api/comment/save',
-        data: {
-          commentContent: commentArea.value,
-          commentUser: localStorage.getItem('user'),
-          commentPost: queryParams.get('id')
-        },
-        headers: {
-          Authorization: localStorage.getItem('token')
-        }
-      })
-      commentArea.value = ''
-      drawerComment.value = false
-      currentPage.value = 1
-      commentData.value = []
-      await loadMoreData()
-    }
-
-    //提交购买
-    const submitBuy = () => {
-      ElMessage({
-        message: '交易成功',
-        type: 'success',
-      })
-      router.push('/home')
-    }
-
-    //滚动到底部执行自动刷新
-    const handleScroll = () => {
-      const scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
-      const windowHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight
-      const scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight
-      if (scrollTop + windowHeight >= scrollHeight) {
-        loadMoreData()
-      }
-    }
-
-    onMounted(() => {
-      window.addEventListener('scroll', handleScroll)
-      const loadingInstance = ElLoading.service({text: 'Loading...', fullscreen: true})
-      loadThisPost()
-      loadPicture()
-      loadMoreData().finally(() => {
-        loadingInstance.close()
-      })
-    })
-
-    //处理登出
-    const logout = () => {
-      localStorage.setItem('token', null)
-      window.location.reload();
-    }
-
-    return {
-      thisPost,
-      commentData,
-      loading,
-      pictureUrl,
-      loadMoreData,
-      drawerComment,
-      commentArea,
-      uploadComment,
-      drawerBuy,
-      submitBuy,
-      logout,
-      isMyPost
-    }
+  })
+  //直接覆盖写入数组
+  thisPost.value = data.rows
+  //判断是否为当前用户的帖子
+  if (thisPost.value.postUser.toString() === localStorage.getItem('user').toString()) {
+    isMyPost.value = true
   }
+}
+
+//加载当前帖子图片
+const loadPicture = async () => {
+  const {data} = await axios({
+    method: 'GET',
+    url: '/api/picture/download?id=' + queryParams.get('id'),
+    headers: {
+      Authorization: localStorage.getItem('token')
+    }
+  })
+  //直接覆盖写入数组
+  pictureUrl.value = data.rows.map((row) => row.pictureUrl)
+}
+
+const loadMoreData = async () => {
+  //正在加载时不再提交请求防止一直处于页面底部刷新
+  if (loading.value) return
+  //开启加载状态
+  loading.value = true
+  //提交请求
+  const {data} = await axios({
+    method: 'POST',
+    url: '/api/comment/list',
+    data: {
+      pageNum: currentPage.value,
+      pageSize: pageSize.value,
+      postId: queryParams.get('id')
+    },
+    headers: {
+      Authorization: localStorage.getItem('token')
+    }
+  })
+  //在数组后增加数据
+  commentData.value = [...commentData.value, ...data.rows]
+  total.value = data.total
+  currentPage.value++
+  //禁用加载状态
+  loading.value = false
+}
+
+//上传评论
+const uploadComment = async () => {
+  //消息为空则禁止提交
+  if (commentArea.value === '') {
+    ElMessage({
+      message: '请输入评论内容',
+      type: 'warning',
+    })
+    return
+  }
+  //提交请求
+  await axios({
+    method: 'POST',
+    url: '/api/comment/save',
+    data: {
+      commentContent: commentArea.value,
+      commentUser: localStorage.getItem('user'),
+      commentPost: queryParams.get('id')
+    },
+    headers: {
+      Authorization: localStorage.getItem('token')
+    }
+  })
+  commentArea.value = ''
+  drawerComment.value = false
+  currentPage.value = 1
+  commentData.value = []
+  await loadMoreData()
+}
+
+//提交购买
+const submitBuy = () => {
+  ElMessage({
+    message: '交易成功',
+    type: 'success',
+  })
+  router.push('/home')
+}
+
+//滚动到底部执行自动刷新
+const handleScroll = () => {
+  const scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
+  const windowHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight
+  const scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight
+  if (scrollTop + windowHeight >= scrollHeight) {
+    loadMoreData()
+  }
+}
+
+onMounted(() => {
+  window.addEventListener('scroll', handleScroll)
+  const loadingInstance = ElLoading.service({text: 'Loading...', fullscreen: true})
+  loadThisPost()
+  loadPicture()
+  loadMoreData().finally(() => {
+    loadingInstance.close()
+  })
+})
+
+//处理登出
+const logout = () => {
+  localStorage.setItem('token', null)
+  window.location.reload();
 }
 </script>
 
@@ -371,10 +352,5 @@ export default {
   font-size: 30px;
   margin: 5px 0;
   font-weight: bolder;
-}
-
-/*自定义顶栏*/
-.header-box {
-  justify-content: space-between;
 }
 </style>

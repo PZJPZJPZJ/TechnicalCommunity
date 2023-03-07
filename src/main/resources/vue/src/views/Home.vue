@@ -4,7 +4,31 @@
       <el-col :span="6">
         <h3>科技论坛</h3>
       </el-col>
-      <el-col :span="6"></el-col>
+      <el-col :span="6">
+        <router-link to="/home">热门</router-link>
+        <router-link to="/tag">分类</router-link>
+        <router-link to="/news">新闻</router-link>
+      </el-col>
+      <el-col :span="6">
+        <div class="mt-4">
+          <el-input
+              v-model="searchBox"
+              placeholder="请输入..."
+              class="input-with-select"
+          >
+            <template #prepend>
+              <el-select v-model="searchSelect" placeholder="搜索内容" style="width: 115px">
+                <el-option label="帖子" value="1" />
+                <el-option label="标签" value="2" />
+                <el-option label="新闻" value="3" />
+              </el-select>
+            </template>
+            <template #append>
+              <el-button type="success">搜索</el-button>
+            </template>
+          </el-input>
+        </div>
+      </el-col>
       <el-col :span="6">
         <el-dropdown :hide-on-click="false">
     <span class="el-dropdown-link">用户
@@ -12,10 +36,9 @@
     </span>
           <template #dropdown>
             <el-dropdown-menu>
-              <el-dropdown-item @click="logout">注销</el-dropdown-item>
-              <el-dropdown-item>Action 2</el-dropdown-item>
-              <el-dropdown-item disabled>Action 4</el-dropdown-item>
-              <el-dropdown-item divided>Action 5</el-dropdown-item>
+              <el-dropdown-item @click="editInfo">编辑信息</el-dropdown-item>
+              <el-dropdown-item @click="logout">注销登录</el-dropdown-item>
+              <el-dropdown-item @click="toChat">用户私信</el-dropdown-item>
             </el-dropdown-menu>
           </template>
         </el-dropdown>
@@ -91,7 +114,8 @@
         placeholder="帖子标签"
         @select="handleSelect"
     />
-    <input class="custom-upload-button" type="file" ref="fileInput" accept=".jpg,.jpeg,.png" multiple @change="onFileChange">
+    <input class="custom-upload-button" type="file" ref="fileInput" accept=".jpg,.jpeg,.png" multiple
+           @change="onFileChange">
     <br>
     <el-switch
         v-model="isGoods"
@@ -115,217 +139,207 @@
   <el-backtop :right="15" :bottom="15"/>
 </template>
 
-<script>
+<script setup>
 
 import {ref, onMounted, reactive} from 'vue'
 import {ElLoading, ElMessage} from 'element-plus'
 import axios from 'axios'
 import {useRouter} from "vue-router";
 
-export default {
-  setup() {
-    const router = useRouter()
-    const postData = ref([])
-    //上传新帖子数据
-    const newPost = reactive({
-      title: '',
-      content: '',
-      tag: '',
-      price: ''
-    })
-    //判断是否新建帖子为商品
-    const isGoods = ref(false)
-    //全部tag
-    const allTags = ref([])
-    //选择tag
-    const selectTag = ref('')
-    const newsData = ref([])
-    const loading = ref(false)
-    const currentPage = ref(1)
-    const pageSize = ref(10)
-    const total = ref(0)
-    //抽屉开启状态
-    const drawer = ref(false)
-    //文件信息
-    const files = ref([]);
+const router = useRouter()
+const searchBox = ref('')
+const searchSelect = ref('')
+const postData = ref([])
+//上传新帖子数据
+const newPost = reactive({
+  title: '',
+  content: '',
+  tag: '',
+  price: ''
+})
+//判断是否新建帖子为商品
+const isGoods = ref(false)
+//全部tag
+const allTags = ref([])
+//选择tag
+const selectTag = ref('')
+const newsData = ref([])
+const loading = ref(false)
+const currentPage = ref(1)
+const pageSize = ref(10)
+const total = ref(0)
+//抽屉开启状态
+const drawer = ref(false)
+//文件信息
+const files = ref([]);
 
-    //接收到图片选中
-    const onFileChange = (event) => {
-      files.value = event.target.files;
-    };
+//接收到图片选中
+const onFileChange = (event) => {
+  files.value = event.target.files;
+};
 
-    const uploadFiles = async (postId) => {
-      // 创建 FormData 对象
-      const formData = new FormData();
-      // 将选择的文件添加到 FormData 对象中
-      for (let i = 0; i < files.value.length; i++) {
-        formData.append('files', files.value[i]);
+const uploadFiles = async (postId) => {
+  // 创建 FormData 对象
+  const formData = new FormData();
+  // 将选择的文件添加到 FormData 对象中
+  for (let i = 0; i < files.value.length; i++) {
+    formData.append('files', files.value[i]);
+  }
+  // 发送请求
+  try {
+    const response = await axios.post('/api/picture/upload?id=' + postId, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+        'Authorization': localStorage.getItem('token')
+      },
+    });
+    console.log(response);
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+const loadMoreData = async () => {
+  if (loading.value) return
+  loading.value = true
+  const {data} = await axios.post('/api/post/hot', {
+        pageNum: currentPage.value,
+        pageSize: pageSize.value,
       }
-      // 发送请求
-      try {
-        const response = await axios.post('/api/picture/upload?id=' + postId, formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-            'Authorization': localStorage.getItem('token')
-          },
-        });
-        console.log(response);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    const loadMoreData = async () => {
-      if (loading.value) return
-      loading.value = true
-      const {data} = await axios.post('/api/post/hot', {
-            pageNum: currentPage.value,
-            pageSize: pageSize.value,
-          }
-          , {
-            headers: {Authorization: localStorage.getItem('token')}
-          })
-      postData.value = [...postData.value, ...data.rows]
-      total.value = data.total
-      currentPage.value++
-      loading.value = false
-    }
-
-    //加载新闻
-    const loadNews = async () => {
-      const {data} = await axios({
-        method: 'GET',
-        url: '/api/news/list',
-        headers: {
-          Authorization: localStorage.getItem('token')
-        }
+      , {
+        headers: {Authorization: localStorage.getItem('token')}
       })
-      newsData.value = data.rows
-      console.log(newsData.value)
-    }
+  postData.value = [...postData.value, ...data.rows]
+  total.value = data.total
+  currentPage.value++
+  loading.value = false
+}
 
-    //滚动到底部执行自动刷新
-    const handleScroll = () => {
-      const scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
-      const windowHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight
-      const scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight
-      if (scrollTop + windowHeight >= scrollHeight) {
+//加载新闻
+const loadNews = async () => {
+  const {data} = await axios({
+    method: 'GET',
+    url: '/api/news/list',
+    headers: {
+      Authorization: localStorage.getItem('token')
+    }
+  })
+  newsData.value = data.rows
+  console.log(newsData.value)
+}
+
+//滚动到底部执行自动刷新
+const handleScroll = () => {
+  const scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
+  const windowHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight
+  const scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight
+  if (scrollTop + windowHeight >= scrollHeight) {
+    loadMoreData()
+  }
+}
+
+//加载随机标签
+const loadRandTag = () => {
+
+}
+
+//查询可用标签
+const loadTags = async () => {
+  const {data} = await axios({
+    method: 'GET',
+    url: '/api/tag/list',
+    headers: {
+      Authorization: localStorage.getItem('token')
+    }
+  })
+  allTags.value = data.rows
+  console.log(allTags.value)
+}
+
+//点击标签
+const handleSelect = () => {
+
+}
+
+//上传帖子
+const uploadPost = async () => {
+  //根据token获取用户ID
+  const {data} = await axios({
+    method: 'GET',
+    url: '/api/user/name?token=' + localStorage.getItem('token'),
+    headers: {
+      Authorization: localStorage.getItem('token')
+    }
+  })
+  await axios({
+    method: 'POST',
+    url: '/api/post/save',
+    data: {
+      postUser: data,
+      postTag: 1,
+      postTitle: newPost.title,
+      postContent: newPost.content,
+      postPrice: newPost.price
+    },
+    headers: {
+      Authorization: localStorage.getItem('token')
+    }
+  }).then(
+      response => {
+        //获取到ID后上传图片
+        uploadFiles(response.data.rows)
+        ElMessage({
+          message: '发布成功',
+          type: 'success',
+        })
+        drawer.value = false
+        currentPage.value = 1
+        postData.value = []
         loadMoreData()
       }
-    }
+      , error => {
+        ElMessage({
+          message: '输入有误',
+          type: 'error',
+        })
+      }
+  )
+}
 
-    //加载随机标签
-    const loadRandTag = () => {
+//点击跳转对应帖子
+const handleViewPost = (postId) => {
+  router.push(`/post?id=${postId}`)
+}
 
-    }
+//点击跳转对应新闻
+const handleViewNews = (newsId) => {
+  router.push(`/news?id=${newsId}`)
+}
 
-    //查询可用标签
-    const loadTags = async () => {
-      const {data} = await axios({
-        method: 'GET',
-        url: '/api/tag/list',
-        headers: {
-          Authorization: localStorage.getItem('token')
-        }
-      })
-      allTags.value = data.rows
-      console.log(allTags.value)
-    }
+//跳转私信页面
+const toChat = () =>{
+  router.push('/chat')
+}
 
-    //点击标签
-    const handleSelect = () => {
+//加载触发
+onMounted(() => {
+  window.addEventListener('scroll', handleScroll)
+  const loadingInstance = ElLoading.service({text: 'Loading...', fullscreen: true})
+  loadNews()
+  loadMoreData().finally(() => {
+    loadingInstance.close()
+  })
+})
 
-    }
+//跳转用户详情页
+const editInfo = () => {
+  router.push("/info")
+}
 
-    //上传帖子
-    const uploadPost = async () => {
-      //根据token获取用户ID
-      const {data} = await axios({
-        method: 'GET',
-        url: '/api/user/name?token=' + localStorage.getItem('token'),
-        headers: {
-          Authorization: localStorage.getItem('token')
-        }
-      })
-      await axios({
-        method: 'POST',
-        url: '/api/post/save',
-        data: {
-          postUser: data,
-          postTag: 1,
-          postTitle: newPost.title,
-          postContent: newPost.content,
-          postPrice: newPost.price
-        },
-        headers: {
-          Authorization: localStorage.getItem('token')
-        }
-      }).then(
-          response => {
-            //获取到ID后上传图片
-            uploadFiles(response.data.rows)
-            ElMessage({
-              message: '发布成功',
-              type: 'success',
-            })
-            drawer.value = false
-            currentPage.value = 1
-            postData.value = []
-            loadMoreData()
-          }
-          , error => {
-            ElMessage({
-              message: '输入有误',
-              type: 'error',
-            })
-          }
-      )
-    }
-
-    //点击跳转对应帖子
-    const handleViewPost = (postId) => {
-      router.push(`/post?id=${postId}`)
-    }
-
-    //点击跳转对应新闻
-    const handleViewNews = (newsId) => {
-      router.push(`/news?id=${newsId}`)
-    }
-
-    //加载触发
-    onMounted(() => {
-      window.addEventListener('scroll', handleScroll)
-      const loadingInstance = ElLoading.service({text: 'Loading...', fullscreen: true})
-      loadNews()
-      loadMoreData().finally(() => {
-        loadingInstance.close()
-      })
-    })
-
-    //处理登出
-    const logout = () => {
-      localStorage.setItem('token', null)
-      window.location.reload();
-    }
-
-    return {
-      postData,
-      loading,
-      loadMoreData,
-      handleViewPost,
-      drawer,
-      newsData,
-      handleViewNews,
-      logout,
-      newPost,
-      uploadPost,
-      isGoods,
-      allTags,
-      loadTags,
-      selectTag,
-      onFileChange
-    }
-  }
+//处理登出
+const logout = () => {
+  localStorage.setItem('token', null)
+  window.location.reload();
 }
 </script>
 
@@ -393,17 +407,12 @@ export default {
   font-size: 14px;
 }
 
-/*自定义顶栏*/
-.header-box {
-  justify-content: space-between;
-}
-
 .custom-upload-button {
   display: inline-block;
   padding: 4px;
   margin: 8px;
   font-size: 14px;
-  box-shadow: 0 0 0 1px var(--el-input-border-color,var(--el-border-color)) inset;
+  box-shadow: 0 0 0 1px var(--el-input-border-color, var(--el-border-color)) inset;
   border-radius: 4px;
   cursor: pointer;
 }
