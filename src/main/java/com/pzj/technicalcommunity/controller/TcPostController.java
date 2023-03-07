@@ -159,11 +159,12 @@ public class TcPostController {
     /**
      * Description 新建帖子
      * Param 帖子实体(json)
-     * Return 执行结果(bool)
+     * Return 新帖子ID(json)
      */
     @PostMapping("/save")
-    public boolean save(@RequestBody TcPost tcPost){
-        return iTcPostService.save(tcPost);
+    public ResultPackage save(@RequestBody TcPost tcPost){
+        iTcPostService.save(tcPost);
+        return ResultPackage.pack(tcPost.getPostId());
     }
 
     /**

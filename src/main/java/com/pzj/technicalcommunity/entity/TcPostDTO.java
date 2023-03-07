@@ -1,5 +1,6 @@
 package com.pzj.technicalcommunity.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -19,6 +20,7 @@ public class TcPostDTO {
 
     private String postContent;
 
+    @JsonFormat(pattern = "yyyy年MM月dd日 HH:mm:ss")
     private LocalDateTime postTime;
 
     private Boolean postTop;

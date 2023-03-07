@@ -42,7 +42,7 @@
               <el-image
                   v-for="i in 3"
                   class="card-img"
-                  :src="pictureUrl[i]"
+                  :src="pictureUrl[i-1]"
                   :zoom-rate="1.2"
                   :preview-src-list="pictureUrl"
                   :initial-index="i"
@@ -135,6 +135,8 @@ export default {
     const drawerBuy = ref(false)
     //新增评论文本框
     const commentArea = ref('')
+    //这是我的帖子
+    const isMyPost = ref(false)
 
     //获取当前帖子
     const loadThisPost = async () => {
@@ -147,6 +149,10 @@ export default {
       })
       //直接覆盖写入数组
       thisPost.value = data.rows
+      //判断是否为当前用户的帖子
+      if(thisPost.value.postUser.toString()===localStorage.getItem('user').toString()){
+        isMyPost.value = true
+      }
     }
 
     //加载当前帖子图片
@@ -198,21 +204,13 @@ export default {
         })
         return
       }
-      //获取用户ID
-      const {data} = await axios({
-        method: 'GET',
-        url: '/api/user/name?token=' + localStorage.getItem('token'),
-        headers: {
-          Authorization: localStorage.getItem('token')
-        }
-      })
       //提交请求
       await axios({
         method: 'POST',
         url: '/api/comment/save',
         data: {
           commentContent: commentArea.value,
-          commentUser: data,
+          commentUser: localStorage.getItem('user'),
           commentPost: queryParams.get('id')
         },
         headers: {
@@ -223,15 +221,15 @@ export default {
       drawerComment.value = false
       currentPage.value = 1
       commentData.value = []
-      loadMoreData()
+      await loadMoreData()
     }
 
     //提交购买
-    const submitBuy = () =>{
-        ElMessage({
-          message: '交易成功',
-          type: 'success',
-        })
+    const submitBuy = () => {
+      ElMessage({
+        message: '交易成功',
+        type: 'success',
+      })
       router.push('/home')
     }
 
@@ -272,7 +270,8 @@ export default {
       uploadComment,
       drawerBuy,
       submitBuy,
-      logout
+      logout,
+      isMyPost
     }
   }
 }

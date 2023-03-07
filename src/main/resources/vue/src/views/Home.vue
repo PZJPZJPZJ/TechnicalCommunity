@@ -108,13 +108,7 @@
         :min="0"
         controls-position="right"
     />
-    <el-upload
-        v-model:file-list="fileList"
-        action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15"
-        list-type="picture-card"
-        :on-preview="handlePictureCardPreview"
-        :on-remove="handleRemove"
-    ></el-upload>
+    <input type="file" ref="fileInput" multiple @change="onFileChange">
     <el-button type="success" @click="uploadPost">发布</el-button>
   </el-drawer>
   <el-backtop :right="15" :bottom="15"/>
@@ -151,6 +145,34 @@ export default {
     const total = ref(0)
     //抽屉开启状态
     const drawer = ref(false)
+    //文件信息
+    const files = ref([]);
+
+    //接收到图片选中
+    const onFileChange = (event) => {
+      files.value = event.target.files;
+    };
+
+    const uploadFiles = async (postId) => {
+      // 创建 FormData 对象
+      const formData = new FormData();
+      // 将选择的文件添加到 FormData 对象中
+      for (let i = 0; i < files.value.length; i++) {
+        formData.append('files', files.value[i]);
+      }
+      // 发送请求
+      try {
+        const response = await axios.post('/api/picture/upload?id='+ postId , formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            'Authorization': localStorage.getItem('token')
+          },
+        });
+        console.log(response);
+      } catch (error) {
+        console.error(error);
+      }
+    };
 
     const loadMoreData = async () => {
       if (loading.value) return
@@ -229,7 +251,7 @@ export default {
         url: '/api/post/save',
         data: {
           postUser: data,
-          postTag: newPost.tag,
+          postTag: 1,
           postTitle: newPost.title,
           postContent: newPost.content,
           postPrice: newPost.price
@@ -239,10 +261,16 @@ export default {
         }
       }).then(
           response => {
+            //获取到ID后上传图片
+            uploadFiles(response.data.rows)
             ElMessage({
               message: '发布成功',
               type: 'success',
             })
+            drawer.value = false
+            currentPage.value = 1
+            postData.value = []
+            loadMoreData()
           }
           , error => {
             ElMessage({
@@ -279,19 +307,6 @@ export default {
       window.location.reload();
     }
 
-    //
-    const dialogImageUrl = ref('')
-    const dialogVisible = ref(false)
-
-    const handleRemove = (uploadFile, uploadFiles) => {
-      console.log(uploadFile, uploadFiles)
-    }
-
-    const handlePictureCardPreview = (uploadFile) => {
-      dialogImageUrl.value = uploadFile.url
-          dialogVisible.value = true
-    }
-
     return {
       postData,
       loading,
@@ -307,8 +322,7 @@ export default {
       allTags,
       loadTags,
       selectTag,
-      handleRemove,
-      handlePictureCardPreview
+      onFileChange
     }
   }
 }

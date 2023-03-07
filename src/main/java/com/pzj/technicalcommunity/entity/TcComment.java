@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import java.time.LocalDateTime;
 import java.io.Serializable;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -30,6 +32,7 @@ public class TcComment implements Serializable {
 
     private String commentContent;
 
+    @JsonFormat(pattern = "yyyy年MM月dd日 HH:mm:ss")
     private LocalDateTime commentTime;
 
 

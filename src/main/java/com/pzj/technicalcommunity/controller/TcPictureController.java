@@ -60,7 +60,7 @@ public class TcPictureController {
         for (MultipartFile file : files) {
             // 生成新的文件名
             String name = generateUUID() + getFileExtension(file.getOriginalFilename());
-            String path = "C:\\Users\\13425\\Documents\\JetBrains\\TechnicalCommunity\\src\\main\\resources\\static\\"+name;
+            String path = "C:\\Users\\13425\\Documents\\JetBrains\\TechnicalCommunity\\target\\classes\\static\\img\\"+name;
             String url = "http://localhost:8080/img/" + name;
             //写入文件
             file.transferTo(new File(path));

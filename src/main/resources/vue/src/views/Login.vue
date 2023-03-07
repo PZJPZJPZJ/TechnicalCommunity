@@ -158,6 +158,7 @@ export default {
                       type: 'success',
                     })
                     localStorage.setItem('token', response.headers['authorization'])
+                    localStorage.setItem('user', response.data.userinfo.username)
                     router.push('/home')
                   }
                   , error => {

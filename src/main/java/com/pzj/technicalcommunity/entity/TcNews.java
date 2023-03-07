@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import java.time.LocalDateTime;
 import java.io.Serializable;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -32,6 +34,7 @@ public class TcNews implements Serializable {
 
     private String newsCover;
 
+    @JsonFormat(pattern = "yyyy年MM月dd日 HH:mm:ss")
     private LocalDateTime newsTime;
 
 

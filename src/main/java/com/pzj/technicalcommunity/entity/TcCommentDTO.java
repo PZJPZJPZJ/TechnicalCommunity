@@ -1,5 +1,6 @@
 package com.pzj.technicalcommunity.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -15,5 +16,6 @@ public class TcCommentDTO {
 
     private String commentContent;
 
+    @JsonFormat(pattern = "yyyy年MM月dd日 HH:mm:ss")
     private LocalDateTime commentTime;
 }
