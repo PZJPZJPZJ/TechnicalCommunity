@@ -50,22 +50,17 @@ public class TcTagController {
     }
 
     /**
-     * Description 新建帖子时可以键入选择，分类展示页面可以键入查询
+     * Description 展示标签键入查询
      * Param 分页信息，查询关键词(json)
      * Return 查询结果(json)
      */
-    @PostMapping ("/search")
-    public ResultPackage search(@RequestBody HashMap hashMap){
-        //设置页数和页大小
-        Page<TcTag> page = new Page<>();
-        page.setCurrent((int)hashMap.get("pageNum"));
-        page.setSize((int)hashMap.get("pageSize"));
+    @GetMapping ("/search")
+    public ResultPackage search(String str){
         //设置查询条件
         QueryWrapper<TcTag> queryWrapper = new QueryWrapper<>();
-        queryWrapper.like("tag_name",hashMap.get("tagName"));
+        queryWrapper.like("tag_name",str);
         //执行查询
-        IPage<TcTag> iPage = iTcTagService.page(page,queryWrapper);
-        return ResultPackage.pack(iPage.getRecords(),iPage.getTotal());
+        return ResultPackage.pack(iTcTagService.list(queryWrapper));
     }
 
     /**

@@ -18,9 +18,9 @@
           >
             <template #prepend>
               <el-select v-model="searchSelect" placeholder="搜索内容" style="width: 115px">
-                <el-option label="帖子" value="1" />
-                <el-option label="标签" value="2" />
-                <el-option label="新闻" value="3" />
+                <el-option label="帖子" value="1"/>
+                <el-option label="标签" value="2"/>
+                <el-option label="新闻" value="3"/>
               </el-select>
             </template>
             <template #append>
@@ -37,8 +37,8 @@
           <template #dropdown>
             <el-dropdown-menu>
               <el-dropdown-item @click="editInfo">编辑信息</el-dropdown-item>
-              <el-dropdown-item @click="logout">注销登录</el-dropdown-item>
               <el-dropdown-item @click="toChat">用户私信</el-dropdown-item>
+              <el-dropdown-item @click="logout">注销登录</el-dropdown-item>
             </el-dropdown-menu>
           </template>
         </el-dropdown>
@@ -109,7 +109,7 @@
         type="textarea"
     />
     <el-autocomplete
-        v-model="selectTag"
+        v-model="inputTag"
         :fetch-suggestions="querySearchAsync"
         placeholder="帖子标签"
         @select="handleSelect"
@@ -129,8 +129,8 @@
         v-model="newPost.price"
         :precision="2"
         :step="1"
-        :max="9999"
-        :min="0"
+        :max="9999.99"
+        :min="0.01"
         controls-position="right"
     />
     <br>
@@ -162,6 +162,7 @@ const isGoods = ref(false)
 //全部tag
 const allTags = ref([])
 //选择tag
+const inputTag = ref('')
 const selectTag = ref('')
 const newsData = ref([])
 const loading = ref(false)
@@ -243,22 +244,27 @@ const loadRandTag = () => {
 
 }
 
-//查询可用标签
-const loadTags = async () => {
-  const {data} = await axios({
+//点击标签获取ID写入变量
+const handleSelect = (value) => {
+  selectTag.value = value.label
+}
+
+//键入时查询标签建议
+  const querySearchAsync = async (queryString, callback)=>{
+  const response = await axios({
     method: 'GET',
-    url: '/api/tag/list',
+    url: '/api/tag/search?str='+inputTag.value,
     headers: {
       Authorization: localStorage.getItem('token')
     }
   })
-  allTags.value = data.rows
-  console.log(allTags.value)
-}
-
-//点击标签
-const handleSelect = () => {
-
+  const mappedData = response.data.rows.map((item) => {
+    return {
+      value: item.tagName, // 将 id 映射到 value
+      label: item.tagId, // 将 name 映射到 label
+    };
+  });
+  callback(mappedData)
 }
 
 //上传帖子
@@ -276,7 +282,7 @@ const uploadPost = async () => {
     url: '/api/post/save',
     data: {
       postUser: data,
-      postTag: 1,
+      postTag: selectTag.value,
       postTitle: newPost.title,
       postContent: newPost.content,
       postPrice: newPost.price
@@ -317,7 +323,7 @@ const handleViewNews = (newsId) => {
 }
 
 //跳转私信页面
-const toChat = () =>{
+const toChat = () => {
   router.push('/chat')
 }
 
