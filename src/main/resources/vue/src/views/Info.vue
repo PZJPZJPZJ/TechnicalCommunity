@@ -4,18 +4,39 @@
       <el-col :span="6">
         <h3>科技论坛</h3>
       </el-col>
-      <el-col :span="6"></el-col>
+      <el-col :span="6">
+        <router-link to="/home">热门</router-link>
+        <router-link to="/tag">分类</router-link>
+        <router-link to="/news">新闻</router-link>
+      </el-col>
+      <el-col :span="6">
+        <div class="mt-4">
+          <el-input
+              v-model="searchBox"
+              placeholder="请输入..."
+              class="input-with-select"
+          >
+            <template #prepend>
+              <el-select v-model="searchSelect" placeholder="搜索内容" style="width: 115px">
+                <el-option label="帖子" value="1"/>
+                <el-option label="标签" value="2"/>
+                <el-option label="新闻" value="3"/>
+              </el-select>
+            </template>
+            <template #append>
+              <el-button type="success">搜索</el-button>
+            </template>
+          </el-input>
+        </div>
+      </el-col>
       <el-col :span="6">
         <el-dropdown :hide-on-click="false">
-    <span class="el-dropdown-link">用户
-    <el-icon class="el-icon--right"><arrow-down/></el-icon>
-    </span>
+          <span class="el-dropdown-link">用户</span>
           <template #dropdown>
             <el-dropdown-menu>
-              <el-dropdown-item @click="editInfo">编辑信息</el-dropdown-item>
+              <el-dropdown-item @click="editInfo">用户中心</el-dropdown-item>
+              <el-dropdown-item @click="toChat">用户私信</el-dropdown-item>
               <el-dropdown-item @click="logout">注销登录</el-dropdown-item>
-              <el-dropdown-item disabled>Action 4</el-dropdown-item>
-              <el-dropdown-item divided>Action 5</el-dropdown-item>
             </el-dropdown-menu>
           </template>
         </el-dropdown>
@@ -59,8 +80,8 @@
         </el-card>
 
         <el-card class="title-card">
-          <span v-if="!isAdmin">我的帖子</span>
-          <span v-if="isAdmin">全部帖子</span>
+          <span v-if="!isAdmin">我的帖子({{total}})</span>
+          <span v-if="isAdmin">全站帖子({{total}})</span>
         </el-card>
 
         <el-card class="post-card" v-for="post in postData" :key="post.id">
@@ -73,8 +94,11 @@
             <div class="title">{{ post.postTitle.substring(0, 20) }}</div>
             <div class="content">{{ post.postContent.substring(0, 100) }}...</div>
           </div>
-          <div class="post-footer">
+          <div class="near-footer">
             <el-tag class="tag" @click="handleViewTag(post.postTag)">{{ post.tagName }}</el-tag>
+            <div class="time">{{ post.postTime }}</div>
+          </div>
+          <div class="post-footer">
             <div class="topOrBottom" v-if="isAdmin">
               <el-popconfirm v-if="!post.postTop" title="确定要置顶吗？" confirm-button-text="确认" cancel-button-text="取消"
                               @confirm="topPost(post.postId)">
@@ -95,7 +119,6 @@
                 <el-button type="danger">删除该帖</el-button>
               </template>
             </el-popconfirm>
-            <div class="time">{{ post.postTime }}</div>
           </div>
         </el-card>
         <div v-if="loading" style="text-align: center">Loading...</div>
@@ -356,6 +379,15 @@ onMounted(() => {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.near-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+  margin-top: 10px;
+  padding-top: 10px;
 }
 
 .post-footer {

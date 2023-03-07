@@ -2,10 +2,8 @@
 
 </template>
 
-<script>
-export default {
-  name: "News"
-}
+<script setup>
+
 </script>
 
 <style scoped>

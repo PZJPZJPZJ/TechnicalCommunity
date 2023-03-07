@@ -2,10 +2,8 @@
 
 </template>
 
-<script>
-export default {
-  name: "Detail"
-}
+<script setup>
+
 </script>
 
 <style scoped>

@@ -16,13 +16,6 @@
               placeholder="请输入..."
               class="input-with-select"
           >
-            <template #prepend>
-              <el-select v-model="searchSelect" placeholder="搜索内容" style="width: 115px">
-                <el-option label="帖子" value="1"/>
-                <el-option label="标签" value="2"/>
-                <el-option label="新闻" value="3"/>
-              </el-select>
-            </template>
             <template #append>
               <el-button type="success">搜索</el-button>
             </template>
@@ -31,7 +24,7 @@
       </el-col>
       <el-col :span="6">
         <el-dropdown :hide-on-click="false">
-    <span class="el-dropdown-link">用户</span>
+          <span class="el-dropdown-link">用户</span>
           <template #dropdown>
             <el-dropdown-menu>
               <el-dropdown-item @click="editInfo">用户中心</el-dropdown-item>
@@ -147,18 +140,8 @@ import axios from 'axios'
 import {useRouter} from "vue-router";
 
 const router = useRouter()
-const searchBox = ref('')
-const searchSelect = ref('')
 const postData = ref([])
-//上传新帖子数据
-const newPost = reactive({
-  title: '',
-  content: '',
-  tag: '',
-  price: ''
-})
-//判断是否新建帖子为商品
-const isGoods = ref(false)
+
 //选择tag
 const inputTag = ref('')
 const selectTag = ref('')
@@ -169,14 +152,17 @@ const pageSize = ref(10)
 const total = ref(0)
 //抽屉开启状态
 const drawer = ref(false)
+
+/**
+ * 文件上传
+ */
 //文件信息
 const files = ref([]);
-
 //接收到图片选中
 const onFileChange = (event) => {
   files.value = event.target.files;
 };
-
+//上传图片
 const uploadFiles = async (postId) => {
   // 创建 FormData 对象
   const formData = new FormData();
@@ -198,6 +184,9 @@ const uploadFiles = async (postId) => {
   }
 };
 
+/**
+ * 刷新方法
+ */
 const loadMoreData = async () => {
   if (loading.value) return
   loading.value = true
@@ -213,12 +202,19 @@ const loadMoreData = async () => {
   currentPage.value++
   loading.value = false
 }
-
-//点击跳转对应标签
-const handleViewTag = (tagId) =>{
-  router.push(`/detail?id=${tagId}`)
+//滚动到底部执行自动刷新
+const handleScroll = () => {
+  const scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
+  const windowHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight
+  const scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight
+  if (scrollTop + windowHeight >= scrollHeight) {
+    loadMoreData()
+  }
 }
 
+/**
+ * 加载方法
+ */
 //加载新闻
 const loadNews = async () => {
   const {data} = await axios({
@@ -231,31 +227,23 @@ const loadNews = async () => {
   newsData.value = data.rows
 }
 
-//滚动到底部执行自动刷新
-const handleScroll = () => {
-  const scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
-  const windowHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight
-  const scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight
-  if (scrollTop + windowHeight >= scrollHeight) {
-    loadMoreData()
-  }
-}
-
 //加载随机标签
 const loadRandTag = () => {
 
 }
-
+/**
+ * 自动完成输入框
+ */
 //点击标签获取ID写入变量
 const handleSelect = (value) => {
   selectTag.value = value.label
 }
 
 //键入时查询标签建议
-  const querySearchAsync = async (queryString, callback)=>{
+const querySearchAsync = async (queryString, callback) => {
   const response = await axios({
     method: 'GET',
-    url: '/api/tag/search?str='+inputTag.value,
+    url: '/api/tag/search?str=' + inputTag.value,
     headers: {
       Authorization: localStorage.getItem('token')
     }
@@ -269,6 +257,18 @@ const handleSelect = (value) => {
   callback(mappedData)
 }
 
+/**
+ * 提交表单
+ */
+//上传新帖子数据
+const newPost = reactive({
+  title: '',
+  content: '',
+  tag: '',
+  price: ''
+})
+//判断是否新建帖子为商品
+const isGoods = ref(false)
 //上传帖子
 const uploadPost = async () => {
   //根据token获取用户ID
@@ -303,13 +303,13 @@ const uploadPost = async () => {
         //清除信息
         drawer.value = false
         files.value = []
-        newPost.title=''
-        newPost.content=''
-        newPost.tag=''
-        newPost.price=''
-        inputTag.value=''
-        selectTag.value=''
-        isGoods.value=false
+        newPost.title = ''
+        newPost.content = ''
+        newPost.tag = ''
+        newPost.price = ''
+        inputTag.value = ''
+        selectTag.value = ''
+        isGoods.value = false
         //刷新首页
         currentPage.value = 1
         postData.value = []
@@ -324,6 +324,9 @@ const uploadPost = async () => {
   )
 }
 
+/**
+ * 跳转
+ */
 //点击跳转对应帖子
 const handleViewPost = (postId) => {
   router.push(`/post?id=${postId}`)
@@ -334,20 +337,21 @@ const handleViewNews = (newsId) => {
   router.push(`/news?id=${newsId}`)
 }
 
+//点击跳转对应标签
+const handleViewTag = (tagId) => {
+  router.push(`/detail?id=${tagId}`)
+}
+
+/**
+ * 顶栏
+ */
+const searchBox = ref('')
+const searchSelect = ref('')
+
 //跳转私信页面
 const toChat = () => {
   router.push('/chat')
 }
-
-//加载触发
-onMounted(() => {
-  window.addEventListener('scroll', handleScroll)
-  const loadingInstance = ElLoading.service({text: 'Loading...', fullscreen: true})
-  loadNews()
-  loadMoreData().finally(() => {
-    loadingInstance.close()
-  })
-})
 
 //跳转用户详情页
 const editInfo = () => {
@@ -359,6 +363,18 @@ const logout = () => {
   localStorage.setItem('token', null)
   window.location.reload();
 }
+
+/**
+ * 加载方法
+ */
+onMounted(() => {
+  window.addEventListener('scroll', handleScroll)
+  const loadingInstance = ElLoading.service({text: 'Loading...', fullscreen: true})
+  loadNews()
+  loadMoreData().finally(() => {
+    loadingInstance.close()
+  })
+})
 </script>
 
 <style scoped>

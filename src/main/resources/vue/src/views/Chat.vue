@@ -2,10 +2,8 @@
 
 </template>
 
-<script>
-export default {
-  name: "Chat"
-}
+<script setup>
+
 </script>
 
 <style scoped>
