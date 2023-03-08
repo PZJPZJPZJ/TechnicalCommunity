@@ -1,30 +1,27 @@
 <template>
   <el-header>
     <el-row class="header-box">
-      <el-col :span="6">
-        <h3>科技论坛</h3>
+      <el-col :xs="0" :sm="0" :md="2" :lg="4" :xl="4"></el-col>
+      <el-col :xs="6" :sm="6" :md="4" :lg="4" :xl="4">
+        <h3 style="margin-top: 13px">科技论坛</h3>
       </el-col>
-      <el-col :span="6">
-        <router-link to="/home">热门</router-link>
-        <router-link to="/tag">分类</router-link>
-        <router-link to="/news">新闻</router-link>
+      <el-col :xs="12" :sm="12" :md="12" :lg="8" :xl="8">
+        <router-link to="/home">
+          <el-button style="height: 35px;width: 35px; margin: 13px 5px"  type="primary" link>热门</el-button>
+        </router-link>
+        <router-link to="/tag">
+          <el-button style="height: 35px;width: 35px; margin: 13px 5px" link>分类</el-button>
+        </router-link>
+        <router-link to="/news">
+          <el-button style="height: 35px;width: 35px; margin: 13px 5px" link>新闻</el-button>
+        </router-link>
       </el-col>
-      <el-col :span="6">
-        <div class="mt-4">
-          <el-input
-              v-model="searchBox"
-              placeholder="请输入..."
-              class="input-with-select"
-          >
-            <template #append>
-              <el-button type="success">搜索</el-button>
-            </template>
-          </el-input>
-        </div>
+      <el-col :xs="3" :sm="3" :md="2" :lg="2" :xl="2">
+        <el-button style="height: 35px;width: 35px; margin-top: 13px" :icon="Search" circle></el-button>
       </el-col>
-      <el-col :span="6">
+      <el-col :xs="3" :sm="3" :md="2" :lg="2" :xl="2">
         <el-dropdown :hide-on-click="false">
-          <span class="el-dropdown-link">用户</span>
+          <el-button style="height: 35px;width: 35px; margin-top: 13px" :icon="User" circle></el-button>
           <template #dropdown>
             <el-dropdown-menu>
               <el-dropdown-item @click="editInfo">用户中心</el-dropdown-item>
@@ -34,24 +31,27 @@
           </template>
         </el-dropdown>
       </el-col>
+      <el-col :xs="0" :sm="0" :md="2" :lg="4" :xl="4"></el-col>
     </el-row>
   </el-header>
   <el-main>
     <el-row>
-      <el-col :span="24">
+      <el-col :xs="0" :sm="0" :md="4" :lg="4" :xl="4"></el-col>
+      <el-col :xs="24" :sm="24" :md="16" :lg="16" :xl="16">
         <el-carousel height="150px" arrow="never">
-          <el-carousel-item v-for="news in newsData" :key="news" @click="handleViewNews(news.newsId)">
+          <el-carousel-item v-for="news in newsData" :key="news" @click="handleViewNews">
             <el-image
                 class="news-img"
                 :src="news.newsCover"
-                fit="cover"
+                fit="contain"
             />
           </el-carousel-item>
         </el-carousel>
       </el-col>
-
       <el-col :xs="0" :sm="0" :md="4" :lg="4" :xl="4"></el-col>
-
+    </el-row>
+    <el-row>
+      <el-col :xs="0" :sm="0" :md="4" :lg="4" :xl="4"></el-col>
       <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="12">
         <el-card class="post-card" v-for="post in postData" :key="post.postId">
           <div class="header">
@@ -69,7 +69,11 @@
             <div class="time">{{ post.postTime }}</div>
           </div>
         </el-card>
-        <div v-if="loading" style="text-align: center">Loading...</div>
+        <div v-if="loading" style="text-align: center">
+          <el-icon>
+            <Loading/>
+          </el-icon>
+        </div>
       </el-col>
 
       <el-col :xs="0" :sm="0" :md="4" :lg="4" :xl="4">
@@ -82,7 +86,7 @@
     </el-row>
   </el-main>
   <el-affix position="bottom" :offset="20">
-    <el-button type="success" style="margin-left: 16px" @click="drawer = true">发帖</el-button>
+    <el-button type="success" circle style="height: 40px;width: 40px" :icon="Plus" @click="drawer = true"></el-button>
   </el-affix>
   <el-drawer v-model="drawer" :direction="'btt'" :with-header="false" size="50%">
     <el-input
@@ -129,7 +133,6 @@
     <br>
     <el-button type="success" @click="uploadPost">发布</el-button>
   </el-drawer>
-  <el-backtop :right="15" :bottom="15"/>
 </template>
 
 <script setup>
@@ -137,6 +140,7 @@ import {ref, onMounted, reactive} from 'vue'
 import {ElLoading, ElMessage} from 'element-plus'
 import axios from 'axios'
 import {useRouter} from "vue-router";
+import {Search, Loading, User, Plus, ChatLineRound, ShoppingCart} from '@element-plus/icons'
 
 /**
  * 抽屉
@@ -332,8 +336,8 @@ const handleViewPost = (postId) => {
 }
 
 //点击跳转对应新闻
-const handleViewNews = (newsId) => {
-  router.push(`/news?id=${newsId}`)
+const handleViewNews = () => {
+  router.push(`/news`)
 }
 
 //点击跳转对应标签

@@ -1,30 +1,27 @@
 <template>
   <el-header>
     <el-row class="header-box">
-      <el-col :span="6">
-        <h3>科技论坛</h3>
+      <el-col :xs="0" :sm="0" :md="2" :lg="2" :xl="2"></el-col>
+      <el-col :xs="6" :sm="6" :md="4" :lg="4" :xl="4">
+        <h3 style="margin-top: 13px">科技论坛</h3>
       </el-col>
-      <el-col :span="6">
-        <router-link to="/home">热门</router-link>
-        <router-link to="/tag">分类</router-link>
-        <router-link to="/news">新闻</router-link>
+      <el-col :xs="12" :sm="6" :md="4" :lg="4" :xl="4">
+        <router-link to="/home">
+          <el-button style="height: 35px;width: 35px; margin: 13px 5px" link>热门</el-button>
+        </router-link>
+        <router-link to="/tag">
+          <el-button style="height: 35px;width: 35px; margin: 13px 5px" link>分类</el-button>
+        </router-link>
+        <router-link to="/news">
+          <el-button style="height: 35px;width: 35px; margin: 13px 5px" link>新闻</el-button>
+        </router-link>
       </el-col>
-      <el-col :span="6">
-        <div class="mt-4">
-          <el-input
-              v-model="searchBox"
-              placeholder="请输入..."
-              class="input-with-select"
-          >
-            <template #append>
-              <el-button type="success">搜索</el-button>
-            </template>
-          </el-input>
-        </div>
+      <el-col :xs="2" :sm="2" :md="2" :lg="2" :xl="2">
+        <el-button style="height: 35px;width: 35px; margin-top: 13px" :icon="Search" circle></el-button>
       </el-col>
-      <el-col :span="6">
+      <el-col :xs="2" :sm="2" :md="2" :lg="2" :xl="2">
         <el-dropdown :hide-on-click="false">
-          <span class="el-dropdown-link">用户</span>
+          <el-button style="height: 35px;width: 35px; margin-top: 13px" :icon="User" circle></el-button>
           <template #dropdown>
             <el-dropdown-menu>
               <el-dropdown-item @click="editInfo">用户中心</el-dropdown-item>
@@ -34,6 +31,7 @@
           </template>
         </el-dropdown>
       </el-col>
+      <el-col :xs="0" :sm="0" :md="2" :lg="2" :xl="2"></el-col>
     </el-row>
   </el-header>
   <el-main>
@@ -98,9 +96,8 @@
   </el-main>
   <el-backtop :right="15" :bottom="15"/>
   <el-affix position="bottom" :offset="20">
-    <el-button type="primary" style="margin-left: 16px" @click="drawerComment = true">评论</el-button>
-    <el-button v-if="thisPost.postPrice" type="danger" style="margin-left: 16px" @click="drawerBuy = true">购买
-    </el-button>
+    <el-button type="primary" circle style="height: 40px;width: 40px" :icon="ChatLineRound" @click="drawerComment = true"></el-button>
+    <el-button v-if="thisPost.postPrice" type="danger" circle style="height: 40px;width: 40px" :icon="ShoppingCart" @click="drawerBuy = true"></el-button>
   </el-affix>
   <el-drawer v-model="drawerComment" :direction="'btt'" :with-header="false">
     <el-input
@@ -116,7 +113,6 @@
   <el-drawer v-model="drawerBuy" :direction="'btt'" :with-header="false">
     <el-button @click="submitBuy()">结算</el-button>
   </el-drawer>
-
 </template>
 
 <script setup>
@@ -125,6 +121,7 @@ import {ref, onMounted} from 'vue'
 import {ElLoading, ElMessage} from 'element-plus'
 import axios from 'axios'
 import router from "@/router";
+import {Search, Loading, User, Plus, ChatLineRound, ShoppingCart} from '@element-plus/icons'
 
 //获取当前url参数
 const queryString = window.location.search;

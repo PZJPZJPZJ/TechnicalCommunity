@@ -95,6 +95,14 @@ onMounted(() => {
   background-color: rgba(255,255,255,0.2) !important;
 }
 
+.el-button{
+  display: inline-block !important;
+}
+
+.el-carousel{
+  border-radius: 5px;
+}
+
 /*滚动指示器美化*/
 ::-webkit-scrollbar {
   width: 6px;

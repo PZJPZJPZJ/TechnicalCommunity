@@ -1,30 +1,27 @@
 <template>
   <el-header>
     <el-row class="header-box">
-      <el-col :span="6">
-        <h3>科技论坛</h3>
+      <el-col :xs="0" :sm="0" :md="2" :lg="2" :xl="2"></el-col>
+      <el-col :xs="6" :sm="6" :md="4" :lg="4" :xl="4">
+        <h3 style="margin-top: 13px">科技论坛</h3>
       </el-col>
-      <el-col :span="6">
-        <router-link to="/home">热门</router-link>
-        <router-link to="/tag">分类</router-link>
-        <router-link to="/news">新闻</router-link>
+      <el-col :xs="12" :sm="6" :md="4" :lg="4" :xl="4">
+        <router-link to="/home">
+          <el-button style="height: 35px;width: 35px; margin: 13px 5px" link>热门</el-button>
+        </router-link>
+        <router-link to="/tag">
+          <el-button style="height: 35px;width: 35px; margin: 13px 5px" link>分类</el-button>
+        </router-link>
+        <router-link to="/news">
+          <el-button style="height: 35px;width: 35px; margin: 13px 5px" type="primary" link>新闻</el-button>
+        </router-link>
       </el-col>
-      <el-col :span="6">
-        <div class="mt-4">
-          <el-input
-              v-model="searchBox"
-              placeholder="请输入..."
-              class="input-with-select"
-          >
-            <template #append>
-              <el-button type="success">搜索</el-button>
-            </template>
-          </el-input>
-        </div>
+      <el-col :xs="2" :sm="2" :md="2" :lg="2" :xl="2">
+        <el-button style="height: 35px;width: 35px; margin-top: 13px" :icon="Search" circle></el-button>
       </el-col>
-      <el-col :span="6">
+      <el-col :xs="2" :sm="2" :md="2" :lg="2" :xl="2">
         <el-dropdown :hide-on-click="false">
-          <span class="el-dropdown-link">用户</span>
+          <el-button style="height: 35px;width: 35px; margin-top: 13px" :icon="User" circle></el-button>
           <template #dropdown>
             <el-dropdown-menu>
               <el-dropdown-item @click="editInfo">用户中心</el-dropdown-item>
@@ -34,6 +31,7 @@
           </template>
         </el-dropdown>
       </el-col>
+      <el-col :xs="0" :sm="0" :md="2" :lg="2" :xl="2"></el-col>
     </el-row>
   </el-header>
   <el-main>
@@ -46,6 +44,14 @@
               <div class="title">{{ news.newsTitle }}</div>
               <div class="content">{{ news.newsContent }}</div>
               <div class="time">{{ news.newsTime }}</div>
+              <div class="news-footer">
+                <el-popconfirm v-if="isAdmin" title="确定要删除吗？" confirm-button-text="确认" cancel-button-text="取消"
+                               @confirm="deleteNews(news.newsId)">
+                  <template #reference>
+                    <el-button type="danger">删除新闻</el-button>
+                  </template>
+                </el-popconfirm>
+              </div>
             </el-col>
             <el-col :span="6">
               <el-image
@@ -62,7 +68,7 @@
     </el-row>
   </el-main>
   <el-affix position="bottom" :offset="20">
-    <el-button v-if="isAdmin" type="warning" style="margin-left: 16px" @click="drawerNews = true">发布新闻</el-button>
+    <el-button v-if="isAdmin" type="warning" circle style="height: 40px;width: 40px" :icon="Plus" @click="drawerNews = true"></el-button>
   </el-affix>
   <el-drawer v-model="drawerNews" :direction="'btt'" :with-header="false">
     <el-input
@@ -91,7 +97,8 @@
 import {onMounted, ref} from "vue";
 import router from "@/router";
 import axios from "axios";
-import {ElLoading} from "element-plus";
+import {ElLoading, ElMessage} from "element-plus";
+import {Search, Loading, User, Plus, ChatLineRound, ShoppingCart} from '@element-plus/icons'
 
 /**
  * 顶栏
@@ -124,26 +131,73 @@ const newsArea = ref('')
 const files = ref([]);
 //接收到图片选中
 const onFileChange = (event) => {
-  files.value = event.target.files;
+  files.value = event.target.files[0];
 };
-const uploadNews = async ()=>{
+const uploadNews = async () => {
   const formData = new FormData()
   formData.append('file', files.value)
   formData.append('newsTitle', newsTitle.value)
   formData.append('newsContent', newsArea.value)
-  try {
-    const response = await axios({
-      method: 'POST',
-      url: '/api/news/save',
-      data: formData,
-      headers: {
-        'Content-Type': 'multipart/form-data',
-        'Authorization': localStorage.getItem('token')
+  await axios({
+    method: 'POST',
+    url: '/api/news/save',
+    data: formData,
+    headers: {
+      'Content-Type': 'multipart/form-data',
+      'Authorization': localStorage.getItem('token')
+    }
+  }).then(
+      response => {
+        ElMessage({
+          message: '发布成功',
+          type: 'success',
+        })
+        //收起抽屉
+        drawerNews.value=false
+        //清除数据
+        newsTitle.value=''
+        newsArea.value=''
+        //刷新首页
+        currentPage.value = 1
+        newsData.value = []
+        loadMoreData()
       }
-    })
-  } catch (error) {
-    console.error(error);
-  }
+      , error => {
+        ElMessage({
+          message: '发布失败',
+          type: 'error',
+        })
+      })
+
+}
+
+/**
+ * 管理
+ */
+const deleteNews = async (newsId)=>{
+  await axios({
+    method: 'GET',
+    url: '/api/news/delete?id=' + newsId,
+    headers: {
+      Authorization: localStorage.getItem('token')
+    }
+  }).then(
+      response => {
+        ElMessage({
+          message: '删除成功',
+          type: 'success',
+        })
+        //刷新页面
+        currentPage.value = 1
+        newsData.value = []
+        loadMoreData()
+      }
+      , error => {
+        ElMessage({
+          message: '删除失败',
+          type: 'error',
+        })
+      })
 }
 
 /**
@@ -190,7 +244,7 @@ const handleScroll = () => {
 //管理员标识
 const isAdmin = ref(false)
 //检查是否为管理员
-const checkAdmin = async () =>{
+const checkAdmin = async () => {
   await axios({
     method: 'GET',
     url: '/api/user/admin?token=' + localStorage.getItem('token'),
@@ -199,10 +253,10 @@ const checkAdmin = async () =>{
     }
   }).then(
       response => {
-        isAdmin.value=true
+        isAdmin.value = true
       }
       , error => {
-        isAdmin.value=false
+        isAdmin.value = false
       })
 }
 
@@ -224,6 +278,7 @@ onMounted(() => {
   margin-bottom: 20px;
   text-align: left;
 }
+
 .title {
   font-size: 20px;
   font-weight: bold;
@@ -234,12 +289,12 @@ onMounted(() => {
   font-size: 16px;
   margin-bottom: 10px;
   overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
+
 .time {
   font-size: 14px;
 }
+
 .custom-upload-button {
   display: inline-block;
   padding: 4px;
@@ -248,5 +303,15 @@ onMounted(() => {
   box-shadow: 0 0 0 1px var(--el-input-border-color, var(--el-border-color)) inset;
   border-radius: 4px;
   cursor: pointer;
+}
+.news-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+  margin-top: 10px;
+  margin-right: 10px;
+  padding-top: 10px;
+  border-top: 1px solid #e4e7ed;
 }
 </style>

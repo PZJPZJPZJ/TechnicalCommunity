@@ -1,30 +1,27 @@
 <template>
   <el-header>
     <el-row class="header-box">
-      <el-col :span="6">
-        <h3>科技论坛</h3>
+      <el-col :xs="0" :sm="0" :md="2" :lg="2" :xl="2"></el-col>
+      <el-col :xs="6" :sm="6" :md="4" :lg="4" :xl="4">
+        <h3 style="margin-top: 13px">科技论坛</h3>
       </el-col>
-      <el-col :span="6">
-        <router-link to="/home">热门</router-link>
-        <router-link to="/tag">分类</router-link>
-        <router-link to="/news">新闻</router-link>
+      <el-col :xs="12" :sm="6" :md="4" :lg="4" :xl="4">
+        <router-link to="/home">
+          <el-button style="height: 35px;width: 35px; margin: 13px 5px" link>热门</el-button>
+        </router-link>
+        <router-link to="/tag">
+          <el-button style="height: 35px;width: 35px; margin: 13px 5px" type="primary" link>分类</el-button>
+        </router-link>
+        <router-link to="/news">
+          <el-button style="height: 35px;width: 35px; margin: 13px 5px" link>新闻</el-button>
+        </router-link>
       </el-col>
-      <el-col :span="6">
-        <div class="mt-4">
-          <el-input
-              v-model="searchBox"
-              placeholder="请输入..."
-              class="input-with-select"
-          >
-            <template #append>
-              <el-button type="success">搜索</el-button>
-            </template>
-          </el-input>
-        </div>
+      <el-col :xs="2" :sm="2" :md="2" :lg="2" :xl="2">
+        <el-button style="height: 35px;width: 35px; margin-top: 13px" :icon="Search" circle></el-button>
       </el-col>
-      <el-col :span="6">
+      <el-col :xs="2" :sm="2" :md="2" :lg="2" :xl="2">
         <el-dropdown :hide-on-click="false">
-          <span class="el-dropdown-link">用户</span>
+          <el-button style="height: 35px;width: 35px; margin-top: 13px" :icon="User" circle></el-button>
           <template #dropdown>
             <el-dropdown-menu>
               <el-dropdown-item @click="editInfo">用户中心</el-dropdown-item>
@@ -34,6 +31,7 @@
           </template>
         </el-dropdown>
       </el-col>
+      <el-col :xs="0" :sm="0" :md="2" :lg="2" :xl="2"></el-col>
     </el-row>
   </el-header>
   <el-main>
@@ -44,6 +42,7 @@
 <script setup>
 import {ref} from "vue";
 import router from "@/router";
+import {Search, Loading, User, Plus, ChatLineRound, ShoppingCart} from '@element-plus/icons'
 
 /**
  * 顶栏
@@ -69,5 +68,36 @@ const logout = () => {
 </script>
 
 <style scoped>
-
+.top-nav {
+  position: relative;
+}
+.top-nav-header {
+  background-color: #ffffff;
+  padding: 0;
+}
+.top-nav-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 60px;
+}
+.top-nav-right {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+.top-nav-items {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.top-nav-dialog {
+  padding: 0;
+  position: absolute;
+  top: 60px;
+  right: 0;
+}
+.top-nav-menu {
+  border: none;
+}
 </style>

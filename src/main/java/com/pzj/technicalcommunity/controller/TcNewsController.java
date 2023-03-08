@@ -62,7 +62,7 @@ public class TcNewsController {
      * Return 执行结果(bool)
      */
     @PostMapping("/save")
-    public ResponseEntity<String> save(@RequestBody TcNews tcNews, @RequestHeader HashMap hashMapHeader, @RequestParam("file") MultipartFile file) throws IOException {
+    public ResponseEntity<String> save(@RequestParam("newsTitle") String newsTitle,@RequestParam("newsContent") String newsContent, @RequestHeader HashMap hashMapHeader, @RequestParam("file") MultipartFile file) throws IOException {
         //根据token获取当前用户
         Integer userId = Integer.valueOf(JwtUtils.getClaimByToken((String) hashMapHeader.get("authorization")).getSubject());
         if (iTcUserService.getById(userId).getUserAdmin()){
@@ -71,9 +71,12 @@ public class TcNewsController {
             String path = "C:\\Users\\13425\\Documents\\JetBrains\\TechnicalCommunity\\target\\classes\\static\\img\\"+name;
             String url = "http://localhost:8080/img/" + name;
             //写入文件
+            TcNews tcNews = new TcNews();
             file.transferTo(new File(path));
             tcNews.setNewsCover(url);
             tcNews.setNewsAdmin(userId);
+            tcNews.setNewsTitle(newsTitle);
+            tcNews.setNewsContent(newsContent);
             iTcNewsService.save(tcNews);
             return ResponseEntity.status(HttpStatus.OK).build();
         }
@@ -127,7 +130,16 @@ public class TcNewsController {
      * Return 执行结果(bool)
      */
     @GetMapping("/delete")
-    public boolean delete(Integer id){
-        return iTcNewsService.removeById(id);
+    public ResponseEntity<String> delete(@RequestHeader HashMap hashMapHeader,Integer id){
+        //根据token获取当前用户
+        Integer userId = Integer.valueOf(JwtUtils.getClaimByToken((String) hashMapHeader.get("authorization")).getSubject());
+        //验证当前用户是否为管理员
+        if (iTcUserService.getById(userId).getUserAdmin()){
+            iTcNewsService.removeById(id);
+            return ResponseEntity.status(HttpStatus.OK).build();
+        }
+        else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
     }
 }
