@@ -177,7 +177,6 @@ const uploadNews = async () => {
           type: 'error',
         })
       })
-
 }
 
 /**
