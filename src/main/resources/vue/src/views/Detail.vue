@@ -17,7 +17,7 @@
         </router-link>
       </el-col>
       <el-col :xs="3" :sm="3" :md="2" :lg="2" :xl="2">
-        <el-button style="height: 35px;width: 35px; margin-top: 13px" :icon="Search" circle></el-button>
+        <el-button style="height: 35px;width: 35px; margin-top: 13px" :icon="Search" circle @click="changeSearch"></el-button>
       </el-col>
       <el-col :xs="3" :sm="3" :md="2" :lg="2" :xl="2">
         <el-dropdown :hide-on-click="false">
@@ -295,6 +295,10 @@ const router = useRouter()
 const handleViewPost = (postId) => {
   router.push('/post?id=' + postId)
 }
+const changeSearch = ()=>{
+  router.push('/search')
+}
+
 
 //管理员点击跳转用户管理
 const toAdmin = () => {

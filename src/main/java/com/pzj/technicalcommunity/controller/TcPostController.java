@@ -53,14 +53,11 @@ public class TcPostController {
     @RequestMapping("/search")
     public ResultPackage search(@RequestBody HashMap hashMap){
         //设置页数和页大小
-        Page<TcPost> page = new Page<>();
+        Page<TcPostDTO> page = new Page<>();
         page.setCurrent((int)hashMap.get("pageNum"));
         page.setSize((int)hashMap.get("pageSize"));
-        //设置查询条件
-        QueryWrapper<TcPost> queryWrapper = new QueryWrapper<>();
-        queryWrapper.like("post_title",hashMap.get("postTitle"));
         //执行查询
-        IPage<TcPost> iPage = iTcPostService.page(page,queryWrapper);
+        IPage<TcPostDTO> iPage = iTcPostService.pageSearch(page,"%"+(String)hashMap.get("postTitle")+"%");
         return ResultPackage.pack(iPage.getRecords(),iPage.getTotal());
     }
 

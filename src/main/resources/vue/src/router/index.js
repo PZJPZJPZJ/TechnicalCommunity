@@ -9,6 +9,7 @@ import Admin from "@/views/Admin";
 import News from "@/views/News";
 import Tag from "@/views/Tag";
 import Chat from "@/views/Chat";
+import Search from "@/views/Search";
 
 const router = createRouter({
     history: createWebHistory(),
@@ -62,6 +63,11 @@ const router = createRouter({
             path: '/chat',
             name: 'Chat',
             component: Chat
+        },
+        {
+            path: '/search',
+            name: 'Search',
+            component: Search
         }
     ]
 });

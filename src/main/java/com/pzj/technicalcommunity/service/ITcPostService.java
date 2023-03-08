@@ -22,4 +22,6 @@ public interface ITcPostService extends IService<TcPost> {
     TcPostDTO listOne(Integer id);
 
     IPage<TcPostDTO> pageTag(Page<TcPostDTO> page, Integer id);
+
+    IPage<TcPostDTO> pageSearch(Page<TcPostDTO> page, String postTitle);
 }
