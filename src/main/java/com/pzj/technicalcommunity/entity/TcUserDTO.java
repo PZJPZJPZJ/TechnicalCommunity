@@ -1,5 +1,6 @@
 package com.pzj.technicalcommunity.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -7,6 +8,8 @@ import java.time.LocalDateTime;
 @Data
 public class TcUserDTO {
     private Integer userId;
+
+    private Boolean userAdmin;
 
     private String userName;
 

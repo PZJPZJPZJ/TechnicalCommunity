@@ -24,4 +24,6 @@ public interface TcPostMapper extends BaseMapper<TcPost> {
     IPage<TcPostDTO> pageUser(Page<TcPostDTO> page,Integer id);
 
     IPage<TcPostDTO> pageAll(Page<TcPostDTO> page);
+
+    IPage<TcPostDTO> pageTag(Page<TcPostDTO> page, Integer id);
 }

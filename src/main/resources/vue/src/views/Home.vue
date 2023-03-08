@@ -10,7 +10,7 @@
           <el-button style="height: 35px;width: 35px; margin: 13px 5px"  type="primary" link>热门</el-button>
         </router-link>
         <router-link to="/tag">
-          <el-button style="height: 35px;width: 35px; margin: 13px 5px" link>分类</el-button>
+          <el-button style="height: 35px;width: 35px; margin: 13px 5px" link>板块</el-button>
         </router-link>
         <router-link to="/news">
           <el-button style="height: 35px;width: 35px; margin: 13px 5px" link>新闻</el-button>
@@ -25,7 +25,8 @@
           <template #dropdown>
             <el-dropdown-menu>
               <el-dropdown-item @click="editInfo">用户中心</el-dropdown-item>
-              <el-dropdown-item @click="toChat">用户私信</el-dropdown-item>
+              <el-dropdown-item @click="toChat">私信列表</el-dropdown-item>
+              <el-dropdown-item v-if="isAdmin" @click="toAdmin">用户管理</el-dropdown-item>
               <el-dropdown-item @click="logout">注销登录</el-dropdown-item>
             </el-dropdown-menu>
           </template>
@@ -69,20 +70,29 @@
             <div class="time">{{ post.postTime }}</div>
           </div>
         </el-card>
-        <div v-if="loading" style="text-align: center">
-          <el-icon>
-            <Loading/>
-          </el-icon>
-        </div>
+        <div v-if="loading" style="text-align: center"><el-icon><Loading/></el-icon></div>
       </el-col>
 
       <el-col :xs="0" :sm="0" :md="4" :lg="4" :xl="4">
         <el-card class="side-card">
-          <div v-for="o in 4" :key="o" class="text item">{{ 'List item ' + o }}</div>
+          <h3 style="margin: 15px">为你推荐</h3>
+          <div v-for="tag in tagData" :key="tag.tagId" @click="toTag(tag.tagId)">
+            <el-row>
+              <el-col :span="8">
+                <el-image
+                    class="card-img"
+                    :src="tag.tagCover"
+                    fit="fill"
+                />
+              </el-col>
+              <el-col :span="16">
+                <p style="height: 50px;line-height: 50px">{{tag.tagName}}</p>
+              </el-col>
+            </el-row>
+          </div>
         </el-card>
       </el-col>
       <el-col :xs="0" :sm="0" :md="4" :lg="4" :xl="4"></el-col>
-
     </el-row>
   </el-main>
   <el-affix position="bottom" :offset="20">
@@ -226,10 +236,25 @@ const loadNews = async () => {
   newsData.value = data.rows
 }
 
+/**
+ * 标签加载
+ */
+const tagData = ref([])
 //加载随机标签
-const loadRandTag = () => {
-
+const loadRandTag = async () => {
+  const {data} = await axios({
+    method: 'GET',
+    url: '/api/tag/introduce',
+    headers: {
+      Authorization: localStorage.getItem('token')
+    }
+  })
+  tagData.value = data.rows
 }
+const toTag = (tagId)=>{
+  router.push('/detail?id='+tagId)
+}
+
 /**
  * 自动完成输入框
  */
@@ -332,24 +357,25 @@ const uploadPost = async () => {
 const router = useRouter()
 //点击跳转对应帖子
 const handleViewPost = (postId) => {
-  router.push(`/post?id=${postId}`)
+  router.push('/post?id='+postId)
 }
 
 //点击跳转对应新闻
 const handleViewNews = () => {
-  router.push(`/news`)
+  router.push('/news')
 }
 
 //点击跳转对应标签
 const handleViewTag = (tagId) => {
-  router.push(`/detail?id=${tagId}`)
+  router.push('/detail?id='+tagId)
 }
-
 /**
  * 顶栏
  */
-const searchBox = ref('')
-const searchSelect = ref('')
+//管理员点击跳转用户管理
+const toAdmin = ()=>{
+  router.push('/admin')
+}
 
 //跳转私信页面
 const toChat = () => {
@@ -368,12 +394,36 @@ const logout = () => {
 }
 
 /**
+ * 管理员判断
+ */
+//管理员标识
+const isAdmin = ref(false)
+//检查是否为管理员
+const checkAdmin = async () =>{
+  await axios({
+    method: 'GET',
+    url: '/api/user/admin?token=' + localStorage.getItem('token'),
+    headers: {
+      Authorization: localStorage.getItem('token')
+    }
+  }).then(
+      response => {
+        isAdmin.value=true
+      }
+      , error => {
+        isAdmin.value=false
+      })
+}
+
+/**
  * 加载方法
  */
 onMounted(() => {
   window.addEventListener('scroll', handleScroll)
   const loadingInstance = ElLoading.service({text: 'Loading...', fullscreen: true})
   loadNews()
+  loadRandTag()
+  checkAdmin()
   loadMoreData().finally(() => {
     loadingInstance.close()
   })
@@ -386,9 +436,10 @@ onMounted(() => {
 }
 
 .card-img {
-  width: 80px;
-  height: 80px;
+  width: 35px;
+  height: 35px;
   margin: 8px;
+  border-radius: 10px;
 }
 
 .post-card {

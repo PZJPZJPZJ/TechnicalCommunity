@@ -1,7 +1,10 @@
 package com.pzj.technicalcommunity.mapper;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.pzj.technicalcommunity.entity.TcUser;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.pzj.technicalcommunity.entity.TcUserDTO;
 import org.mapstruct.Mapper;
 
 /**
@@ -15,4 +18,5 @@ import org.mapstruct.Mapper;
 @Mapper
 public interface TcUserMapper extends BaseMapper<TcUser> {
 
+    IPage<TcUserDTO> pageSafe(Page<TcUserDTO> page);
 }

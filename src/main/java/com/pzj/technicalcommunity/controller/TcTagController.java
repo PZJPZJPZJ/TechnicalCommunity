@@ -26,6 +26,11 @@ public class TcTagController {
     @Autowired
     private ITcTagService iTcTagService;
 
+    @GetMapping("/show")
+    public ResultPackage show(Integer id){
+        return ResultPackage.pack(iTcTagService.getById(id));
+    }
+
     /**
      * 获取全部标签
      * @return
@@ -47,6 +52,18 @@ public class TcTagController {
         page.setSize((int)hashMap.get("pageSize"));
         IPage<TcTag> iPage = iTcTagService.page(page);
         return ResultPackage.pack(iPage.getRecords(),iPage.getTotal());
+    }
+
+    @GetMapping("/introduce")
+    public ResultPackage introduce(){
+        Page<TcTag> page = new Page<>();
+        page.setCurrent(1);
+        page.setSize(10);
+        //设置查询条件
+        QueryWrapper<TcTag> queryWrapper = new QueryWrapper<>();
+        queryWrapper.last("ORDER BY RAND()");
+        IPage<TcTag> iPage = iTcTagService.page(page,queryWrapper);
+        return ResultPackage.pack(iPage.getRecords(), iPage.getTotal());
     }
 
     /**

@@ -103,6 +103,11 @@ onMounted(() => {
   border-radius: 5px;
 }
 
+.el-overlay.is-message-box .el-overlay-message-box{
+  backdrop-filter: blur(10px);
+  background-color: rgba(0,0,0,0.2);
+}
+
 /*滚动指示器美化*/
 ::-webkit-scrollbar {
   width: 6px;

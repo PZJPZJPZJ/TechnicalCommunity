@@ -1,37 +1,38 @@
 <template>
   <el-header>
     <el-row class="header-box">
-      <el-col :xs="0" :sm="0" :md="2" :lg="2" :xl="2"></el-col>
+      <el-col :xs="0" :sm="0" :md="2" :lg="4" :xl="4"></el-col>
       <el-col :xs="6" :sm="6" :md="4" :lg="4" :xl="4">
         <h3 style="margin-top: 13px">科技论坛</h3>
       </el-col>
-      <el-col :xs="12" :sm="6" :md="4" :lg="4" :xl="4">
+      <el-col :xs="12" :sm="12" :md="12" :lg="8" :xl="8">
         <router-link to="/home">
           <el-button style="height: 35px;width: 35px; margin: 13px 5px" link>热门</el-button>
         </router-link>
         <router-link to="/tag">
-          <el-button style="height: 35px;width: 35px; margin: 13px 5px" link>分类</el-button>
+          <el-button style="height: 35px;width: 35px; margin: 13px 5px" link>板块</el-button>
         </router-link>
         <router-link to="/news">
           <el-button style="height: 35px;width: 35px; margin: 13px 5px" link>新闻</el-button>
         </router-link>
       </el-col>
-      <el-col :xs="2" :sm="2" :md="2" :lg="2" :xl="2">
+      <el-col :xs="3" :sm="3" :md="2" :lg="2" :xl="2">
         <el-button style="height: 35px;width: 35px; margin-top: 13px" :icon="Search" circle></el-button>
       </el-col>
-      <el-col :xs="2" :sm="2" :md="2" :lg="2" :xl="2">
+      <el-col :xs="3" :sm="3" :md="2" :lg="2" :xl="2">
         <el-dropdown :hide-on-click="false">
           <el-button style="height: 35px;width: 35px; margin-top: 13px" :icon="User" circle></el-button>
           <template #dropdown>
             <el-dropdown-menu>
               <el-dropdown-item @click="editInfo">用户中心</el-dropdown-item>
-              <el-dropdown-item @click="toChat">用户私信</el-dropdown-item>
+              <el-dropdown-item @click="toChat">私信列表</el-dropdown-item>
+              <el-dropdown-item v-if="isAdmin" @click="toAdmin">用户管理</el-dropdown-item>
               <el-dropdown-item @click="logout">注销登录</el-dropdown-item>
             </el-dropdown-menu>
           </template>
         </el-dropdown>
       </el-col>
-      <el-col :xs="0" :sm="0" :md="2" :lg="2" :xl="2"></el-col>
+      <el-col :xs="0" :sm="0" :md="2" :lg="4" :xl="4"></el-col>
     </el-row>
   </el-header>
   <el-main>
@@ -112,7 +113,7 @@
             </el-popconfirm>
           </div>
         </el-card>
-        <div v-if="loading" style="text-align: center">Loading...</div>
+        <div v-if="loading" style="text-align: center"><el-icon><Loading/></el-icon></div>
 
       </el-col>
       <el-col :xs="0" :sm="0" :md="4" :lg="4" :xl="4"></el-col>
@@ -136,8 +137,7 @@ const postData = ref([])
 const currentPage = ref(1)
 const pageSize = ref(10)
 const total = ref(0)
-//管理员标识
-const isAdmin = ref(false)
+
 
 //加载用户信息
 const loadMyInfo = async () => {
@@ -153,34 +153,65 @@ const loadMyInfo = async () => {
 
 //更新用户信息
 const updateMyInfo = async () => {
-  await axios({
-    method: 'POST',
-    url: '/api/user/update',
-    data: {
-      userName: myInfo.value.userName,
-      userSign: myInfo.value.userSign,
-      userSex: myInfo.value.userSex,
-      userBirth: myInfo.value.userBirth,
-      userPassword: myPassword.value
-    },
-    headers: {
-      Authorization: localStorage.getItem('token')
-    }
-  }).then(
-      response => {
-        ElMessage({
-          message: '修改成功',
-          type: 'success',
-        })
-        changePassword.value = false
+  if (changePassword.value){
+    await axios({
+      method: 'POST',
+      url: '/api/user/update',
+      data: {
+        userName: myInfo.value.userName,
+        userSign: myInfo.value.userSign,
+        userSex: myInfo.value.userSex,
+        userBirth: myInfo.value.userBirth,
+        userPassword: myPassword.value
+      },
+      headers: {
+        Authorization: localStorage.getItem('token')
       }
-      , error => {
-        ElMessage({
-          message: '修改失败',
-          type: 'error',
-        })
+    }).then(
+        response => {
+          ElMessage({
+            message: '修改成功',
+            type: 'success',
+          })
+          myPassword.value=''
+          changePassword.value = false
+        }
+        , error => {
+          ElMessage({
+            message: '修改失败',
+            type: 'error',
+          })
+        }
+    )
+  }
+  else {
+    await axios({
+      method: 'POST',
+      url: '/api/user/update',
+      data: {
+        userName: myInfo.value.userName,
+        userSign: myInfo.value.userSign,
+        userSex: myInfo.value.userSex,
+        userBirth: myInfo.value.userBirth
+      },
+      headers: {
+        Authorization: localStorage.getItem('token')
       }
-  )
+    }).then(
+        response => {
+          ElMessage({
+            message: '修改成功',
+            type: 'success',
+          })
+        }
+        , error => {
+          ElMessage({
+            message: '修改失败',
+            type: 'error',
+          })
+        }
+    )
+  }
 }
 //跳转用户详情页
 const editInfo = () => {
@@ -208,6 +239,11 @@ const handleViewPost = (postId) => {
   router.push(`/post?id=${postId}`)
 }
 
+/**
+ * 管理员判断
+ */
+//管理员标识
+const isAdmin = ref(false)
 //检查是否为管理员
 const checkAdmin = async () =>{
   await axios({
@@ -225,6 +261,17 @@ const checkAdmin = async () =>{
       })
 }
 
+/**
+ * 顶栏
+ */
+//管理员点击跳转用户管理
+const toAdmin = ()=>{
+  router.push('/admin')
+}
+//跳转私信页面
+const toChat = () => {
+  router.push('/chat')
+}
 //点击跳转对应标签
 const handleViewTag = (tagId) => {
   router.push(`/detail?id=${tagId}`)
@@ -342,6 +389,8 @@ onMounted(() => {
 .post-card {
   margin-bottom: 20px;
   text-align: left;
+  box-shadow: none;
+  border: none;
 }
 
 .header {
@@ -402,13 +451,6 @@ onMounted(() => {
 }
 
 .title-card {
-  margin-bottom: 20px;
-  text-align: left;
-  box-shadow: none;
-  border: none;
-}
-
-.post-card {
   margin-bottom: 20px;
   text-align: left;
   box-shadow: none;

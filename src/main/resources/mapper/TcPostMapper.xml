@@ -31,4 +31,12 @@
                  LEFT JOIN tc_tag on tc_tag.tag_id = tc_post.post_tag
         ORDER BY post_time DESC
     </select>
+    <select id="pageTag" parameterType="Integer" resultType="com.pzj.technicalcommunity.entity.TcPostDTO">
+        SELECT *
+        FROM tc_post
+                 LEFT JOIN tc_user on tc_user.user_id = tc_post.post_user
+                 LEFT JOIN tc_tag on tc_tag.tag_id = tc_post.post_tag
+        WHERE post_tag = #{id}
+        ORDER BY post_time DESC
+    </select>
 </mapper>

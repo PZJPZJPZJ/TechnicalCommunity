@@ -65,6 +65,23 @@ public class TcPostController {
     }
 
     /**
+     * 列出当前tag所有帖子
+     * @param hashMap
+     * @param id
+     * @return 封装
+     */
+    @RequestMapping("/tag")
+    public ResultPackage tag(@RequestBody HashMap hashMap,Integer id){
+        //设置页数和页大小
+        Page<TcPostDTO> page = new Page<>();
+        page.setCurrent((int)hashMap.get("pageNum"));
+        page.setSize((int)hashMap.get("pageSize"));
+        //执行查询
+        IPage<TcPostDTO> iPage = iTcPostService.pageTag(page,id);
+        return ResultPackage.pack(iPage.getRecords(),iPage.getTotal());
+    }
+
+    /**
      * Description 随机展示首页热门帖子
      * Param 分页数据(json)
      * Return 随机热门帖子(json)
@@ -102,21 +119,6 @@ public class TcPostController {
             iPage = iTcPostService.pageUser(page,userId);
         }
         return ResultPackage.pack(iPage.getRecords(),iPage.getTotal());
-    }
-
-    /**
-     * Description 统计当前Tag帖子数
-     * Param 标签ID(url)
-     * Return 数量(json)
-     */
-    @PostMapping("/count")
-    public ResultPackage count(Integer id){
-        //设置查询条件
-        QueryWrapper<TcPost> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("post_tag",id);
-        //执行查询
-        Integer integer = iTcPostService.count(queryWrapper);
-        return ResultPackage.pack(integer);
     }
 
     /**

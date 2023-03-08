@@ -1,7 +1,6 @@
 package com.pzj.technicalcommunity.controller;
 
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -15,7 +14,6 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -41,16 +39,21 @@ public class TcUserController {
      * Return 分页用户数据(bool)
      */
     @PostMapping("/page")
-    public ResultPackage listPage(@RequestBody HashMap hashMap){
-        Page<TcUser> page = new Page<>();
-        page.setCurrent((int)hashMap.get("pageNum"));
-        page.setSize((int)hashMap.get("pageSize"));
-        //设置查询条件
-        QueryWrapper<TcUser> queryWrapper = new QueryWrapper<>();
-        queryWrapper.select("user_id").select("user_admin").select("user_name").select("user_sign").select("user_sex").select("user_birth");
-        //执行查询
-        IPage<TcUser> iPage = iTcUserService.page(page,queryWrapper);
-        return ResultPackage.pack(iPage.getRecords(),iPage.getTotal());
+    public ResultPackage listPage(@RequestBody HashMap hashMapBody,@RequestHeader HashMap hashMapHeader){
+        //根据token获取当前用户
+        Integer userId = Integer.valueOf(JwtUtils.getClaimByToken((String) hashMapHeader.get("authorization")).getSubject());
+        //验证当前用户是否为管理员
+        if (iTcUserService.getById(userId).getUserAdmin()){
+            Page<TcUserDTO> page = new Page<>();
+            page.setCurrent((int)hashMapBody.get("pageNum"));
+            page.setSize((int)hashMapBody.get("pageSize"));
+            //执行查询
+            IPage<TcUserDTO> iPage = iTcUserService.pageSafe(page);
+            return ResultPackage.pack(iPage.getRecords(),iPage.getTotal());
+        }
+        else {
+            return ResultPackage.message(401,"Unauthorized");
+        }
     }
 
     /**
@@ -70,9 +73,6 @@ public class TcUserController {
     //模糊查询用户信息
     @PostMapping ("/search")
     public ResultPackage search(@RequestBody TcUser tcUser){
-        //设置查询条件
-        //LambdaQueryWrapper<TcUser> lambdaQueryWrapper = new LambdaQueryWrapper<>();
-        //lambdaQueryWrapper.like(TcUser::getUserName,tcUser.getUserName());
         QueryWrapper<TcUser> queryWrapper = new QueryWrapper<>();
         queryWrapper.like("user_name",tcUser.getUserName()).select("user_id").select("user_name");
         //执行查询
@@ -98,12 +98,27 @@ public class TcUserController {
     }
 
     /**
+     * 移除用户
+     * @param id
+     * @return 状态码
+     */
+    @GetMapping("/delete")
+    public ResponseEntity<String> delete(Integer id){
+        if (iTcUserService.removeById(id)){
+            return ResponseEntity.status(HttpStatus.OK).build();
+        }
+        else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+    }
+
+    /**
      * Description 用户信息修改
      * Param 用户实体(json)
      * Return 执行结果(bool)
      */
     @PostMapping("/update")
-    public boolean update(@RequestBody TcUser tcUser,@RequestHeader HashMap hashMapHeader){
+    public ResponseEntity<String> update(@RequestBody TcUser tcUser,@RequestHeader HashMap hashMapHeader){
         //根据token写入用户id
         Integer userId = Integer.valueOf(JwtUtils.getClaimByToken((String) hashMapHeader.get("authorization")).getSubject());
         tcUser.setUserId(userId);
@@ -111,7 +126,12 @@ public class TcUserController {
         if(tcUser.getUserPassword() != null){
             tcUser.setUserPassword(PasswordEncoder.encode(tcUser.getUserPassword()));
         }
-        return iTcUserService.updateById(tcUser);
+        if (iTcUserService.updateById(tcUser)){
+            return ResponseEntity.status(HttpStatus.OK).build();
+        }
+        else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
     }
 
     /**
@@ -139,6 +159,57 @@ public class TcUserController {
         return JwtUtils.getClaimByToken(token).getSubject();
     }
 
+    /**
+     * 提权普通用户为管理员
+     * @param hashMapHeader
+     * @param id
+     * @return 状态码
+     */
+    @GetMapping("/authority")
+    public ResponseEntity<String> authority(@RequestHeader HashMap hashMapHeader,Integer id){
+        //根据token获取当前用户
+        Integer userId = Integer.valueOf(JwtUtils.getClaimByToken((String) hashMapHeader.get("authorization")).getSubject());
+        //验证当前用户是否为管理员
+        if (iTcUserService.getById(userId).getUserAdmin()){
+            TcUser tcUser = new TcUser();
+            tcUser.setUserId(id);
+            tcUser.setUserAdmin(true);
+            iTcUserService.updateById(tcUser);
+            return ResponseEntity.status(HttpStatus.OK).build();
+        }
+        else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+    }
+
+    /**
+     * 降权普通用户为用户
+     * @param hashMapHeader
+     * @param id
+     * @return 状态码
+     */
+    @GetMapping("/unauthority")
+    public ResponseEntity<String> unauthority(@RequestHeader HashMap hashMapHeader,Integer id){
+        //根据token获取当前用户
+        Integer userId = Integer.valueOf(JwtUtils.getClaimByToken((String) hashMapHeader.get("authorization")).getSubject());
+        //验证当前用户是否为管理员
+        if (iTcUserService.getById(userId).getUserAdmin()){
+            TcUser tcUser = new TcUser();
+            tcUser.setUserId(id);
+            tcUser.setUserAdmin(false);
+            iTcUserService.updateById(tcUser);
+            return ResponseEntity.status(HttpStatus.OK).build();
+        }
+        else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+    }
+
+    /**
+     * 查询用户是否为管理员
+     * @param token
+     * @return 状态码
+     */
     @GetMapping("/admin")
     public ResponseEntity<String> admin(String token){
         Integer userId = Integer.valueOf(JwtUtils.getClaimByToken(token).getSubject());

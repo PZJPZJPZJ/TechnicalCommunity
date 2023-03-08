@@ -44,5 +44,10 @@ public class TcPostServiceImpl extends ServiceImpl<TcPostMapper, TcPost> impleme
         return tcPostMapper.listOne(id);
     }
 
+    @Override
+    public IPage<TcPostDTO> pageTag(Page<TcPostDTO> page, Integer id) {
+        return tcPostMapper.pageTag(page,id);
+    }
+
 
 }

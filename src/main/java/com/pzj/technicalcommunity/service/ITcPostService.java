@@ -20,4 +20,6 @@ public interface ITcPostService extends IService<TcPost> {
     IPage<TcPostDTO> pageAll(Page<TcPostDTO> page);
     IPage<TcPostDTO> pageUser(Page<TcPostDTO> page,Integer id);
     TcPostDTO listOne(Integer id);
+
+    IPage<TcPostDTO> pageTag(Page<TcPostDTO> page, Integer id);
 }
