@@ -266,10 +266,12 @@ const uploadComment = async () => {
 //提交购买
 const toBuy = () => {
   ElMessage({
-    message: '在购买前请先与卖家咨询商品情况',
+    showClose: true,
+    duration: 0,
+    message: '购买前请先与卖家咨询商品情况,对方账号为'+thisPost.value.postUser,
     type: 'info',
   })
-  router.push('/chat?id='+queryParams.get('id'))
+  router.push('/chat')
 }
 
 //滚动到底部执行自动刷新

@@ -136,6 +136,7 @@ const newChat = async ()=>{
       response => {
         inputUser.value=''
         getList()
+
       }
       , error => {
         ElMessage({
