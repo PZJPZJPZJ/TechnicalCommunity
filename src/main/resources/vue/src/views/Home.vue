@@ -61,9 +61,15 @@
             <div class="user-info">{{ post.userName }}</div>
           </div>
           <div class="center" @click="handleViewPost(post.postId)">
-            <div class="title">{{ post.postTitle.substring(0, 20) }}</div>
+            <div class="title">{{ post.postTitle.substring(0, 20) }}...</div>
             <div class="content">{{ post.postContent.substring(0, 100) }}...</div>
-            <el-skeleton :rows="2"/>
+            <div class="images">
+              <el-image
+                  class="post-img"
+                  :src="post.postImg"
+                  fit="cover"
+              />
+            </div>
           </div>
           <div class="post-footer">
             <el-tag class="tag" @click="handleViewTag(post.postTag)">{{ post.tagName }}</el-tag>
@@ -109,7 +115,7 @@
     />
     <el-input
         v-model="newPost.content"
-        maxlength="500"
+        maxlength="1000"
         placeholder="帖子内容"
         :autosize="true"
         show-word-limit
@@ -445,6 +451,12 @@ onMounted(() => {
   height: 35px;
   margin: 8px;
   border-radius: 10px;
+}
+
+.post-img {
+  width: 200px;
+  height: 200px;
+  margin: 8px;
 }
 
 .post-card {

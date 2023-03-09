@@ -4,8 +4,8 @@
     <select id="listMyChat" parameterType="Integer" resultType="com.pzj.technicalcommunity.entity.TcChatDTO">
         SELECT *
         FROM tc_chat
-                 LEFT JOIN tc_user on tc_user.user_id = tc_chat.chat_receive
-        WHERE chat_send = #{userId}
+                 JOIN tc_user ON (tc_chat.chat_send = tc_user.user_id OR tc_chat.chat_receive = tc_user.user_id)
+        WHERE (tc_chat.chat_send = #{userId} OR tc_chat.chat_receive = #{userId}) AND tc_user.user_id != #{userId}
         ORDER BY chat_unread DESC,chat_time DESC
     </select>
 </mapper>

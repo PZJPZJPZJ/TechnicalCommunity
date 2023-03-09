@@ -14,7 +14,7 @@ import java.util.Date;
 @Data
 public class JwtUtils {
 
-    private static final long EXPIRE_TIME = 120 * 60 * 1000; // 过期时间 120 分钟
+    private static final long EXPIRE_TIME = 24 * 60 * 60 * 1000; // 过期时间一天(h*m*s*ms)
     private static final String SECRET = "f5hu8kr32xh9"; // 密钥
 
     /**

@@ -26,4 +26,6 @@ public class TcPostDTO {
     private Boolean postTop;
 
     private BigDecimal postPrice;
+
+    private String postImg;
 }

@@ -10,7 +10,7 @@
             <div class="online-person">
               <div class="person-cards-wrapper">
                 <input class="inputs" v-model="inputUser" @keyup.enter="newChat" placeholder="对方账号"/>
-                <div class="personList" v-for="chat in chatList" :key="chat" @click="selectChat(chat.chatId)">
+                <div class="personList" v-for="chat in chatList" :key="chat" @click="selectChat(chat.chatId,chat.userName,chat.userSign)">
                   <el-badge :value="chat.chatUnread" :max="9" class="item" :hidden=!chat.chatUnread>
                     <div class="person-card">
                       <div class="info">
@@ -30,32 +30,33 @@
               <div class="chat-window">
                 <div class="top">
                   <div class="info-detail">
-                    <div class="name">顶栏用户名</div>
-                    <div class="detail">顶栏描述</div>
+                    <div class="name">
+                      {{ nameCurrent }}
+                      <el-popconfirm v-if="nameCurrent!==''" title="对方列表也会同时删除，确定要继续吗？">
+                        <template #reference>
+                          <el-icon><Delete /></el-icon>
+                        </template>
+                      </el-popconfirm>
+                    </div>
+                    <div class="detail">{{ signCurrent }}</div>
                   </div>
                 </div>
                 <div class="bottom">
                   <div class="chat-content" ref="chatContent">
-                    <div class="chat-wrapper" v-for="i in 10" :key="i">
-                      <!--                vif-->
-                      <div class="chat-friend">
-                        <div class="chat-text">对方输入{{ i }}</div>
-                        <div class="info-time">
-                          <span>对方时间{{ i }}</span>
-                        </div>
+                    <div class="chat-wrapper" v-for="message in messageList" :key="message.messageId">
+                      <div class="chat-friend" v-if="false">
+                        <div class="chat-text">{{message.messageContent}}</div>
+                        <div class="info-time"><span>{{ message.messageTime }}</span></div>
                       </div>
-                      <!--                velse-->
                       <div class="chat-me">
-                        <div class="chat-text">我的输入{{ i }}</div>
-                        <div class="info-time">
-                          <span>我方时间{{ i }}</span>
-                        </div>
+                        <div class="chat-text">{{message.messageContent}}</div>
+                        <div class="info-time"><span>{{ message.messageTime }}</span></div>
                       </div>
                     </div>
                   </div>
                   <div class="chatInputs">
-                    <input class="inputs"/>
-                    <div class="send boxinput" @click="sendMsg"><el-icon><Promotion /></el-icon></div>
+                    <input class="inputs" v-model="inputMsg"/>
+                    <div class="send boxinput" @click="sendMsg" @keyup.enter="sendMsg"><el-icon><Promotion /></el-icon></div>
                   </div>
                 </div>
               </div>
@@ -72,7 +73,7 @@
 
 <script setup>
 import {onMounted, ref} from "vue";
-import {Promotion, ArrowLeftBold, User, Plus, ChatLineRound, ShoppingCart} from '@element-plus/icons'
+import {Promotion, ArrowLeftBold, Delete} from '@element-plus/icons'
 import {useRouter} from "vue-router";
 import axios from "axios";
 import {ElMessage} from "element-plus";
@@ -80,6 +81,8 @@ import {ElMessage} from "element-plus";
 const showChatWindow = ref(true)
 const chatList = ref([])
 const chatCurrent = ref('')
+const nameCurrent = ref('')
+const signCurrent = ref('')
 const getList = async ()=>{
   const {data} = await axios({
     method: 'GET',
@@ -90,8 +93,10 @@ const getList = async ()=>{
   })
   chatList.value=data.rows
 }
-const selectChat = async (chatId)=>{
+const selectChat = async (chatId,userName,userSign)=>{
   chatCurrent.value = chatId
+  nameCurrent.value = userName
+  signCurrent.value = userSign
   await axios({
     method: 'GET',
     url: '/api/chat/clear?chatId='+chatId,
@@ -100,7 +105,20 @@ const selectChat = async (chatId)=>{
     }
   })
   await getList()
+  await getMessage()
+  await scrollBottom()
+}
 
+const messageList = ref([])
+const getMessage = async ()=>{
+  const {data} = await axios({
+    method: 'GET',
+    url: '/api/message/list?id='+chatCurrent.value,
+    headers: {
+      Authorization: localStorage.getItem('token')
+    }
+  })
+  messageList.value=data.rows
 }
 
 /**
@@ -129,6 +147,46 @@ const newChat = async ()=>{
 }
 
 /**
+ * 新建消息
+ */
+const inputMsg = ref('')
+const sendMsg = async ()=>{
+  if (inputMsg.value===''){
+    ElMessage({
+      message: '输入不能为空',
+      type: 'warning',
+    })
+  }
+  else{
+    await axios({
+      method: 'POST',
+      url: '/api/message/save',
+      data: {
+        messageChat: chatCurrent.value,
+        messageContent: inputMsg.value
+      },
+      headers: {
+        Authorization: localStorage.getItem('token')
+      }
+    }).then(
+        response => {
+          inputMsg.value=''
+          getMessage()
+          setTimeout(() => {
+            scrollBottom()
+          }, 500);
+        }
+        , error => {
+          ElMessage({
+            message: '发送失败',
+            type: 'error',
+          })
+        }
+    )
+  }
+}
+
+/**
  * 滚动到底部
  */
 const chatContent = ref(null);
@@ -141,7 +199,7 @@ const scrollBottom = ()=>{
  */
 const router = useRouter()
 const toHome = ()=>{
-  router.push('/home')
+  router.back()
 }
 
 /**
@@ -155,10 +213,9 @@ onMounted(() => {
 
 <style scoped>
 .home {
-  width: 90vw;
-  height: 90vh;
-  background-color: rgb(39, 42, 55, 0.9);
-  border-radius: 15px;
+  width: 100vw;
+  height: 100vh;
+  background: linear-gradient(to right, #95d475, #b3e19d);
   position: absolute;
   left: 50%;
   top: 50%;
@@ -186,6 +243,7 @@ onMounted(() => {
 .chatHome .chatLeft .title {
   color: #fff;
   padding-left: 10px;
+  text-shadow: 4px 4px 3px rgba(0, 0, 0, 0.25);
 }
 .chatHome .chatLeft .online-person {
   margin-top: 85px;
@@ -208,19 +266,20 @@ onMounted(() => {
 .chatHome .chatLeft .online-person .person-cards-wrapper .inputs {
   width: 90%;
   height: 50px;
-  background-color: rgb(66, 70, 86);
+  background-color: rgb(255, 255, 255,0.5);
   border-radius: 15px;
-  border: 1px solid rgb(66, 70, 86);
+  border: 0;
   padding: 10px;
   box-sizing: border-box;
   transition: 0.2s;
   font-size: 20px;
-  color: #fff;
+  color: #000000;
   font-weight: 100;
 }
 
 .chatHome .chatLeft .online-person .person-cards-wrapper .inputs:focus {
   outline: none;
+  border: 2px solid #67C23A;
 }
 
 .chatHome .chatRight {
@@ -242,7 +301,7 @@ onMounted(() => {
   width: 250px;
   height: 80px;
   border-radius: 10px;
-  background-color: rgb(50, 54, 68);
+  background-color: rgba(255,255,255,0.5);
   position: relative;
   margin: 25px 0;
   cursor: pointer;
@@ -261,40 +320,40 @@ onMounted(() => {
   margin-left: 20px;
 }
 .person-card .info .info-detail .name {
-  color: #fff;
+  color: #000;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
   margin-bottom: 5px;
 }
 .person-card .info .info-detail .detail {
-  color: #5c6675;
+  color: #000000;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
   font-size: 12px;
 }
 .person-card:hover {
-  background-color: #1d90f5;
+  background-color: #d1edc4;
   transition: 0.3s;
-  box-shadow: 0px 0px 10px 0px rgb(0, 136, 255);
+  box-shadow: 0px 0px 10px 0px #d1edc4;
 }
 .person-card:focus {
-  background-color: #1d90f5;
+  background-color: #d1edc4;
   transition: 0.3s;
-  box-shadow: 0px 0px 10px 0px rgb(0, 136, 255);
+  box-shadow: 0px 0px 10px 0px #d1edc4;
 }
 
 .person-card:hover .info .info-detail .detail {
   color: #fff;
 }
 .activeCard {
-  background-color: #1d90f5;
+  background-color: #529b2e;
   transition: 0.3s;
   box-shadow: 3px 2px 10px 0px rgb(0, 136, 255);
 }
 .activeCard .info .info-detail .detail {
-  color: #fff;
+  color: #ffffff;
 }
 
 .chat-window {
@@ -323,18 +382,20 @@ onMounted(() => {
   font-size: 20px;
   font-weight: 600;
   color: #fff;
+  text-shadow: 4px 4px 3px rgba(0, 0, 0, 0.25);
 }
 
 .chat-window .top .info-detail .detail {
-  color: #9e9e9e;
+  color: #ffffff;
   font-size: 12px;
   margin-top: 2px;
+  text-shadow: 4px 4px 3px rgba(0, 0, 0, 0.25);
 }
 
 .chat-window .bottom {
   width: 100%;
-  height: 70vh;
-  background-color: rgb(50, 54, 68);
+  height: 80vh;
+  background-color: rgb(255, 255, 255,0.5);
   border-radius: 20px;
   padding: 20px;
   box-sizing: border-box;
@@ -412,12 +473,12 @@ onMounted(() => {
   max-width: 90%;
   padding: 20px;
   border-radius: 20px 20px 5px 20px;
-  background-color: rgb(29, 144, 245);
+  background-color: #67C23A;
   color: #fff;
 }
 
 .chat-window .bottom .chat-content .chat-wrapper .chat-me .chat-text:hover {
-  background-color: rgb(26, 129, 219);
+  background-color: #529b2e;
 }
 
 .chat-window .bottom .chat-content .chat-wrapper .chat-me .info-time {
@@ -460,30 +521,30 @@ onMounted(() => {
 .chat-window .bottom .chatInputs .inputs {
   width: 90%;
   height: 50px;
-  background-color: rgb(66, 70, 86);
+  background-color: rgba(255, 255, 255,0.5);
   border-radius: 15px;
-  border: 2px solid rgb(34, 135, 225);
+  border: 0;
   padding: 10px;
   box-sizing: border-box;
-  transition: 0.2s;
+  transition: 0.3s;
   font-size: 20px;
-  color: #fff;
+  color: #000000;
   font-weight: 100;
   margin: 0 20px;
 }
 
 .chat-window .bottom .chatInputs .inputs:focus {
   outline: none;
+  border: 2px solid #67C23A;
 }
 
 .chat-window .bottom .chatInputs .send {
-  background-color: rgb(29, 144, 245);
+  background-color: rgba(255,255,255,0.5);
   border: 0;
   transition: 0.3s;
-  box-shadow: 0px 0px 5px 0px rgb(0, 136, 255);
 }
 
 .chat-window .bottom .chatInputs .send:hover {
-  box-shadow: 0px 0px 10px 0px rgb(0, 136, 255);
+  box-shadow: 0px 0px 10px 0px  #67C23A;
 }
 </style>

@@ -12,6 +12,8 @@ public class TcChatDTO {
     private Integer chatSend;
 
     private Integer chatReceive;
+
+    private Integer chatList;
     private String userName;
     private String userSign;
 

@@ -2,10 +2,15 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.pzj.technicalcommunity.mapper.TcPostMapper">
     <select id="pageTop" resultType="com.pzj.technicalcommunity.entity.TcPostDTO">
-        SELECT *
+        SELECT *,
+               (SELECT picture_url
+                FROM tc_picture
+                WHERE tc_picture.picture_post = tc_post.post_id
+                ORDER BY picture_id ASC
+                   LIMIT 1) AS post_img
         FROM tc_post
-                 LEFT JOIN tc_user on tc_user.user_id = tc_post.post_user
-                 LEFT JOIN tc_tag on tc_tag.tag_id = tc_post.post_tag
+            LEFT JOIN tc_user on tc_user.user_id = tc_post.post_user
+            LEFT JOIN tc_tag on tc_tag.tag_id = tc_post.post_tag
         WHERE post_top = 1
         ORDER BY RAND()
     </select>

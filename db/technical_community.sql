@@ -11,7 +11,7 @@
  Target Server Version : 80031
  File Encoding         : 65001
 
- Date: 08/03/2023 23:42:31
+ Date: 09/03/2023 19:54:37
 */
 
 SET NAMES utf8mb4;
@@ -33,6 +33,10 @@ CREATE TABLE `tc_chat`  (
 -- ----------------------------
 -- Records of tc_chat
 -- ----------------------------
+INSERT INTO `tc_chat` VALUES (1, 100000, 100001, 0, '2023-03-09 18:59:25');
+INSERT INTO `tc_chat` VALUES (2, 100000, 100002, 0, '2023-03-09 17:50:23');
+INSERT INTO `tc_chat` VALUES (3, 100001, 100002, 0, '2023-03-09 13:05:34');
+INSERT INTO `tc_chat` VALUES (4, 100003, 100000, 0, '2023-03-09 17:51:43');
 
 -- ----------------------------
 -- Table structure for tc_comment
@@ -66,6 +70,25 @@ CREATE TABLE `tc_message`  (
 -- ----------------------------
 -- Records of tc_message
 -- ----------------------------
+INSERT INTO `tc_message` VALUES (1, 2, '你好', '2023-03-09 14:28:12');
+INSERT INTO `tc_message` VALUES (2, 2, '你好呀', '2023-03-09 14:50:34');
+INSERT INTO `tc_message` VALUES (3, 2, '哈哈哈', '2023-03-09 14:51:52');
+INSERT INTO `tc_message` VALUES (4, 2, '感觉怎么样', '2023-03-09 14:52:00');
+INSERT INTO `tc_message` VALUES (5, 2, '很棒', '2023-03-09 14:52:28');
+INSERT INTO `tc_message` VALUES (6, 2, '好好啊', '2023-03-09 14:52:36');
+INSERT INTO `tc_message` VALUES (7, 2, '不错', '2023-03-09 14:54:01');
+INSERT INTO `tc_message` VALUES (8, 2, '哈哈哈', '2023-03-09 16:49:51');
+INSERT INTO `tc_message` VALUES (9, 4, '哈哈哈', '2023-03-09 16:51:53');
+INSERT INTO `tc_message` VALUES (10, 4, '哈哈哈', '2023-03-09 17:11:19');
+INSERT INTO `tc_message` VALUES (11, 3, '哈哈哈', '2023-03-09 17:14:34');
+INSERT INTO `tc_message` VALUES (12, 3, '哈哈哈', '2023-03-09 17:14:43');
+INSERT INTO `tc_message` VALUES (13, 2, '哈哈哈', '2023-03-09 17:49:43');
+INSERT INTO `tc_message` VALUES (14, 1, '哈哈哈', '2023-03-09 17:51:02');
+INSERT INTO `tc_message` VALUES (15, 1, '哈哈哈', '2023-03-09 18:58:25');
+INSERT INTO `tc_message` VALUES (16, 1, '感觉怎么样', '2023-03-09 18:58:31');
+INSERT INTO `tc_message` VALUES (17, 1, '这个论坛还行吧', '2023-03-09 18:58:39');
+INSERT INTO `tc_message` VALUES (18, 1, '如果可以的话请多多支持喔', '2023-03-09 18:58:54');
+INSERT INTO `tc_message` VALUES (19, 1, '有什么可以改进的地方可以反馈', '2023-03-09 18:59:15');
 
 -- ----------------------------
 -- Table structure for tc_news
@@ -99,6 +122,14 @@ CREATE TABLE `tc_picture`  (
 -- ----------------------------
 -- Records of tc_picture
 -- ----------------------------
+INSERT INTO `tc_picture` VALUES (1, 1, 'http://localhost:8080/img/260396aae0fd4d499cbc2fdcc0f1474b.jpg');
+INSERT INTO `tc_picture` VALUES (2, 1, 'http://localhost:8080/img/373a718a1c7c4167b0412e655615f774.jpg');
+INSERT INTO `tc_picture` VALUES (3, 1, 'http://localhost:8080/img/5114b0f876f548a78faddd0994335264.jpg');
+INSERT INTO `tc_picture` VALUES (4, 1, 'http://localhost:8080/img/a6df47f01b154fa7808060cb7119cb8b.jpg');
+INSERT INTO `tc_picture` VALUES (5, 1, 'http://localhost:8080/img/f138293a28cd4e8fa730758eae25bfe1.jpg');
+INSERT INTO `tc_picture` VALUES (6, 2, 'http://localhost:8080/img/d5e5ea848ee5411ea807c714c967c4dc.jpeg');
+INSERT INTO `tc_picture` VALUES (7, 2, 'http://localhost:8080/img/7fada992bde54e3c9fb0e6240bab028f.jpg');
+INSERT INTO `tc_picture` VALUES (8, 2, 'http://localhost:8080/img/c173d32f4a344a0aa72d24ab32e397bc.jpg');
 
 -- ----------------------------
 -- Table structure for tc_post
@@ -119,6 +150,8 @@ CREATE TABLE `tc_post`  (
 -- ----------------------------
 -- Records of tc_post
 -- ----------------------------
+INSERT INTO `tc_post` VALUES (1, 2, 100012, '堆硬件对比暴力算法，谁才是手机摄影正确的方向？', '在现今各款旗舰手机都主打摄影的时代\n手机厂商逐渐分成了硬件派和算法派\n硬件派的代表是一众国产厂商\n以超高规格的硬件来保证成像素质\n算法派的代表为三星、苹果、谷歌等外国厂商\n强调软硬结合 硬件参数一般没有那么激进\n但会大量使用定制硬件 以提升软硬结合表现\n那到底是谁会更胜一筹？\n\n抱着这个疑问 我找来了两台价格以及定位都十分接近的安卓手机 分别代表硬件派和算法派来比较看看\n他们分别是Samsung Galaxy S23+ 和 Xiaomi 13 Pro\nSamsung Galaxy S23+ 8+256 价格为 HK$7499\nXiaomi 13 Pro 12+256 价格为 HK$7699\n\n两台手机均为国际版媒体机\n软件系统也是零售版系统 与零售版并无差距\n\n📱硬件参数对比及分析：\n\n📱小米13 Pro\n\n📱主摄/广角：\n感光元件： SONY IMX989 50MP 1.0”\n镜头：23MM F1.9 OIS (由21MM裁切)\n对焦：Dual Pixel PDAF 双核相位, Laser AF 激光\n\n💡SONY IMX989 是目前最大尺寸的Mobile CIS\n4:3 TYPE-1.0 的尺寸以及1.6um的大像素\n像素合并后更可达到3.2um的尺寸\n令它拥有高动态范围以及低噪点的特性\n是目前Mobile CIS中最顶级的存在\nDPAF + Laser AF 也保证了在暗光环境的AF速度\n\n📷长焦：\n感光元件：ISOCELL S5KJN1 50MP 1/2.76\"\n镜头：75MM F2 OIS (由66MM裁切)\n对焦：PDAF 相位对焦 (10cm - ∞)\n\n💡ISOCELL JN1 是一颗高像素的中低阶Mobile CIS\n经常被用于千元级的主摄以及定位中高阶的副摄\n优点是可以较小的体积去实现高像素\n也符合小米13 Pro各方面都比较均衡的定位\n值得注意的是这颗3.2倍长焦镜头采用了F2的大光圈\n以及浮动对焦镜组 搭配上高像素 CIS 及 OIS 光学防抖\n在近摄及5倍变焦時能获得不错的表现\n\n📷超广角：\n感光元件：ISOCELL S5KJN1 50 MP 1/2.76\"\n镜头：14MM F2.2 115˚\n对焦：PDAF 相位对焦\n\n💡因为主摄使用了TYPE-1.0模组导致了厚度及体积增加\n所以超广角现在能够有足够空间加入VCM 以实', '2023-03-09 19:22:48', 1, NULL);
+INSERT INTO `tc_post` VALUES (2, 2, 100013, '浅谈安卓（1）-----安卓简介', '我们先来聊聊这个很有意思的版本代号\n首先，如果让你来数数，你会咋样数？\n相信绝大多数人是“1 2 3 4 5 6 7 8 9 10......”\n现在教你谷歌的数数：“阿童木、发条机器人、纸杯蛋糕、甜甜圈、松饼、冻酸奶、姜饼、蜂巢、冰激凌三明治、果冻豆、奇巧、棒棒糖、棉花糖、牛轧糖、奥利奥、派，柑橘馅饼、红色天鹅绒蛋糕、雪花冰沙、提拉米苏......”\n（以上仅为段子，不必过于认真流汗滑稽流汗滑稽）\n不过细心的朋友会发现并觉得很好奇，安卓的版本代号为何绝大多数都是甜品（除前两个外）\n其实，在最初，安卓的代号原本是机器人系列（如阿童木，发条机器人）但后来谷歌为了避免商标问题，将代号由机器人系列转变为了现在的甜点系列\n而谷歌工程师Hiroshi Lockheimer在一篇博文中则透露，Android系统的名字涉及到谷歌软件工程师深夜加班时喜爱的各类美味（看来大家都是吃货.jpg）\n不过还有个细节\n我花了点时间浅浅地做成了表格（如下）', '2023-03-09 19:51:51', 1, NULL);
 
 -- ----------------------------
 -- Table structure for tc_tag
@@ -199,7 +232,19 @@ CREATE TABLE `tc_user`  (
 -- ----------------------------
 -- Records of tc_user
 -- ----------------------------
-INSERT INTO `tc_user` VALUES (100000, 1, '$2a$10$ULux4VKe8JxZ77trA1fwi.WQ.243Prhk6cx0GsFH5o8orQXgYRMc.', '管理员', NULL, NULL, NULL);
-INSERT INTO `tc_user` VALUES (100001, 0, '$2a$10$/pLgHwjVM3GIT09ZggzNOefsZ1crxC74vbK3rfIscoZVFbdG54kbK', '测试用户', NULL, NULL, NULL);
+INSERT INTO `tc_user` VALUES (100000, 1, '$2a$10$ULux4VKe8JxZ77trA1fwi.WQ.243Prhk6cx0GsFH5o8orQXgYRMc.', '初始管理员', '维护科技社区氛围是我的职责', '女', NULL);
+INSERT INTO `tc_user` VALUES (100001, 0, '$2a$10$/pLgHwjVM3GIT09ZggzNOefsZ1crxC74vbK3rfIscoZVFbdG54kbK', '站长', '有什么问题可以向我反馈喔', '男', NULL);
+INSERT INTO `tc_user` VALUES (100002, 0, '$2a$10$lQqKjIO3GkIqRR1Y1ya54umTdLBuupv6O7m91TwMZ6Lz.y6i.uXtm', '科技媒体', '第一手新鲜资讯会呈现给大家', '女', NULL);
+INSERT INTO `tc_user` VALUES (100003, 0, '$2a$10$r7ecGX/XKksKgCJqz8OyvOTAsnY7l6aM8KlCenHK5Ha1zvNYxopq2', '科技美学', '大家好这里是科技美学', '男', NULL);
+INSERT INTO `tc_user` VALUES (100004, 0, '$2a$10$Vu7xyO1DTPKGyJ09jv7KiuO29bDhG8UzT72R3dNmkaJ627sJaV36K', '刷机玩家', NULL, NULL, NULL);
+INSERT INTO `tc_user` VALUES (100005, 0, '$2a$10$nn3KbzdUjTsrdrzJbLwlnOcHQrYg3d.9arwjPADrCEUfNk/IJJgcW', 'VR资讯', NULL, NULL, NULL);
+INSERT INTO `tc_user` VALUES (100006, 0, '$2a$10$ndQw1GY5B2Pb6o3XAH4rVeSSclhpEVI/NhRXNgHkBLrWpR.103G42', '任务管理器', NULL, NULL, NULL);
+INSERT INTO `tc_user` VALUES (100007, 0, '$2a$10$HhOo1sycQTnu8WlbF2Va4uFkrJXRhat20zIOCNTWYCtGXe97MGA8C', 'Vue小哥', NULL, NULL, NULL);
+INSERT INTO `tc_user` VALUES (100008, 0, '$2a$10$sM24.Na3NztI61evh0A4Fu9JQtjQKZDaGxtoM0Q0L5gf2go97Y2J.', 'IOS越狱支持', NULL, NULL, NULL);
+INSERT INTO `tc_user` VALUES (100009, 0, '$2a$10$o5ANzRhfcAKi0Mo7moHHJ.fqA0ggdTqdDhPrG3D1VObU/zhsJsCHC', '社区小编', NULL, NULL, NULL);
+INSERT INTO `tc_user` VALUES (100010, 0, '$2a$10$gPsqLS/GpYjD5rdukil9DubZ.RBTEQqqLQwg5xkXA4GL5GjvSV3Ty', '营销号', NULL, NULL, NULL);
+INSERT INTO `tc_user` VALUES (100011, 0, '$2a$10$jOgDuK9.nokOo/D7.XLEae.MvY1ckM.tucrbgK2hVwPpui9Vd8MNO', '邻站小编', NULL, NULL, NULL);
+INSERT INTO `tc_user` VALUES (100012, 0, '$2a$10$HhQfnpRSwTn3qMLU5iWO9eBEukUNbITQuK0D6O.0NYCl6b/idW7Vy', '拍照盲评', NULL, NULL, NULL);
+INSERT INTO `tc_user` VALUES (100013, 0, '$2a$10$0aMXrvH.hZwj9H1APgg89Oy78/r4e7SdX12kZPZpX2e/vLdP1Jska', '软件科普', NULL, NULL, NULL);
 
 SET FOREIGN_KEY_CHECKS = 1;

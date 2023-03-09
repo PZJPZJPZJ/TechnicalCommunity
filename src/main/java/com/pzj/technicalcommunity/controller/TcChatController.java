@@ -89,7 +89,11 @@ public class TcChatController {
         //检测聊天是否存在
         QueryWrapper<TcChat> queryWrapper1 = new QueryWrapper<>();
         queryWrapper1.eq("chat_receive",id).eq("chat_send",userId);
-        if (iTcUserService.count(queryWrapper)>0 && iTcChatService.count(queryWrapper1)==0 && !userId.equals(id)){
+        //检测聊天是否已存在对方发起
+        QueryWrapper<TcChat> queryWrapper2 = new QueryWrapper<>();
+        queryWrapper1.eq("chat_receive",userId).eq("chat_send",id);
+        //计算查询结果计数，确认目标用户是否存在，确认是否已存在聊天,确认是否已存在对方发起，确认目标用户是否为自己
+        if (iTcUserService.count(queryWrapper)>0 && iTcChatService.count(queryWrapper1)==0 && iTcChatService.count(queryWrapper2)==0 && !userId.equals(id)){
             iTcChatService.save(tcChat);
             return ResponseEntity.status(HttpStatus.OK).build();
         }
@@ -104,7 +108,18 @@ public class TcChatController {
      * Return 执行结果(bool)
      */
     @GetMapping("/delete")
-    public boolean delete(Integer id){
-        return iTcChatService.removeById(id);
+    public ResponseEntity<String> delete(@RequestHeader HashMap hashMapHeader,Integer id){
+        //根据token获取当前用户
+        Integer userId = Integer.valueOf(JwtUtils.getClaimByToken((String) hashMapHeader.get("authorization")).getSubject());
+        //检测聊天是否存在
+        QueryWrapper<TcChat> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("chat_send",userId).eq("chat_id",id);
+        if (iTcChatService.count(queryWrapper)>0){
+            iTcChatService.removeById(id);
+            return ResponseEntity.status(HttpStatus.OK).build();
+        }
+        else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
     }
 }

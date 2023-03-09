@@ -58,7 +58,7 @@
                   :src="pictureUrl[i-1]"
                   :zoom-rate="1.2"
                   :preview-src-list="pictureUrl"
-                  :initial-index="i"
+                  :initial-index="i-1"
                   fit="cover"
               />
             </div>
@@ -112,7 +112,7 @@
   <el-backtop :right="15" :bottom="15"/>
   <el-affix position="bottom" :offset="20">
     <el-button type="primary" circle style="height: 40px;width: 40px" :icon="ChatLineRound" @click="drawerComment = true"></el-button>
-    <el-button v-if="thisPost.postPrice" type="danger" circle style="height: 40px;width: 40px" :icon="ShoppingCart" @click="drawerBuy = true"></el-button>
+    <el-button v-if="thisPost.postPrice" type="danger" circle style="height: 40px;width: 40px" :icon="ShoppingCart" @click="toBuy"></el-button>
   </el-affix>
   <el-drawer v-model="drawerComment" :direction="'btt'" :with-header="false">
     <el-input
@@ -124,9 +124,6 @@
         type="textarea"
     />
     <el-button @click="uploadComment">发布</el-button>
-  </el-drawer>
-  <el-drawer v-model="drawerBuy" :direction="'btt'" :with-header="false">
-    <el-button @click="submitBuy()">结算</el-button>
   </el-drawer>
 </template>
 
@@ -156,7 +153,6 @@ const pageSize = ref(10)
 const total = ref(0)
 //抽屉开启状态
 const drawerComment = ref(false)
-const drawerBuy = ref(false)
 //新增评论文本框
 const commentArea = ref('')
 //这是我的帖子
@@ -268,12 +264,12 @@ const uploadComment = async () => {
 }
 
 //提交购买
-const submitBuy = () => {
+const toBuy = () => {
   ElMessage({
-    message: '交易成功',
-    type: 'success',
+    message: '在购买前请先与卖家咨询商品情况',
+    type: 'info',
   })
-  router.push('/home')
+  router.push('/chat?id='+queryParams.get('id'))
 }
 
 //滚动到底部执行自动刷新
