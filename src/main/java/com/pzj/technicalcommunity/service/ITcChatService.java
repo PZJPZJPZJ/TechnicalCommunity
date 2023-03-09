@@ -1,7 +1,12 @@
 package com.pzj.technicalcommunity.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.pzj.technicalcommunity.entity.TcChat;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.pzj.technicalcommunity.entity.TcChatDTO;
+
+import java.util.List;
 
 /**
  * <p>
@@ -13,4 +18,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface ITcChatService extends IService<TcChat> {
 
+    List<TcChatDTO> listMyChat(Integer userId);
 }

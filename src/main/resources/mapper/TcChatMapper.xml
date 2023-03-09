@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.pzj.technicalcommunity.mapper.TcChatMapper">
-
+    <select id="listMyChat" parameterType="Integer" resultType="com.pzj.technicalcommunity.entity.TcChatDTO">
+        SELECT *
+        FROM tc_chat
+                 LEFT JOIN tc_user on tc_user.user_id = tc_chat.chat_receive
+        WHERE chat_send = #{userId}
+        ORDER BY chat_unread DESC,chat_time DESC
+    </select>
 </mapper>
