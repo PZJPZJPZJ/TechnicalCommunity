@@ -137,7 +137,10 @@ import axios from 'axios'
 import {useRouter} from "vue-router";
 import {Search, Loading, User, Plus, ChatLineRound, ShoppingCart} from '@element-plus/icons'
 
-//获取当前帖子
+//获取当前url参数
+const queryString = window.location.search;
+const queryParams = new URLSearchParams(queryString);
+//获取当前标签
 const thisTag = ref([])
 const loadThisTag = async () => {
   const {data} = await axios({
@@ -222,9 +225,6 @@ const handleScroll = () => {
 /**
  * 提交表单
  */
-//获取当前url参数
-const queryString = window.location.search;
-const queryParams = new URLSearchParams(queryString);
 //上传新帖子数据
 const newPost = reactive({
   title: '',
