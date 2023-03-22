@@ -72,7 +72,7 @@
         <el-card class="title-card">
           <span>全部评论({{ commentData.length }})</span>
         </el-card>
-        <el-card class="comment-card" v-for="comment in commentData" :key="comment.id">
+        <el-card class="comment-card" v-for="comment in commentData" :key="comment.commentId">
           <div class="header">
             <el-avatar class="avatar" :src="'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png'"
                        :size="30"></el-avatar>
@@ -81,6 +81,11 @@
           <div class="content">{{ comment.commentContent }}</div>
           <div class="post-footer">
             <div class="time">{{ comment.commentTime }}</div>
+            <el-popconfirm title="确定要删除吗？" confirm-button-text="确认" cancel-button-text="取消" v-if="loginUser == comment.commentUser" @confirm="deleteComment(comment.commentId)">
+              <template #reference>
+                <el-button type="danger">删除该评论</el-button>
+              </template>
+            </el-popconfirm>
           </div>
         </el-card>
         <div v-if="loading" style="text-align: center"><el-icon><Loading/></el-icon></div>
@@ -157,6 +162,8 @@ const drawerComment = ref(false)
 const commentArea = ref('')
 //这是我的帖子
 const isMyPost = ref(false)
+//当前登录账户
+const loginUser = ref(localStorage.getItem('user'))
 
 //获取当前帖子
 const loadThisPost = async () => {
@@ -261,6 +268,34 @@ const uploadComment = async () => {
   currentPage.value = 1
   commentData.value = []
   await loadMoreData()
+}
+
+//删除评论
+const deleteComment = async (commentId)=>{
+  await axios({
+    method: 'GET',
+    url: '/api/comment/delete?id='+commentId,
+    headers: {
+      Authorization: localStorage.getItem('token')
+    }
+  }).then(
+      response => {
+        ElMessage({
+          showClose: true,
+          message: '删除成功',
+          type: 'success',
+        })
+        currentPage.value = 1
+        commentData.value = []
+        loadMoreData()
+      }
+      , error => {
+        ElMessage({
+          showClose: true,
+          message: '删除失败',
+          type: 'error',
+        })
+      })
 }
 
 //提交购买
