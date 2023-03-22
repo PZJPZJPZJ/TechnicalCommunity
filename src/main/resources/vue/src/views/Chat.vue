@@ -44,11 +44,11 @@
                 <div class="bottom">
                   <div class="chat-content" ref="chatContent">
                     <div class="chat-wrapper" v-for="message in messageList" :key="message.messageId">
-                      <div class="chat-friend" v-if="false">
+                      <div class="chat-friend" v-if="!(message.messageUser == loginUser)">
                         <div class="chat-text">{{message.messageContent}}</div>
                         <div class="info-time"><span>{{ message.messageTime }}</span></div>
                       </div>
-                      <div class="chat-me">
+                      <div class="chat-me" v-if="message.messageUser == loginUser">
                         <div class="chat-text">{{message.messageContent}}</div>
                         <div class="info-time"><span>{{ message.messageTime }}</span></div>
                       </div>
@@ -83,6 +83,7 @@ const chatList = ref([])
 const chatCurrent = ref('')
 const nameCurrent = ref('')
 const signCurrent = ref('')
+const loginUser = ref('')
 const getList = async ()=>{
   const {data} = await axios({
     method: 'GET',
@@ -209,6 +210,7 @@ const toHome = ()=>{
 onMounted(() => {
   scrollBottom()
   getList()
+  loginUser.value=localStorage.getItem('user')
 });
 </script>
 

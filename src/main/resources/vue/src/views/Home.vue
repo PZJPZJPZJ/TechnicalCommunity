@@ -3,7 +3,7 @@
     <el-row class="header-box">
       <el-col :xs="0" :sm="0" :md="2" :lg="4" :xl="4"></el-col>
       <el-col :xs="6" :sm="6" :md="4" :lg="4" :xl="4">
-        <h3 style="margin-top: 13px">科技论坛</h3>
+        <h3 style="margin-top: 13px">科技社区</h3>
       </el-col>
       <el-col :xs="12" :sm="12" :md="12" :lg="8" :xl="8">
         <router-link to="/home">
@@ -298,7 +298,7 @@ const newPost = reactive({
   title: '',
   content: '',
   tag: '',
-  price: ''
+  price: null
 })
 //判断是否新建帖子为商品
 const isGoods = ref(false)
@@ -330,6 +330,7 @@ const uploadPost = async () => {
         //获取到ID后上传图片
         uploadFiles(response.data.rows)
         ElMessage({
+          showClose: true,
           message: '发布成功',
           type: 'success',
         })
@@ -339,7 +340,7 @@ const uploadPost = async () => {
         newPost.title = ''
         newPost.content = ''
         newPost.tag = ''
-        newPost.price = ''
+        newPost.price = null
         inputTag.value = ''
         selectTag.value = ''
         isGoods.value = false
@@ -350,6 +351,7 @@ const uploadPost = async () => {
       }
       , error => {
         ElMessage({
+          showClose: true,
           message: '输入有误',
           type: 'error',
         })

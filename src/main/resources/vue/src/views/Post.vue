@@ -3,7 +3,7 @@
     <el-row class="header-box">
       <el-col :xs="0" :sm="0" :md="2" :lg="4" :xl="4"></el-col>
       <el-col :xs="6" :sm="6" :md="4" :lg="4" :xl="4">
-        <h3 style="margin-top: 13px">科技论坛</h3>
+        <h3 style="margin-top: 13px">科技社区</h3>
       </el-col>
       <el-col :xs="12" :sm="12" :md="12" :lg="8" :xl="8">
         <router-link to="/home">
@@ -64,7 +64,7 @@
             </div>
           </el-badge>
           <div class="post-footer">
-            <el-tag class="tag">{{ thisPost.tagName }}</el-tag>
+            <el-tag class="tag" @click="handleViewTag">{{ thisPost.tagName }}</el-tag>
             <div class="time">{{ thisPost.postTime }}</div>
           </div>
         </el-card>
@@ -272,6 +272,11 @@ const toBuy = () => {
     type: 'info',
   })
   router.push('/chat')
+}
+
+//点击跳转对应标签
+const handleViewTag = () => {
+  router.push('/detail?id='+thisPost.value.postTag)
 }
 
 //滚动到底部执行自动刷新

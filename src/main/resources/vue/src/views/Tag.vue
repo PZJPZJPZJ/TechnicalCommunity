@@ -3,7 +3,7 @@
     <el-row class="header-box">
       <el-col :xs="0" :sm="0" :md="2" :lg="2" :xl="2"></el-col>
       <el-col :xs="6" :sm="6" :md="4" :lg="4" :xl="4">
-        <h3 style="margin-top: 13px">科技论坛</h3>
+        <h3 style="margin-top: 13px">科技社区</h3>
       </el-col>
       <el-col :xs="12" :sm="6" :md="4" :lg="4" :xl="4">
         <router-link to="/home">

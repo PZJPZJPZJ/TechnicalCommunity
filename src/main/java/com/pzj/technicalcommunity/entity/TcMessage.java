@@ -26,6 +26,8 @@ public class TcMessage implements Serializable {
     @TableId(value = "message_id", type = IdType.AUTO)
     private Integer messageId;
 
+    private Integer messageUser;
+
     private Integer messageChat;
 
     private String messageContent;

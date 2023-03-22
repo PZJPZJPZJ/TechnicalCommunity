@@ -9,6 +9,7 @@ import com.pzj.technicalcommunity.entity.TcChat;
 import com.pzj.technicalcommunity.entity.TcMessage;
 import com.pzj.technicalcommunity.service.ITcChatService;
 import com.pzj.technicalcommunity.service.ITcMessageService;
+import com.pzj.technicalcommunity.util.JwtUtils;
 import com.pzj.technicalcommunity.util.ResultPackage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -54,7 +55,10 @@ public class TcMessageController {
     }
 
     @RequestMapping("/save")
-    public ResponseEntity<String> save(@RequestBody TcMessage tcMessage){
+    public ResponseEntity<String> save(@RequestHeader HashMap hashMapHeader,@RequestBody TcMessage tcMessage){
+        //根据token获取当前用户
+        Integer userId = Integer.valueOf(JwtUtils.getClaimByToken((String) hashMapHeader.get("authorization")).getSubject());
+        tcMessage.setMessageUser(userId);
         if (iTcMessageService.save(tcMessage)){
             UpdateWrapper<TcChat> updateWrapper = new UpdateWrapper<>();
             updateWrapper.setSql("chat_unread = chat_unread + 1").eq("chat_id", tcMessage.getMessageChat());
