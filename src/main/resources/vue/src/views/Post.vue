@@ -70,7 +70,7 @@
         </el-card>
 
         <el-card class="title-card">
-          <span>全部评论({{ commentData.length }})</span>
+          <span>全部评论({{ total }})</span>
         </el-card>
         <el-card class="comment-card" v-for="comment in commentData" :key="comment.commentId">
           <div class="header">
