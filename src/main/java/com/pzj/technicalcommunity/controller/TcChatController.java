@@ -86,14 +86,19 @@ public class TcChatController {
         //检测用户是否存在
         QueryWrapper<TcUser> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("user_id",id);
+        boolean userExist = iTcUserService.count(queryWrapper)>0;
         //检测聊天是否存在
         QueryWrapper<TcChat> queryWrapper1 = new QueryWrapper<>();
         queryWrapper1.eq("chat_receive",id).eq("chat_send",userId);
+        boolean chatExist1 = iTcChatService.count(queryWrapper1)==0;
         //检测聊天是否已存在对方发起
         QueryWrapper<TcChat> queryWrapper2 = new QueryWrapper<>();
-        queryWrapper1.eq("chat_receive",userId).eq("chat_send",id);
+        queryWrapper2.eq("chat_send",id).eq("chat_receive",userId);
+        boolean chatExist2 = iTcChatService.count(queryWrapper2)==0;
+        //确认目标用户不为自己
+        boolean notMe = !userId.equals(id);
         //计算查询结果计数，确认目标用户是否存在，确认是否已存在聊天,确认是否已存在对方发起，确认目标用户是否为自己
-        if (iTcUserService.count(queryWrapper)>0 && iTcChatService.count(queryWrapper1)==0 && iTcChatService.count(queryWrapper2)==0 && !userId.equals(id)){
+        if (userExist && chatExist1 && chatExist2 && notMe){
             iTcChatService.save(tcChat);
             return ResponseEntity.status(HttpStatus.OK).build();
         }
