@@ -97,7 +97,7 @@ public class TcChatController {
         boolean chatExist2 = iTcChatService.count(queryWrapper2)==0;
         //确认目标用户不为自己
         boolean notMe = !userId.equals(id);
-        //计算查询结果计数，确认目标用户是否存在，确认是否已存在聊天,确认是否已存在对方发起，确认目标用户是否为自己
+        //检验是否都符合上述条件
         if (userExist && chatExist1 && chatExist2 && notMe){
             iTcChatService.save(tcChat);
             return ResponseEntity.status(HttpStatus.OK).build();
