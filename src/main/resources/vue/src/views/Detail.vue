@@ -106,7 +106,7 @@
         show-word-limit
         type="textarea"
     />
-    <input class="custom-upload-button" type="file" ref="fileInput" accept=".jpg,.jpeg,.png" multiple
+    <input class="custom-upload-button" type="file" ref="fileInput" accept=".jpg,.jpeg,.png,.gif" multiple
            @change="onFileChange">
     <br>
     <el-switch

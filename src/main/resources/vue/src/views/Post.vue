@@ -17,7 +17,8 @@
         </router-link>
       </el-col>
       <el-col :xs="3" :sm="3" :md="2" :lg="2" :xl="2">
-        <el-button style="height: 35px;width: 35px; margin-top: 13px" :icon="Search" circle @click="changeSearch"></el-button>
+        <el-button style="height: 35px;width: 35px; margin-top: 13px" :icon="Search" circle
+                   @click="changeSearch"></el-button>
       </el-col>
       <el-col :xs="3" :sm="3" :md="2" :lg="2" :xl="2">
         <el-dropdown :hide-on-click="false">
@@ -50,19 +51,18 @@
           <div v-if="thisPost.postPrice" class="price">￥{{ thisPost.postPrice }}</div>
           <div class="title">{{ thisPost.postTitle }}</div>
           <div class="content">{{ thisPost.postContent }}</div>
-          <el-badge v-if="pictureUrl.length" :value="pictureUrl.length" :max="99" class="item">
-            <div class="images">
-              <el-image
-                  v-for="i in 3"
-                  class="card-img"
-                  :src="pictureUrl[i-1]"
-                  :zoom-rate="1.2"
-                  :preview-src-list="pictureUrl"
-                  :initial-index="i-1"
-                  fit="cover"
-              />
-            </div>
-          </el-badge>
+          <div class="images">
+            <el-image
+                v-for="i in 3"
+                class="card-img"
+                :src="pictureUrl[i-1]"
+                :zoom-rate="1.2"
+                :preview-src-list="pictureUrl"
+                :initial-index="i-1"
+                fit="cover"
+            />
+            <el-badge v-if="pictureUrl.length-3 > 0" :value="pictureUrl.length-3" :max="9" class="item"></el-badge>
+          </div>
           <div class="post-footer">
             <el-tag class="tag" @click="handleViewTag">{{ thisPost.tagName }}</el-tag>
             <div class="time">{{ thisPost.postTime }}</div>
@@ -81,14 +81,19 @@
           <div class="content">{{ comment.commentContent }}</div>
           <div class="post-footer">
             <div class="time">{{ comment.commentTime }}</div>
-            <el-popconfirm title="确定要删除吗？" confirm-button-text="确认" cancel-button-text="取消" v-if="loginUser == comment.commentUser" @confirm="deleteComment(comment.commentId)">
+            <el-popconfirm title="确定要删除吗？" confirm-button-text="确认" cancel-button-text="取消"
+                           v-if="loginUser == comment.commentUser" @confirm="deleteComment(comment.commentId)">
               <template #reference>
                 <el-button type="danger">删除该评论</el-button>
               </template>
             </el-popconfirm>
           </div>
         </el-card>
-        <div v-if="loading" style="text-align: center"><el-icon><Loading/></el-icon></div>
+        <div v-if="loading" style="text-align: center">
+          <el-icon>
+            <Loading/>
+          </el-icon>
+        </div>
 
       </el-col>
 
@@ -105,7 +110,7 @@
                 />
               </el-col>
               <el-col :span="16">
-                <p style="height: 50px;line-height: 50px">{{tag.tagName}}</p>
+                <p style="height: 50px;line-height: 50px">{{ tag.tagName }}</p>
               </el-col>
             </el-row>
           </div>
@@ -116,8 +121,10 @@
   </el-main>
   <el-backtop :right="15" :bottom="15"/>
   <el-affix position="bottom" :offset="20">
-    <el-button type="primary" circle style="height: 40px;width: 40px" :icon="ChatLineRound" @click="drawerComment = true"></el-button>
-    <el-button v-if="thisPost.postPrice" type="danger" circle style="height: 40px;width: 40px" :icon="ShoppingCart" @click="toBuy"></el-button>
+    <el-button type="primary" circle style="height: 40px;width: 40px" :icon="ChatLineRound"
+               @click="drawerComment = true"></el-button>
+    <el-button v-if="thisPost.postPrice" type="danger" circle style="height: 40px;width: 40px" :icon="ShoppingCart"
+               @click="toBuy"></el-button>
   </el-affix>
   <el-drawer v-model="drawerComment" :direction="'btt'" :with-header="false">
     <el-input
@@ -210,8 +217,8 @@ const loadRandTag = async () => {
   })
   tagData.value = data.rows
 }
-const toTag = (tagId)=>{
-  router.push('/detail?id='+tagId)
+const toTag = (tagId) => {
+  router.push('/detail?id=' + tagId)
 }
 
 const loadMoreData = async () => {
@@ -271,10 +278,10 @@ const uploadComment = async () => {
 }
 
 //删除评论
-const deleteComment = async (commentId)=>{
+const deleteComment = async (commentId) => {
   await axios({
     method: 'GET',
-    url: '/api/comment/delete?id='+commentId,
+    url: '/api/comment/delete?id=' + commentId,
     headers: {
       Authorization: localStorage.getItem('token')
     }
@@ -303,7 +310,7 @@ const toBuy = () => {
   ElMessage({
     showClose: true,
     duration: 0,
-    message: '购买前请先与卖家咨询商品情况,对方账号为'+thisPost.value.postUser,
+    message: '购买前请先与卖家咨询商品情况,对方账号为' + thisPost.value.postUser,
     type: 'info',
   })
   router.push('/chat')
@@ -311,7 +318,7 @@ const toBuy = () => {
 
 //点击跳转对应标签
 const handleViewTag = () => {
-  router.push('/detail?id='+thisPost.value.postTag)
+  router.push('/detail?id=' + thisPost.value.postTag)
 }
 
 //滚动到底部执行自动刷新
@@ -328,7 +335,7 @@ const handleScroll = () => {
 const toChat = () => {
   router.push('/chat')
 }
-const changeSearch = ()=>{
+const changeSearch = () => {
   router.push('/search')
 }
 
@@ -338,7 +345,7 @@ const editInfo = () => {
   router.push("/info")
 }
 //管理员点击跳转用户管理
-const toAdmin = ()=>{
+const toAdmin = () => {
   router.push('/admin')
 }
 
@@ -348,7 +355,7 @@ const toAdmin = ()=>{
 //管理员标识
 const isAdmin = ref(false)
 //检查是否为管理员
-const checkAdmin = async () =>{
+const checkAdmin = async () => {
   await axios({
     method: 'GET',
     url: '/api/user/admin?token=' + localStorage.getItem('token'),
@@ -357,10 +364,10 @@ const checkAdmin = async () =>{
     }
   }).then(
       response => {
-        isAdmin.value=true
+        isAdmin.value = true
       }
       , error => {
-        isAdmin.value=false
+        isAdmin.value = false
       })
 }
 
@@ -393,7 +400,7 @@ onMounted(() => {
   margin: 8px;
 }
 
-.introduce-img{
+.introduce-img {
   width: 35px;
   height: 35px;
   margin: 8px;

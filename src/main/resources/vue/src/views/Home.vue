@@ -127,7 +127,7 @@
         placeholder="帖子标签"
         @select="handleSelect"
     />
-    <input class="custom-upload-button" type="file" ref="fileInput" accept=".jpg,.jpeg,.png" multiple
+    <input class="custom-upload-button" type="file" ref="fileInput" accept=".jpg,.jpeg,.png,.gif" multiple
            @change="onFileChange">
     <br>
     <el-switch
