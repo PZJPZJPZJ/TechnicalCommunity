@@ -138,5 +138,5 @@ ALTER TABLE tc_picture AUTO_INCREMENT=1;
 ALTER TABLE tc_post AUTO_INCREMENT=1;
 ALTER TABLE tc_tag AUTO_INCREMENT=1;
 ALTER TABLE tc_user AUTO_INCREMENT=100000;
-INSERT INTO `technical_community`.`tc_user` (`user_id`, `user_admin`, `user_password`, `user_name`, `user_cover`, `user_sign`, `user_sex`, `user_birth`) VALUES (100000, 1, '$2a$10$ULux4VKe8JxZ77trA1fwi.WQ.243Prhk6cx0GsFH5o8orQXgYRMc.', '初始管理员', 'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png', '维护科技社区氛围是我的职责', '男', '2022-12-31 16:00:00');
+INSERT INTO `technical_community`.`tc_user` (`user_id`, `user_admin`, `user_password`, `user_name`, `user_cover`, `user_sign`, `user_sex`, `user_birth`) VALUES (100000, 1, '$2a$10$ULux4VKe8JxZ77trA1fwi.WQ.243Prhk6cx0GsFH5o8orQXgYRMc.', '社区管理员', 'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png', '维护科技社区氛围是我的职责', '男', '2022-12-31 16:00:00');
 INSERT INTO `technical_community`.`tc_user` (`user_id`, `user_admin`, `user_password`, `user_name`, `user_cover`, `user_sign`, `user_sex`, `user_birth`) VALUES (100001, 1, '$2a$10$/pLgHwjVM3GIT09ZggzNOefsZ1crxC74vbK3rfIscoZVFbdG54kbK', '站长', 'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png', '有什么问题可以向我反馈喔', '男', '2023-02-08 18:05:31');
