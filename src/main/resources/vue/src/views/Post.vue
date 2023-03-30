@@ -52,15 +52,33 @@
           <div class="content">{{ thisPost.postContent }}</div>
           <div class="images">
             <el-image
-                v-for="i in 3"
+                v-if="pictureUrl[0]"
                 class="card-img"
-                :src="pictureUrl[i-1]"
+                :src="pictureUrl[0]"
                 :zoom-rate="1.2"
                 :preview-src-list="pictureUrl"
-                :initial-index="i-1"
+                :initial-index="0"
                 fit="cover"
             />
-            <el-badge v-if="pictureUrl.length-3 > 0" :value="pictureUrl.length-3" :max="9" class="item"></el-badge>
+            <el-image
+                v-if="pictureUrl[1]"
+                class="card-img"
+                :src="pictureUrl[1]"
+                :zoom-rate="1.2"
+                :preview-src-list="pictureUrl"
+                :initial-index="1"
+                fit="cover"
+            />
+            <el-image
+                v-if="pictureUrl[2]"
+                class="card-img"
+                :src="pictureUrl[2]"
+                :zoom-rate="1.2"
+                :preview-src-list="pictureUrl"
+                :initial-index="2"
+                fit="cover"
+            />
+            <el-badge v-if="pictureUrl.length-3 > 0" :value="pictureUrl.length-3" :max="9" type="info" class="item"></el-badge>
           </div>
           <div class="post-footer">
             <el-tag class="tag" @click="handleViewTag">{{ thisPost.tagName }}</el-tag>
