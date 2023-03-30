@@ -44,8 +44,7 @@
 
         <el-card class="post-card">
           <div class="header">
-            <el-avatar class="avatar" :src="thisPost.userCover"
-                       :size="30"></el-avatar>
+            <el-avatar class="avatar" :src="thisPost.userCover" :size="35"></el-avatar>
             <div class="user-info">{{ thisPost.userName }}</div>
           </div>
           <div v-if="thisPost.postPrice" class="price">￥{{ thisPost.postPrice }}</div>
@@ -74,8 +73,7 @@
         </el-card>
         <el-card class="comment-card" v-for="comment in commentData" :key="comment.commentId">
           <div class="header">
-            <el-avatar class="avatar" :src="comment.userCover"
-                       :size="30"></el-avatar>
+            <el-avatar class="avatar" :src="comment.userCover" :size="35"></el-avatar>
             <div class="user-info">{{ comment.userName }}</div>
           </div>
           <div class="content">{{ comment.commentContent }}</div>
@@ -94,9 +92,7 @@
             <Loading/>
           </el-icon>
         </div>
-
       </el-col>
-
       <el-col :xs="0" :sm="0" :md="4" :lg="4" :xl="4">
         <el-card class="side-card">
           <h3 style="margin: 15px">为你推荐</h3>
@@ -307,13 +303,7 @@ const deleteComment = async (commentId) => {
 
 //提交购买
 const toBuy = () => {
-  ElMessage({
-    showClose: true,
-    duration: 0,
-    message: '购买前请先与卖家咨询商品情况,对方账号为' + thisPost.value.postUser,
-    type: 'info',
-  })
-  router.push('/chat')
+  router.push('/chat?id='+thisPost.value.postUser)
 }
 
 //点击跳转对应标签

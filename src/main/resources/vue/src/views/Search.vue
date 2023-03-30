@@ -58,8 +58,7 @@
       <el-col :xs="24" :sm="24" :md="16" :lg="16" :xl="16">
         <el-card class="post-card" v-for="post in postData" :key="post.postId">
           <div class="header">
-            <el-avatar class="avatar" :src="post.userCover"
-                       :size="30"></el-avatar>
+            <el-avatar class="avatar" :src="post.userCover" :size="35"></el-avatar>
             <div class="user-info">{{ post.userName }}</div>
           </div>
           <div class="center" @click="handleViewPost(post.postId)">

@@ -5,16 +5,17 @@
         <div class="chatHome">
           <div class="chatLeft">
             <div class="title">
-              <h1><el-icon @click="toHome"><ArrowLeftBold /></el-icon>用户私信</h1>
+              <el-button type="success" @click="toHome"><el-icon><ArrowLeftBold /></el-icon></el-button>
+              <h1>用户私信</h1>
             </div>
             <div class="online-person">
               <div class="person-cards-wrapper">
                 <input class="inputs" v-model="inputUser" @keyup.enter="newChat" placeholder="对方账号"/>
-                <div class="personList" v-for="chat in chatList" :key="chat" @click="selectChat(chat.chatId,chat.userName,chat.userSign)">
+                <div class="personList" v-for="chat in chatList" :key="chat" @click="selectChat(chat.chatId,chat.userName,chat.userCover,chat.userSign)">
                   <el-badge :value="chat.chatUnread" :max="9" class="item" :hidden=!chat.chatUnread>
                     <div class="person-card">
                       <div class="info">
-                        <el-avatar class="avatar" :src="chat.userCover" :size="30"></el-avatar>
+                        <el-avatar class="avatar" :src="chat.userCover" :size="50"></el-avatar>
                         <div class="info-detail">
                           <div class="name">{{ chat.userName }}</div>
                           <div class="detail">{{ chat.userSign }}</div>
@@ -32,8 +33,9 @@
                 <div class="top">
                   <div class="info-detail">
                     <div class="name">
+                      <el-avatar class="avatar" v-if="nameCurrent!==''" :src="coverCurrent" :size="25"></el-avatar>
                       {{ nameCurrent }}
-                      <el-popconfirm v-if="nameCurrent!==''" title="对方列表也会同时删除，确定要继续吗？">
+                      <el-popconfirm v-if="nameCurrent!==''" title="对方列表也会同时删除，确定要继续吗？" @confirm="deleteChat">
                         <template #reference>
                           <el-icon><Delete /></el-icon>
                         </template>
@@ -84,7 +86,11 @@ const chatList = ref([])
 const chatCurrent = ref('')
 const nameCurrent = ref('')
 const signCurrent = ref('')
+const coverCurrent = ref('')
 const loginUser = ref('')
+//获取当前url参数
+const queryString = window.location.search;
+const queryParams = new URLSearchParams(queryString);
 const getList = async ()=>{
   const {data} = await axios({
     method: 'GET',
@@ -95,10 +101,11 @@ const getList = async ()=>{
   })
   chatList.value=data.rows
 }
-const selectChat = async (chatId,userName,userSign)=>{
+const selectChat = async (chatId,userName,userCover,userSign)=>{
   chatCurrent.value = chatId
   nameCurrent.value = userName
   signCurrent.value = userSign
+  coverCurrent.value = userCover
   await axios({
     method: 'GET',
     url: '/api/chat/clear?chatId='+chatId,
@@ -110,7 +117,6 @@ const selectChat = async (chatId,userName,userSign)=>{
   await getMessage()
   await scrollBottom()
 }
-
 const messageList = ref([])
 const getMessage = async ()=>{
   const {data} = await axios({
@@ -136,14 +142,12 @@ const newChat = async ()=>{
     }
   }).then(
       response => {
-        inputUser.value=''
         getList()
-
       }
       , error => {
         ElMessage({
           message: '输入的账号有误或聊天已存在',
-          type: 'error',
+          type: 'warning',
         })
       }
   )
@@ -190,6 +194,38 @@ const sendMsg = async ()=>{
 }
 
 /**
+ * 删除聊天
+ */
+const deleteChat = async ()=>{
+  await axios({
+    method: 'GET',
+    url: '/api/chat/delete?id='+chatCurrent.value,
+    headers: {
+      Authorization: localStorage.getItem('token')
+    }
+  }).then(
+      response => {
+        ElMessage({
+          message: '删除成功',
+          type: 'success',
+        })
+        getList()
+        chatCurrent.value = ''
+        nameCurrent.value = ''
+        signCurrent.value = ''
+        coverCurrent.value = ''
+        messageList.value = []
+      }
+      , error => {
+        ElMessage({
+          message: '删除失败',
+          type: 'error',
+        })
+      }
+  )
+}
+
+/**
  * 滚动到底部
  */
 const chatContent = ref(null);
@@ -212,6 +248,31 @@ onMounted(() => {
   scrollBottom()
   getList()
   loginUser.value=localStorage.getItem('user')
+  if (queryParams.get('id')){
+    axios({
+      method: 'GET',
+      url: '/api/chat/save?id='+queryParams.get('id'),
+      headers: {
+        Authorization: localStorage.getItem('token')
+      }
+    }).then(
+        response => {
+          ElMessage({
+            showClose: true,
+            message: '购买前请先与卖家咨询商品情况,对方账号为'+queryParams.get('id'),
+            type: 'info',
+          })
+          getList()
+        }
+        , error => {
+          ElMessage({
+            showClose: true,
+            message: '购买前请先与卖家咨询商品情况,对方账号为'+queryParams.get('id'),
+            type: 'info',
+          })
+        }
+    )
+  }
 });
 </script>
 

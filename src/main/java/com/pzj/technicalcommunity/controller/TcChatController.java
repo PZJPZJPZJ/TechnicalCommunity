@@ -111,14 +111,8 @@ public class TcChatController {
      * Return 执行结果(bool)
      */
     @GetMapping("/delete")
-    public ResponseEntity<String> delete(@RequestHeader HashMap hashMapHeader,Integer id){
-        //根据token获取当前用户
-        Integer userId = Integer.valueOf(JwtUtils.getClaimByToken((String) hashMapHeader.get("authorization")).getSubject());
-        //检测聊天是否存在
-        QueryWrapper<TcChat> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("chat_send",userId).eq("chat_id",id);
-        if (iTcChatService.count(queryWrapper)>0){
-            iTcChatService.removeById(id);
+    public ResponseEntity<String> delete(Integer id){
+        if (iTcChatService.removeById(id)){
             return ResponseEntity.status(HttpStatus.OK).build();
         }
         else {

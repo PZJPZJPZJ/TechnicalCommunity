@@ -17,7 +17,8 @@
         </router-link>
       </el-col>
       <el-col :xs="3" :sm="3" :md="2" :lg="2" :xl="2">
-        <el-button style="height: 35px;width: 35px; margin-top: 13px" :icon="Search" circle @click="changeSearch"></el-button>
+        <el-button style="height: 35px;width: 35px; margin-top: 13px" :icon="Search" circle
+                   @click="changeSearch"></el-button>
       </el-col>
       <el-col :xs="3" :sm="3" :md="2" :lg="2" :xl="2">
         <el-dropdown :hide-on-click="false">
@@ -40,7 +41,8 @@
       <el-col :xs="0" :sm="0" :md="4" :lg="4" :xl="4"></el-col>
       <el-col :xs="24" :sm="24" :md="16" :lg="16" :xl="16">
         <el-card :model="myInfo" label-width="100px">
-          <el-upload class="avatar-uploader" :http-request="upLoadFile" :show-file-list="false" :before-upload="beforeAvatarUpload">
+          <el-upload class="avatar-uploader" :http-request="upLoadFile" :show-file-list="false"
+                     :before-upload="beforeAvatarUpload">
             <el-avatar class="avatar" :src="myInfo.userCover" :size="100"></el-avatar>
           </el-upload>
           <el-form-item label="账号">
@@ -61,28 +63,23 @@
               <el-radio label="女">女</el-radio>
             </el-radio-group>
           </el-form-item>
-          <el-switch
-              v-model="changePassword"
-              active-text="修改密码"
-              inactive-text="保持密码"
-          />
+          <el-form-item>
+            <el-switch v-model="changePassword" active-text="修改密码" inactive-text="保持密码"/>
+          </el-form-item>
           <el-form-item v-if="changePassword" label="修改密码">
             <el-input v-model="myPassword" type="password" show-password></el-input>
           </el-form-item>
-          <el-form-item>
-            <el-button type="primary" @click="updateMyInfo">保存</el-button>
-          </el-form-item>
+          <el-button type="primary" @click="updateMyInfo">保存</el-button>
         </el-card>
 
         <el-card class="title-card">
-          <span v-if="!isAdmin">我的帖子({{total}})</span>
-          <span v-if="isAdmin">全站帖子({{total}})</span>
+          <span v-if="!isAdmin">我的帖子({{ total }})</span>
+          <span v-if="isAdmin">全站帖子({{ total }})</span>
         </el-card>
 
         <el-card class="post-card" v-for="post in postData" :key="post.id">
           <div class="header">
-            <el-avatar class="avatar" :src="post.userCover"
-                       :size="30"></el-avatar>
+            <el-avatar class="avatar" :src="post.userCover" :size="35"></el-avatar>
             <div class="user-info">{{ post.userName }}</div>
           </div>
           <div class="center" @click="handleViewPost(post.postId)">
@@ -95,14 +92,16 @@
           </div>
           <div class="post-footer">
             <div class="topOrBottom" v-if="isAdmin">
-              <el-popconfirm v-if="!post.postTop" title="确定要置顶吗？" confirm-button-text="确认" cancel-button-text="取消"
-                              @confirm="topPost(post.postId)">
+              <el-popconfirm v-if="!post.postTop" title="确定要置顶吗？" confirm-button-text="确认"
+                             cancel-button-text="取消"
+                             @confirm="topPost(post.postId)">
                 <template #reference>
                   <el-button type="success">置顶该帖</el-button>
                 </template>
               </el-popconfirm>
-              <el-popconfirm v-if="post.postTop" title="确定要取消置顶吗？" confirm-button-text="确认" cancel-button-text="取消"
-                              @confirm="bottomPost(post.postId)">
+              <el-popconfirm v-if="post.postTop" title="确定要取消置顶吗？" confirm-button-text="确认"
+                             cancel-button-text="取消"
+                             @confirm="bottomPost(post.postId)">
                 <template #reference>
                   <el-button type="warning">取消置顶</el-button>
                 </template>
@@ -116,7 +115,11 @@
             </el-popconfirm>
           </div>
         </el-card>
-        <div v-if="loading" style="text-align: center"><el-icon><Loading/></el-icon></div>
+        <div v-if="loading" style="text-align: center">
+          <el-icon>
+            <Loading/>
+          </el-icon>
+        </div>
 
       </el-col>
       <el-col :xs="0" :sm="0" :md="4" :lg="4" :xl="4"></el-col>
@@ -125,7 +128,6 @@
 </template>
 
 <script setup>
-//加载触发
 import {onMounted, reactive, ref} from "vue";
 import axios from "axios";
 import {ElLoading, ElMessage} from "element-plus";
@@ -156,7 +158,7 @@ const loadMyInfo = async () => {
 
 //更新用户信息
 const updateMyInfo = async () => {
-  if (changePassword.value){
+  if (changePassword.value) {
     await axios({
       method: 'POST',
       url: '/api/user/update',
@@ -173,21 +175,22 @@ const updateMyInfo = async () => {
     }).then(
         response => {
           ElMessage({
-            message: '修改成功',
+            showClose: true,
+            message: '修改用户信息成功',
             type: 'success',
           })
-          myPassword.value=''
+          myPassword.value = ''
           changePassword.value = false
         }
         , error => {
           ElMessage({
-            message: '修改失败',
+            showClose: true,
+            message: '修改用户信息失败',
             type: 'error',
           })
         }
     )
-  }
-  else {
+  } else {
     await axios({
       method: 'POST',
       url: '/api/user/update',
@@ -203,13 +206,15 @@ const updateMyInfo = async () => {
     }).then(
         response => {
           ElMessage({
-            message: '修改成功',
+            showClose: true,
+            message: '修改用户信息成功',
             type: 'success',
           })
         }
         , error => {
           ElMessage({
-            message: '修改失败',
+            showClose: true,
+            message: '修改用户信息失败',
             type: 'error',
           })
         }
@@ -218,18 +223,39 @@ const updateMyInfo = async () => {
 }
 
 //用户头像更新
-const file = ref('')
-
-const upLoadFile = ()=>{
-  console.log(file)
+const formData = new FormData()
+const upLoadFile = async () => {
+  await axios({
+    method: 'POST',
+    url: '/api/user/cover',
+    data: formData,
+    headers: {
+      'Content-Type': 'multipart/form-data',
+      'Authorization': localStorage.getItem('token')
+    }
+  }).then(
+      response => {
+        ElMessage({
+          showClose: true,
+          message: '更换头像成功',
+          type: 'success',
+        })
+      }
+      , error => {
+        ElMessage({
+          showClose: true,
+          message: '更换头像失败',
+          type: 'error',
+        })
+      })
+  await loadMyInfo()
 }
-const beforeAvatarUpload = (rawFile)=>{
-  if (rawFile.type !== 'image/jpeg') {
+const beforeAvatarUpload = (rawFile) => {
+  if ((rawFile.type !== 'image/jpeg') && (rawFile.type !== 'image/png')) {
     ElMessage.error('请选择JPG或PNG类型的图片')
     return false;
-  }
-  else{
-    file.value = rawFile;
+  } else {
+    formData.append('file', rawFile)
     return true;
   }
 }
@@ -266,7 +292,7 @@ const handleViewPost = (postId) => {
 //管理员标识
 const isAdmin = ref(false)
 //检查是否为管理员
-const checkAdmin = async () =>{
+const checkAdmin = async () => {
   await axios({
     method: 'GET',
     url: '/api/user/admin?token=' + localStorage.getItem('token'),
@@ -275,10 +301,10 @@ const checkAdmin = async () =>{
     }
   }).then(
       response => {
-        isAdmin.value=true
+        isAdmin.value = true
       }
       , error => {
-        isAdmin.value=false
+        isAdmin.value = false
       })
 }
 
@@ -286,10 +312,10 @@ const checkAdmin = async () =>{
  * 顶栏
  */
 //管理员点击跳转用户管理
-const toAdmin = ()=>{
+const toAdmin = () => {
   router.push('/admin')
 }
-const changeSearch = ()=>{
+const changeSearch = () => {
   router.push('/search')
 }
 
