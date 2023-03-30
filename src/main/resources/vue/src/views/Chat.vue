@@ -144,10 +144,16 @@ const newChat = async ()=>{
       response => {
         inputUser.value = ''
         getList()
+        ElMessage({
+          showClose: true,
+          message: '新建聊天成功',
+          type: 'success',
+        })
       }
       , error => {
         inputUser.value = ''
         ElMessage({
+          showClose: true,
           message: '输入的账号有误或聊天已存在',
           type: 'warning',
         })
