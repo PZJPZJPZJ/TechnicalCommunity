@@ -32,6 +32,8 @@ public class TcUser implements Serializable {
 
     private String userName;
 
+    private String userCover;
+
     private String userSign;
 
     private String userSex;

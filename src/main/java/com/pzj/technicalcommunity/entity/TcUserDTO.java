@@ -13,6 +13,8 @@ public class TcUserDTO {
 
     private String userName;
 
+    private String userCover;
+
     private String userSign;
 
     private String userSex;
