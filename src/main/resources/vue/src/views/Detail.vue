@@ -99,7 +99,7 @@
     />
     <el-input
         v-model="newPost.content"
-        maxlength="500"
+        maxlength="1000"
         placeholder="帖子内容"
         :autosize="true"
         show-word-limit
