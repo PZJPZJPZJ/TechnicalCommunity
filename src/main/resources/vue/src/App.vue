@@ -88,7 +88,6 @@ onMounted(() => {
 
 .el-card:hover {
   background-color: rgba(255, 255, 255, 0.75);
-  cursor: pointer;
 }
 
 .el-input-group__append, .el-input-group__prepend{
@@ -127,5 +126,11 @@ onMounted(() => {
 /*自定义顶栏*/
 .header-box {
   justify-content: space-between;
+}
+.tag {
+  cursor: pointer;
+}
+.center{
+  cursor: pointer;
 }
 </style>

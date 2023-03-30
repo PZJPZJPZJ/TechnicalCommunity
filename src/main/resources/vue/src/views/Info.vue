@@ -40,6 +40,9 @@
       <el-col :xs="0" :sm="0" :md="4" :lg="4" :xl="4"></el-col>
       <el-col :xs="24" :sm="24" :md="16" :lg="16" :xl="16">
         <el-card :model="myInfo" label-width="100px">
+          <el-upload class="avatar-uploader" :http-request="upLoadFile" :show-file-list="false" :before-upload="beforeAvatarUpload">
+            <el-avatar class="avatar" :src="myInfo.userCover" :size="100"></el-avatar>
+          </el-upload>
           <el-form-item label="账号">
             <el-input v-model="myInfo.userId" :disabled="true"></el-input>
           </el-form-item>
@@ -213,6 +216,24 @@ const updateMyInfo = async () => {
     )
   }
 }
+
+//用户头像更新
+const file = ref('')
+
+const upLoadFile = ()=>{
+  console.log(file)
+}
+const beforeAvatarUpload = (rawFile)=>{
+  if (rawFile.type !== 'image/jpeg') {
+    ElMessage.error('请选择JPG或PNG类型的图片')
+    return false;
+  }
+  else{
+    file.value = rawFile;
+    return true;
+  }
+}
+
 //跳转用户详情页
 const editInfo = () => {
   router.push("/info")
