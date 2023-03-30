@@ -345,6 +345,7 @@ const deletePost = async (postId) => {
   }).then(
       response => {
         ElMessage({
+          showClose: true,
           message: '删除成功',
           type: 'success',
         })
@@ -355,6 +356,7 @@ const deletePost = async (postId) => {
       }
       , error => {
         ElMessage({
+          showClose: true,
           message: '删除失败',
           type: 'error',
         })
@@ -372,6 +374,7 @@ const topPost = async (postId) => {
   }).then(
       response => {
         ElMessage({
+          showClose: true,
           message: '置顶成功',
           type: 'success',
         })
@@ -382,6 +385,7 @@ const topPost = async (postId) => {
       }
       , error => {
         ElMessage({
+          showClose: true,
           message: '置顶失败',
           type: 'error',
         })
