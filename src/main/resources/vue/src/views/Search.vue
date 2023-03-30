@@ -58,7 +58,7 @@
       <el-col :xs="24" :sm="24" :md="16" :lg="16" :xl="16">
         <el-card class="post-card" v-for="post in postData" :key="post.postId">
           <div class="header">
-            <el-avatar class="avatar" :src="'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png'"
+            <el-avatar class="avatar" :src="post.userCover"
                        :size="30"></el-avatar>
             <div class="user-info">{{ post.userName }}</div>
           </div>

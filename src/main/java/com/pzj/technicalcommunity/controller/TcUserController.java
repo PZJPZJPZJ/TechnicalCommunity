@@ -15,9 +15,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
+
+import static com.pzj.technicalcommunity.util.PictureUtils.generateUUID;
+import static com.pzj.technicalcommunity.util.PictureUtils.getFileExtension;
 
 /**
  * <p>
@@ -126,6 +132,32 @@ public class TcUserController {
         if(tcUser.getUserPassword() != null){
             tcUser.setUserPassword(PasswordEncoder.encode(tcUser.getUserPassword()));
         }
+        if (iTcUserService.updateById(tcUser)){
+            return ResponseEntity.status(HttpStatus.OK).build();
+        }
+        else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+    }
+
+    /**
+     * 更新用户头像
+     * @return
+     */
+    @RequestMapping("/cover")
+    public ResponseEntity<String> cover(@RequestHeader HashMap hashMapHeader, @RequestParam("file") MultipartFile file) throws IOException {
+        //根据token获取当前用户
+        Integer userId = Integer.valueOf(JwtUtils.getClaimByToken((String) hashMapHeader.get("authorization")).getSubject());
+        //创建新对象
+        TcUser tcUser = new TcUser();
+        tcUser.setUserId(userId);
+        //处理图片
+        String name = generateUUID() + getFileExtension(file.getOriginalFilename());
+        String path = "C:\\Users\\13425\\Documents\\JetBrains\\TechnicalCommunity\\target\\classes\\static\\img\\"+name;
+        String url = "http://localhost:8080/img/" + name;
+        file.transferTo(new File(path));
+        tcUser.setUserCover(url);
+        //写入数据库
         if (iTcUserService.updateById(tcUser)){
             return ResponseEntity.status(HttpStatus.OK).build();
         }

@@ -41,8 +41,7 @@
       <el-col :xs="24" :sm="24" :md="16" :lg="16" :xl="16">
         <el-card class="post-card" v-for="user in userData" :key="user.userId">
           <div class="header">
-            <el-avatar class="avatar" :src="'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png'"
-                       :size="30"></el-avatar>
+            <el-avatar class="avatar" :src="user.userCover" :size="30"></el-avatar>
           </div>
           <div class="center">
             <div class="user-info">账号：{{ user.userId }}</div>

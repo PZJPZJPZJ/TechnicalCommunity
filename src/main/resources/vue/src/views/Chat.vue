@@ -14,6 +14,7 @@
                   <el-badge :value="chat.chatUnread" :max="9" class="item" :hidden=!chat.chatUnread>
                     <div class="person-card">
                       <div class="info">
+                        <el-avatar class="avatar" :src="chat.userCover" :size="30"></el-avatar>
                         <div class="info-detail">
                           <div class="name">{{ chat.userName }}</div>
                           <div class="detail">{{ chat.userSign }}</div>
@@ -348,7 +349,7 @@ onMounted(() => {
 }
 
 .person-card:hover .info .info-detail .detail {
-  color: #fff;
+  color: #000;
 }
 .activeCard {
   background-color: #529b2e;

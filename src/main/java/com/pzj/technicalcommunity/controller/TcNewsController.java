@@ -5,8 +5,6 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.pzj.technicalcommunity.entity.TcNews;
-import com.pzj.technicalcommunity.entity.TcPost;
-import com.pzj.technicalcommunity.entity.TcPostDTO;
 import com.pzj.technicalcommunity.service.ITcNewsService;
 import com.pzj.technicalcommunity.service.ITcUserService;
 import com.pzj.technicalcommunity.util.JwtUtils;

@@ -13,6 +13,7 @@ public class TcCommentDTO {
 
     private Integer commentUser;
     private String userName;
+    private String userCover;
 
     private String commentContent;
 

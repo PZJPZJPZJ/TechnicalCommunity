@@ -1,11 +1,11 @@
 <template>
   <el-header>
     <el-row class="header-box">
-      <el-col :xs="0" :sm="0" :md="2" :lg="2" :xl="2"></el-col>
+      <el-col :xs="0" :sm="0" :md="2" :lg="4" :xl="4"></el-col>
       <el-col :xs="6" :sm="6" :md="4" :lg="4" :xl="4">
         <h3 style="margin-top: 13px">科技社区</h3>
       </el-col>
-      <el-col :xs="12" :sm="6" :md="4" :lg="4" :xl="4">
+      <el-col :xs="12" :sm="12" :md="12" :lg="8" :xl="8">
         <router-link to="/home">
           <el-button style="height: 35px;width: 35px; margin: 13px 5px" link>热门</el-button>
         </router-link>
@@ -16,11 +16,10 @@
           <el-button style="height: 35px;width: 35px; margin: 13px 5px" link>新闻</el-button>
         </router-link>
       </el-col>
-      <el-col :xs="2" :sm="2" :md="2" :lg="2" :xl="2">
-        <el-button style="height: 35px;width: 35px; margin-top: 13px" :icon="Search" circle
-                   @click="changeSearch"></el-button>
+      <el-col :xs="3" :sm="3" :md="2" :lg="2" :xl="2">
+        <el-button style="height: 35px;width: 35px; margin-top: 13px" :icon="Search" circle @click="changeSearch"></el-button>
       </el-col>
-      <el-col :xs="2" :sm="2" :md="2" :lg="2" :xl="2">
+      <el-col :xs="3" :sm="3" :md="2" :lg="2" :xl="2">
         <el-dropdown :hide-on-click="false">
           <el-button style="height: 35px;width: 35px; margin-top: 13px" :icon="User" circle></el-button>
           <template #dropdown>
@@ -33,9 +32,10 @@
           </template>
         </el-dropdown>
       </el-col>
-      <el-col :xs="0" :sm="0" :md="2" :lg="2" :xl="2"></el-col>
+      <el-col :xs="0" :sm="0" :md="2" :lg="4" :xl="4"></el-col>
     </el-row>
   </el-header>
+
   <el-main>
     <el-row>
       <el-col :xs="0" :sm="0" :md="4" :lg="4" :xl="4"></el-col>

@@ -15,6 +15,7 @@ public class TcPostDTO {
 
     private Integer postUser;
     private String userName;
+    private String userCover;
 
     private String postTitle;
 

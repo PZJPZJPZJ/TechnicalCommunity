@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.pzj.technicalcommunity.mapper.TcUserMapper">
     <select id="pageSafe" resultType="com.pzj.technicalcommunity.entity.TcUserDTO">
-        SELECT user_id, user_admin, user_name, user_sign, user_sex, user_birth
+        SELECT user_id, user_admin, user_name, user_cover, user_sign, user_sex, user_birth
         FROM tc_user
     </select>
 </mapper>

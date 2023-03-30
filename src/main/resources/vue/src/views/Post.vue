@@ -44,7 +44,7 @@
 
         <el-card class="post-card">
           <div class="header">
-            <el-avatar class="avatar" :src="'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png'"
+            <el-avatar class="avatar" :src="thisPost.userCover"
                        :size="30"></el-avatar>
             <div class="user-info">{{ thisPost.userName }}</div>
           </div>
@@ -74,7 +74,7 @@
         </el-card>
         <el-card class="comment-card" v-for="comment in commentData" :key="comment.commentId">
           <div class="header">
-            <el-avatar class="avatar" :src="'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png'"
+            <el-avatar class="avatar" :src="comment.userCover"
                        :size="30"></el-avatar>
             <div class="user-info">{{ comment.userName }}</div>
           </div>
