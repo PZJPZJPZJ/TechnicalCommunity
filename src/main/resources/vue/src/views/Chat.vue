@@ -142,9 +142,11 @@ const newChat = async ()=>{
     }
   }).then(
       response => {
+        inputUser.value = ''
         getList()
       }
       , error => {
+        inputUser.value = ''
         ElMessage({
           message: '输入的账号有误或聊天已存在',
           type: 'warning',
