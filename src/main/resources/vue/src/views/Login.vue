@@ -154,6 +154,7 @@ const login = () => {
       })
           .then(response => {
                 ElMessage({
+                  showClose: true,
                   message: '登录成功',
                   type: 'success',
                 })
@@ -163,6 +164,7 @@ const login = () => {
               }
               , error => {
                 ElMessage({
+                  showClose: true,
                   message: '用户名或密码错误',
                   type: 'warning',
                 })
