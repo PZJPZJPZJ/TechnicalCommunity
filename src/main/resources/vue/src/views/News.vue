@@ -158,6 +158,7 @@ const uploadNews = async () => {
   }).then(
       response => {
         ElMessage({
+          showClose: true,
           message: '发布成功',
           type: 'success',
         })
@@ -173,6 +174,7 @@ const uploadNews = async () => {
       }
       , error => {
         ElMessage({
+          showClose: true,
           message: '发布失败',
           type: 'error',
         })
@@ -192,6 +194,7 @@ const deleteNews = async (newsId)=>{
   }).then(
       response => {
         ElMessage({
+          showClose: true,
           message: '删除成功',
           type: 'success',
         })
@@ -202,6 +205,7 @@ const deleteNews = async (newsId)=>{
       }
       , error => {
         ElMessage({
+          showClose: true,
           message: '删除失败',
           type: 'error',
         })
