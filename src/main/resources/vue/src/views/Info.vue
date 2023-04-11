@@ -1,41 +1,5 @@
 <template>
-  <el-header>
-    <el-row class="header-box">
-      <el-col :xs="0" :sm="0" :md="2" :lg="4" :xl="4"></el-col>
-      <el-col :xs="6" :sm="6" :md="4" :lg="4" :xl="4">
-        <h3 style="margin-top: 13px">科技社区</h3>
-      </el-col>
-      <el-col :xs="12" :sm="12" :md="12" :lg="8" :xl="8">
-        <router-link to="/home">
-          <el-button style="height: 35px;width: 35px; margin: 13px 5px" link>热门</el-button>
-        </router-link>
-        <router-link to="/tag">
-          <el-button style="height: 35px;width: 35px; margin: 13px 5px" link>板块</el-button>
-        </router-link>
-        <router-link to="/news">
-          <el-button style="height: 35px;width: 35px; margin: 13px 5px" link>新闻</el-button>
-        </router-link>
-      </el-col>
-      <el-col :xs="3" :sm="3" :md="2" :lg="2" :xl="2">
-        <el-button style="height: 35px;width: 35px; margin-top: 13px" :icon="Search" circle
-                   @click="changeSearch"></el-button>
-      </el-col>
-      <el-col :xs="3" :sm="3" :md="2" :lg="2" :xl="2">
-        <el-dropdown :hide-on-click="false">
-          <el-button style="height: 35px;width: 35px; margin-top: 13px" :icon="User" circle></el-button>
-          <template #dropdown>
-            <el-dropdown-menu>
-              <el-dropdown-item @click="editInfo">用户中心</el-dropdown-item>
-              <el-dropdown-item @click="toChat">私信列表</el-dropdown-item>
-              <el-dropdown-item v-if="isAdmin" @click="toAdmin">用户管理</el-dropdown-item>
-              <el-dropdown-item @click="logout">注销登录</el-dropdown-item>
-            </el-dropdown-menu>
-          </template>
-        </el-dropdown>
-      </el-col>
-      <el-col :xs="0" :sm="0" :md="2" :lg="4" :xl="4"></el-col>
-    </el-row>
-  </el-header>
+  <HeadBar></HeadBar>
   <el-main>
     <el-row>
       <el-col :xs="0" :sm="0" :md="4" :lg="4" :xl="4"></el-col>
@@ -133,6 +97,7 @@ import axios from "axios";
 import {ElLoading, ElMessage} from "element-plus";
 import router from "@/router";
 import {Search, Loading, User, Plus, ChatLineRound, ShoppingCart} from '@element-plus/icons'
+import HeadBar from "@/components/HeadBar"
 
 const myInfo = ref([])
 const changePassword = ref(false)
@@ -260,11 +225,6 @@ const beforeAvatarUpload = (rawFile) => {
   }
 }
 
-//跳转用户详情页
-const editInfo = () => {
-  router.push("/info")
-}
-
 const loadMoreData = async () => {
   if (loading.value) return
   loading.value = true
@@ -308,31 +268,11 @@ const checkAdmin = async () => {
       })
 }
 
-/**
- * 顶栏
- */
-//管理员点击跳转用户管理
-const toAdmin = () => {
-  router.push('/admin')
-}
-const changeSearch = () => {
-  router.push('/search')
-}
-
-//跳转私信页面
-const toChat = () => {
-  router.push('/chat')
-}
 //点击跳转对应标签
 const handleViewTag = (tagId) => {
   router.push(`/detail?id=${tagId}`)
 }
 
-//处理登出
-const logout = () => {
-  localStorage.setItem('token', null)
-  window.location.reload();
-}
 
 //删除选中帖子
 const deletePost = async (postId) => {
@@ -499,6 +439,7 @@ onMounted(() => {
 .tag {
   font-size: 14px;
   margin-right: 10px;
+  cursor: pointer;
 }
 
 .time {
@@ -510,5 +451,8 @@ onMounted(() => {
   text-align: left;
   box-shadow: none;
   border: none;
+}
+.center{
+  cursor: pointer;
 }
 </style>

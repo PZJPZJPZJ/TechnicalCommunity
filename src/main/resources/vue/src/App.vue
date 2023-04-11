@@ -90,21 +90,21 @@ onMounted(() => {
   background-color: rgba(255, 255, 255, 0.75);
 }
 
-.el-input-group__append, .el-input-group__prepend{
-  background-color: rgba(255,255,255,0.2) !important;
+.el-input-group__append, .el-input-group__prepend {
+  background-color: rgba(255, 255, 255, 0.2) !important;
 }
 
-.el-button{
+.el-button {
   display: inline-block !important;
 }
 
-.el-carousel{
+.el-carousel {
   border-radius: 5px;
 }
 
-.el-overlay.is-message-box .el-overlay-message-box{
+.el-overlay.is-message-box .el-overlay-message-box {
   backdrop-filter: blur(10px);
-  background-color: rgba(0,0,0,0.2);
+  background-color: rgba(0, 0, 0, 0.2);
 }
 
 /*滚动指示器美化*/
@@ -121,16 +121,5 @@ onMounted(() => {
 
 ::-webkit-scrollbar-track {
   border-radius: 10px;
-}
-
-/*自定义顶栏*/
-.header-box {
-  justify-content: space-between;
-}
-.tag {
-  cursor: pointer;
-}
-.center{
-  cursor: pointer;
 }
 </style>

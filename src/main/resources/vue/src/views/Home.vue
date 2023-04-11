@@ -1,40 +1,5 @@
 <template>
-  <el-header>
-    <el-row class="header-box">
-      <el-col :xs="0" :sm="0" :md="2" :lg="4" :xl="4"></el-col>
-      <el-col :xs="6" :sm="6" :md="4" :lg="4" :xl="4">
-        <h3 style="margin-top: 13px">科技社区</h3>
-      </el-col>
-      <el-col :xs="12" :sm="12" :md="12" :lg="8" :xl="8">
-        <router-link to="/home">
-          <el-button style="height: 35px;width: 35px; margin: 13px 5px"  type="primary" link>热门</el-button>
-        </router-link>
-        <router-link to="/tag">
-          <el-button style="height: 35px;width: 35px; margin: 13px 5px" link>板块</el-button>
-        </router-link>
-        <router-link to="/news">
-          <el-button style="height: 35px;width: 35px; margin: 13px 5px" link>新闻</el-button>
-        </router-link>
-      </el-col>
-      <el-col :xs="3" :sm="3" :md="2" :lg="2" :xl="2">
-        <el-button style="height: 35px;width: 35px; margin-top: 13px" :icon="Search" circle @click="changeSearch"></el-button>
-      </el-col>
-      <el-col :xs="3" :sm="3" :md="2" :lg="2" :xl="2">
-        <el-dropdown :hide-on-click="false">
-          <el-button style="height: 35px;width: 35px; margin-top: 13px" :icon="User" circle></el-button>
-          <template #dropdown>
-            <el-dropdown-menu>
-              <el-dropdown-item @click="editInfo">用户中心</el-dropdown-item>
-              <el-dropdown-item @click="toChat">私信列表</el-dropdown-item>
-              <el-dropdown-item v-if="isAdmin" @click="toAdmin">用户管理</el-dropdown-item>
-              <el-dropdown-item @click="logout">注销登录</el-dropdown-item>
-            </el-dropdown-menu>
-          </template>
-        </el-dropdown>
-      </el-col>
-      <el-col :xs="0" :sm="0" :md="2" :lg="4" :xl="4"></el-col>
-    </el-row>
-  </el-header>
+  <HeadBar></HeadBar>
   <el-main>
     <el-row>
       <el-col :xs="0" :sm="0" :md="4" :lg="4" :xl="4"></el-col>
@@ -79,23 +44,7 @@
       </el-col>
 
       <el-col :xs="0" :sm="0" :md="4" :lg="4" :xl="4">
-        <el-card class="side-card">
-          <h3 style="margin: 15px">为你推荐</h3>
-          <div v-for="tag in tagData" :key="tag.tagId" @click="toTag(tag.tagId)">
-            <el-row>
-              <el-col :span="8">
-                <el-image
-                    class="card-img"
-                    :src="tag.tagCover"
-                    fit="fill"
-                />
-              </el-col>
-              <el-col :span="16">
-                <p style="height: 50px;line-height: 50px">{{tag.tagName}}</p>
-              </el-col>
-            </el-row>
-          </div>
-        </el-card>
+        <SideCard></SideCard>
       </el-col>
       <el-col :xs="0" :sm="0" :md="4" :lg="4" :xl="4"></el-col>
     </el-row>
@@ -156,6 +105,8 @@ import {ElLoading, ElMessage} from 'element-plus'
 import axios from 'axios'
 import {useRouter} from "vue-router";
 import {Search, Loading, User, Plus, ChatLineRound, ShoppingCart} from '@element-plus/icons'
+import HeadBar from "@/components/HeadBar"
+import SideCard from "@/components/SideCard"
 
 /**
  * 抽屉
@@ -239,25 +190,6 @@ const loadNews = async () => {
     }
   })
   newsData.value = data.rows
-}
-
-/**
- * 标签加载
- */
-const tagData = ref([])
-//加载随机标签
-const loadRandTag = async () => {
-  const {data} = await axios({
-    method: 'GET',
-    url: '/api/tag/introduce',
-    headers: {
-      Authorization: localStorage.getItem('token')
-    }
-  })
-  tagData.value = data.rows
-}
-const toTag = (tagId)=>{
-  router.push('/detail?id='+tagId)
 }
 
 /**
@@ -375,34 +307,7 @@ const handleViewNews = () => {
 const handleViewTag = (tagId) => {
   router.push('/detail?id='+tagId)
 }
-const changeSearch = ()=>{
-  router.push('/search')
-}
 
-
-/**
- * 顶栏
- */
-//管理员点击跳转用户管理
-const toAdmin = ()=>{
-  router.push('/admin')
-}
-
-//跳转私信页面
-const toChat = () => {
-  router.push('/chat')
-}
-
-//跳转用户详情页
-const editInfo = () => {
-  router.push("/info")
-}
-
-//处理登出
-const logout = () => {
-  localStorage.setItem('token', null)
-  window.location.reload();
-}
 
 /**
  * 管理员判断
@@ -433,7 +338,6 @@ onMounted(() => {
   window.addEventListener('scroll', handleScroll)
   const loadingInstance = ElLoading.service({text: 'Loading...', fullscreen: true})
   loadNews()
-  loadRandTag()
   checkAdmin()
   loadMoreData().finally(() => {
     loadingInstance.close()
@@ -442,16 +346,6 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.side-card {
-  margin: 10px;
-}
-
-.card-img {
-  width: 35px;
-  height: 35px;
-  margin: 8px;
-  border-radius: 10px;
-}
 
 .post-img {
   width: 200px;
@@ -506,6 +400,7 @@ onMounted(() => {
 .tag {
   font-size: 14px;
   margin-right: 10px;
+  cursor: pointer;
 }
 
 .time {
@@ -519,6 +414,9 @@ onMounted(() => {
   font-size: 14px;
   box-shadow: 0 0 0 1px var(--el-input-border-color, var(--el-border-color)) inset;
   border-radius: 4px;
+  cursor: pointer;
+}
+.center{
   cursor: pointer;
 }
 </style>

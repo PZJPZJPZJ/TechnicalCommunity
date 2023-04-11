@@ -143,7 +143,6 @@ const mySwitch = () => {
   flag.value = !flag.value
 }
 
-
 const login = () => {
   loginFormRef.value.validate((valid) => {
     if (valid) {
