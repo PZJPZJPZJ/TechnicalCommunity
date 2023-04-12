@@ -12,17 +12,17 @@
               <div class="person-cards-wrapper">
                 <input class="inputs" v-model="inputUser" @keyup.enter="newChat" placeholder="对方账号"/>
                 <div class="personList" v-for="chat in chatList" :key="chat" @click="selectChat(chat.chatId,chat.userName,chat.userCover,chat.userSign)">
-                  <el-badge :value="chat.chatUnread" :max="9" class="item" :hidden=!chat.chatUnread>
                     <div class="person-card">
                       <div class="info">
-                        <el-avatar class="avatar" :src="chat.userCover" :size="50"></el-avatar>
+                        <el-badge :value="chat.chatUnread" :max="9" class="item" :hidden=!chat.chatUnread>
+                          <el-avatar class="avatar" :src="chat.userCover" :size="50"></el-avatar>
+                        </el-badge>
                         <div class="info-detail">
                           <div class="name">{{ chat.userName }}</div>
-                          <div class="detail">{{ chat.userSign }}</div>
+                          <div class="detail">{{ chat.chatTime }}</div>
                         </div>
                       </div>
                     </div>
-                  </el-badge>
                 </div>
               </div>
             </div>
@@ -385,7 +385,6 @@ onMounted(() => {
   top: 50%;
   width: 90%;
   transform: translate(-50%, -50%);
-  overflow: hidden;
   display: flex;
 }
 .person-card .info .info-detail {
