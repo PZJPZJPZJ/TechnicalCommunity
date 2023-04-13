@@ -4,7 +4,7 @@
     <el-row>
       <el-col :xs="0" :sm="0" :md="4" :lg="4" :xl="4"></el-col>
       <el-col :xs="24" :sm="24" :md="16" :lg="16" :xl="16">
-        <el-row :span="6">
+        <el-row class="tag-container">
           <el-card class="post-card" v-for="tag in tagData" :key="tag.tagId" @click="handleViewTag(tag.tagId)">
             <el-image
                 class="card-img"
@@ -190,6 +190,12 @@ onMounted(() => {
 
 .el-card.is-always-shadow {
   box-shadow: none;
+}
+
+.tag-container{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
 }
 
 .post-card {
