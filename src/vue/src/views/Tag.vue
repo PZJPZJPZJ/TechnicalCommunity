@@ -81,6 +81,7 @@ const uploadTag = async () => {
   }).then(
       response => {
         ElMessage({
+          showClose: true,
           message: '新增成功',
           type: 'success',
         })
@@ -95,6 +96,7 @@ const uploadTag = async () => {
       }
       , error => {
         ElMessage({
+          showClose: true,
           message: '新增失败',
           type: 'error',
         })
