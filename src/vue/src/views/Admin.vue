@@ -118,6 +118,7 @@ const authorityUser = async (userId)=>{
   }).then(
       response => {
         ElMessage({
+          showClose: true,
           message: '提权成功',
           type: 'success',
         })
@@ -128,6 +129,7 @@ const authorityUser = async (userId)=>{
       }
       , error => {
         ElMessage({
+          showClose: true,
           message: '提权失败',
           type: 'error',
         })
@@ -143,6 +145,7 @@ const unauthorityUser = async (userId)=>{
   }).then(
       response => {
         ElMessage({
+          showClose: true,
           message: '降权成功',
           type: 'success',
         })
@@ -153,6 +156,7 @@ const unauthorityUser = async (userId)=>{
       }
       , error => {
         ElMessage({
+          showClose: true,
           message: '降权失败',
           type: 'error',
         })
@@ -170,6 +174,7 @@ const deleteUser = async (userId)=>{
         }).then(
             response => {
               ElMessage({
+                showClose: true,
                 message: '注销用户成功',
                 type: 'success',
               })
@@ -180,6 +185,7 @@ const deleteUser = async (userId)=>{
             }
             , error => {
               ElMessage({
+                showClose: true,
                 message: '注销用户失败',
                 type: 'error',
               })
@@ -187,6 +193,7 @@ const deleteUser = async (userId)=>{
       })
       .catch(() => {
         ElMessage({
+          showClose: true,
           message: '用户取消操作',
           type: 'warning',
         })

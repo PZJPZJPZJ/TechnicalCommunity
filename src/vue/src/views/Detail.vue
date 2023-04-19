@@ -227,6 +227,7 @@ const uploadPost = async () => {
         //获取到ID后上传图片
         uploadFiles(response.data.rows)
         ElMessage({
+          showClose: true,
           message: '发布成功',
           type: 'success',
         })
@@ -245,6 +246,7 @@ const uploadPost = async () => {
       }
       , error => {
         ElMessage({
+          showClose: true,
           message: '输入有误',
           type: 'error',
         })

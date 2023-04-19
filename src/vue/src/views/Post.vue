@@ -196,6 +196,7 @@ const uploadComment = async () => {
   //消息为空则禁止提交
   if (commentArea.value === '') {
     ElMessage({
+      showClose: true,
       message: '请输入评论内容',
       type: 'warning',
     })
