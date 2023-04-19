@@ -10,6 +10,7 @@ import com.pzj.technicalcommunity.service.ITcUserService;
 import com.pzj.technicalcommunity.util.JwtUtils;
 import com.pzj.technicalcommunity.util.ResultPackage;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -34,6 +35,8 @@ import static com.pzj.technicalcommunity.util.PictureUtils.getFileExtension;
 @RestController
 @RequestMapping("/news")
 public class TcNewsController {
+    @Value("${data.domain}")
+    private String domain;
     @Autowired
     private ITcNewsService iTcNewsService;
     @Autowired
@@ -66,8 +69,8 @@ public class TcNewsController {
         if (iTcUserService.getById(userId).getUserAdmin()){
             // 生成新的文件名
             String name = generateUUID() + getFileExtension(file.getOriginalFilename());
-            String path = "C:\\Users\\13425\\Documents\\JetBrains\\TechnicalCommunity\\target\\classes\\static\\img\\"+name;
-            String url = "http://localhost:8080/img/" + name;
+            String path = System.getProperty("user.dir") + "\\target\\classes\\static\\img\\"+name;
+            String url = domain + "/img/" + name;
             //写入文件
             TcNews tcNews = new TcNews();
             file.transferTo(new File(path));

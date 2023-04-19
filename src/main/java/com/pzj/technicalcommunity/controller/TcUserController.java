@@ -12,6 +12,7 @@ import com.pzj.technicalcommunity.util.PasswordEncoder;
 import com.pzj.technicalcommunity.util.ResultPackage;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -36,6 +37,8 @@ import static com.pzj.technicalcommunity.util.PictureUtils.getFileExtension;
 @RestController
 @RequestMapping("/user")
 public class TcUserController {
+    @Value("${data.domain}")
+    private String domain;
     @Autowired
     private ITcUserService iTcUserService;
 
@@ -153,8 +156,8 @@ public class TcUserController {
         tcUser.setUserId(userId);
         //处理图片
         String name = generateUUID() + getFileExtension(file.getOriginalFilename());
-        String path = "C:\\Users\\13425\\Documents\\JetBrains\\TechnicalCommunity\\target\\classes\\static\\img\\"+name;
-        String url = "http://localhost:8080/img/" + name;
+        String path = System.getProperty("user.dir") + "\\target\\classes\\static\\img\\"+name;
+        String url = domain + "/img/" + name;
         file.transferTo(new File(path));
         tcUser.setUserCover(url);
         //写入数据库

@@ -6,6 +6,7 @@ import com.pzj.technicalcommunity.entity.TcPicture;
 import com.pzj.technicalcommunity.service.ITcPictureService;
 import com.pzj.technicalcommunity.util.ResultPackage;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,6 +33,8 @@ import static com.pzj.technicalcommunity.util.PictureUtils.getFileExtension;
 @RestController
 @RequestMapping("/picture")
 public class TcPictureController {
+    @Value("${data.domain}")
+    private String domain;
     @Autowired
     private ITcPictureService iTcPictureService;
 
@@ -60,8 +63,8 @@ public class TcPictureController {
         for (MultipartFile file : files) {
             // 生成新的文件名
             String name = generateUUID() + getFileExtension(file.getOriginalFilename());
-            String path = "C:\\Users\\13425\\Documents\\JetBrains\\TechnicalCommunity\\target\\classes\\static\\img\\"+name;
-            String url = "http://localhost:8080/img/" + name;
+            String path = System.getProperty("user.dir") + "\\target\\classes\\static\\img\\"+name;
+            String url = domain + "/img/" + name;
             //写入文件
             file.transferTo(new File(path));
             //实体类赋值

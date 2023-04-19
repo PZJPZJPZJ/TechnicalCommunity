@@ -8,6 +8,7 @@ import com.pzj.technicalcommunity.entity.TcTag;
 import com.pzj.technicalcommunity.service.ITcTagService;
 import com.pzj.technicalcommunity.util.ResultPackage;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -31,6 +32,8 @@ import static com.pzj.technicalcommunity.util.PictureUtils.getFileExtension;
 @RestController
 @RequestMapping("/tag")
 public class TcTagController {
+    @Value("${data.domain}")
+    private String domain;
     @Autowired
     private ITcTagService iTcTagService;
 
@@ -96,8 +99,8 @@ public class TcTagController {
     @RequestMapping("/save")
     public ResponseEntity<String> save(@RequestParam("tagName") String tagName, @RequestParam("file") MultipartFile file) throws IOException {
         String name = generateUUID() + getFileExtension(file.getOriginalFilename());
-        String path = "C:\\Users\\13425\\Documents\\JetBrains\\TechnicalCommunity\\target\\classes\\static\\img\\"+name;
-        String url = "http://localhost:8080/img/" + name;
+        String path = System.getProperty("user.dir") + "\\target\\classes\\static\\img\\"+name;
+        String url = domain + "/img/" + name;
         //写入文件
         TcTag tcTag = new TcTag();
         file.transferTo(new File(path));
