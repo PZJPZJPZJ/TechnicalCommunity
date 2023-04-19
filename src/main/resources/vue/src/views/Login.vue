@@ -5,13 +5,10 @@
         <h1>科技社区</h1>
         <p>构建良好科技社区新氛围</p>
       </div>
-      <!-- 注册盒子 -->
       <div class="register-form">
-        <!-- 标题盒子 -->
         <div class="title-box">
           <h1>注册</h1>
         </div>
-        <!-- 输入框盒子 -->
         <el-form
             ref="registerFormRef"
             :model="registerForm"
@@ -47,13 +44,10 @@
           <p @click="mySwitch">已有账号?</p>
         </div>
       </div>
-      <!-- 登录盒子 -->
       <div class="login-form">
-        <!-- 标题盒子 -->
         <div class="title-box">
           <h1>登录</h1>
         </div>
-        <!-- 输入框盒子 -->
         <el-form
             ref="loginFormRef"
             :model="loginForm"
@@ -65,6 +59,7 @@
                 type="text"
                 placeholder="账号"
                 v-model="loginForm.id"
+                :key="timer"
             />
           </el-form-item>
           <el-form-item prop="password" label=" ">
@@ -91,6 +86,7 @@ import {ElMessage} from 'element-plus'
 import {useRouter} from 'vue-router'
 import axios from "axios";
 
+const timer = new Date().getTime();
 const router = useRouter()
 const loginFormRef = ref('')
 const registerFormRef = ref('')
@@ -192,10 +188,11 @@ const register = () => {
           response => {
             ElMessage({
               showClose: true,
-              duration: 0,
-              message: '注册成功，您的账号为' + response.data.rows,
+              message: '注册成功，请牢记您的账号',
               type: 'success',
             })
+            //写入输入框
+            loginForm.id = response.data.rows.toString()
             //切换窗口
             mySwitch()
           }

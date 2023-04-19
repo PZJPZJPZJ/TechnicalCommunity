@@ -203,6 +203,7 @@ onMounted(() => {
   width: 145px;
   height: 145px;
   border-radius: 20px;
+  cursor: pointer;
 }
 
 .card-text {

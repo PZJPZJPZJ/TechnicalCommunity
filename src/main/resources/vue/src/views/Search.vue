@@ -9,6 +9,7 @@
             class="w-50 m-2"
             size="large"
             placeholder="搜索"
+            @keyup.enter="searchButton"
         >
           <template #append>
             <el-button :icon="Search" @click="searchButton"/>
@@ -115,6 +116,11 @@ const handleScroll = () => {
   }
 }
 
+//点击跳转对应标签
+const handleViewTag = (tagId) => {
+  router.push('/detail?id='+tagId)
+}
+
 /**
  * 搜索
  */
@@ -195,5 +201,8 @@ onMounted(() => {
 
 .time {
   font-size: 14px;
+}
+.center{
+  cursor: pointer;
 }
 </style>

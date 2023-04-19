@@ -5,7 +5,7 @@
         <div class="chatHome">
           <div class="chatLeft">
             <div class="title">
-              <el-button type="success" @click="toHome"><el-icon><ArrowLeftBold /></el-icon></el-button>
+              <el-button type="success" @click="toHome"><el-icon><ArrowLeftBold /></el-icon>返回</el-button>
               <h1>用户私信</h1>
             </div>
             <div class="online-person">
@@ -58,8 +58,8 @@
                     </div>
                   </div>
                   <div class="chatInputs">
-                    <input class="inputs" v-model="inputMsg"/>
-                    <div class="send boxinput" @click="sendMsg" @keyup.enter="sendMsg"><el-icon><Promotion /></el-icon></div>
+                    <input class="inputs" v-model="inputMsg" @keyup.enter="sendMsg" />
+                    <div class="send boxinput" @click="sendMsg" ><el-icon><Promotion /></el-icon></div>
                   </div>
                 </div>
               </div>
