@@ -16,20 +16,20 @@
             <div class="user-info">生日：{{ user.userBirth }}</div>
           </div>
           <div class="post-footer">
-            <el-popconfirm v-if="!user.userAdmin" title="管理员具有操作所有账号的权限，请谨慎操作，确定要授权吗？" confirm-button-text="确认" cancel-button-text="取消"
-                           @confirm="authorityUser(user.userId)">
+            <el-popconfirm v-if="!user.userAdmin" title="管理员具有操作所有账号的权限，请谨慎操作，确定要授权吗？"
+                           confirm-button-text="确认" cancel-button-text="取消" @confirm="authorityUser(user.userId)">
               <template #reference>
                 <el-button type="success">授权为管理员</el-button>
               </template>
             </el-popconfirm>
-            <el-popconfirm v-if="user.userAdmin" title="确定要取消授权吗？" confirm-button-text="确认" cancel-button-text="取消"
-                           @confirm="unauthorityUser(user.userId)">
+            <el-popconfirm v-if="user.userAdmin" title="确定要取消授权吗？" confirm-button-text="确认"
+                           cancel-button-text="取消" @confirm="unauthorityUser(user.userId)">
               <template #reference>
                 <el-button type="warning">取消授权为管理员</el-button>
               </template>
             </el-popconfirm>
-            <el-popconfirm v-if="isAdmin" title="如非违反社区规则，不建议注销账户，确定要继续吗？" confirm-button-text="确认" cancel-button-text="取消"
-                           @confirm="deleteUser(user.userId)">
+            <el-popconfirm v-if="isAdmin" title="如非违反社区规则，不建议注销账户，确定要继续吗？" confirm-button-text="确认"
+                           cancel-button-text="取消" @confirm="deleteUser(user.userId)">
               <template #reference>
                 <el-button type="danger">移除该用户</el-button>
               </template>
